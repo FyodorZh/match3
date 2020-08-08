@@ -1,10 +1,22 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Match3.Core", "..\UnityGame\Assets\Scripts\Match3.Core\Match3.Core.csproj", "{51F1D5CD-8A13-4266-9C3F-78CF5C787154}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Match3.Features", "..\UnityGame\Assets\Scripts\Match3.Features\Match3.Features.csproj", "{43E4BA75-80A7-4D69-9E70-76F957A73703}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51F1D5CD-8A13-4266-9C3F-78CF5C787154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51F1D5CD-8A13-4266-9C3F-78CF5C787154}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51F1D5CD-8A13-4266-9C3F-78CF5C787154}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51F1D5CD-8A13-4266-9C3F-78CF5C787154}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43E4BA75-80A7-4D69-9E70-76F957A73703}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43E4BA75-80A7-4D69-9E70-76F957A73703}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43E4BA75-80A7-4D69-9E70-76F957A73703}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43E4BA75-80A7-4D69-9E70-76F957A73703}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
