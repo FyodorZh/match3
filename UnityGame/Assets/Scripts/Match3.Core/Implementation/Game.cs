@@ -14,5 +14,10 @@ namespace Match3
             Rules = rules;
             _board = new Board(this, cellGridData);
         }
+
+        public void Tick(int dTimeMs)
+        {
+            // TODO
+        }
     }
 }
