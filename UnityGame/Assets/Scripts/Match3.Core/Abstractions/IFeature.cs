@@ -3,7 +3,7 @@
     public interface IFeature
     {
         void Init(IGameRules rules);
-        void Start(IGame game);
-        void Tick(IGame game);
+        object Start(IGame game);
+        void Tick(IGame game, object state);
     }
 }
