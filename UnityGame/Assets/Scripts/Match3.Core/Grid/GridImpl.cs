@@ -41,18 +41,25 @@
         
         public ICell GetCell(CellPosition position)
         {
-            return At(position.X, position.Y);
+            return CellAt(position.X, position.Y);
         }
 
         public IBorder GetBorder(BorderPosition position)
         {
-            throw new System.NotImplementedException();
+            return BorderAt(position.X, position.Y);
         }
 
-        private Cell At(int x, int y)
+        private Cell CellAt(int x, int y)
         {
             if (x >= 0 && x < Width && y >= 0 && y < Height)
                 return _cells[x, y];
+            return null; // TODO
+        }
+        
+        private Border BorderAt(int x, int y)
+        {
+            if (x >= 0 && x <= Width && y >= 0 && y <= Height)
+                return _borders[x, y];
             return null; // TODO
         }
     }

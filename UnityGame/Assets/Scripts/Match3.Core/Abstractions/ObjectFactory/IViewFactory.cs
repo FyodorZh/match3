@@ -2,15 +2,15 @@
 {
     public interface IViewFactory
     {
-        IObjectView Construct(IType type, IGameContext context);
+        IObjectView Construct(IObject logicObject, IGameContext context);
     }
 
     public static class IViewFactory_Ext
     {
-        public static TObject Construct<TObject>(this IViewFactory factory, IType type, IGameContext context)
+        public static TObject Construct<TObject>(this IViewFactory factory, IObject logicObject, IGameContext context)
             where TObject : class, IObjectView
         {
-            var obj = factory.Construct(type, context);
+            var obj = factory.Construct(logicObject, context);
             if (obj is TObject typedObj)
             {
                 return typedObj;
