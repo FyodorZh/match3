@@ -6,6 +6,7 @@
         int Width { get; }
         int Height { get; }
         
-        ICell At(CellPosition position);
+        ICell GetCell(CellPosition position);
+        IBorder GetBorder(BorderPosition position);
     }
 }

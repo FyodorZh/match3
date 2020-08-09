@@ -3,6 +3,7 @@
     class CellGrid : ICellGrid
     {
         private readonly Cell[,] _cells;
+        private readonly Border[,] _borders;
         
         public CellGridId Id { get; }
         public int Width { get; }
@@ -11,6 +12,7 @@
         public CellGrid(CellGridId id, int width, int height)
         {
             _cells = new Cell[width, height];
+            _borders = new Border[width + 1, height + 1];
             Width = width;
             Height = height;
             
@@ -21,6 +23,14 @@
                     _cells[x, y] = new Cell(this, new CellPosition(x, y));
                 }
             }
+            
+            for (int x = 0; x <= width; ++x)
+            {
+                for (int y = 0; y <= height; ++y)
+                {
+                    _borders[x, y] = new Border(this, new BorderPosition(x, y));
+                }
+            }
         }
 
         public CellGrid(CellGridId id, ICellGridData data)
@@ -29,9 +39,14 @@
             // todo
         }
         
-        public ICell At(CellPosition position)
+        public ICell GetCell(CellPosition position)
         {
             return At(position.X, position.Y);
+        }
+
+        public IBorder GetBorder(BorderPosition position)
+        {
+            throw new System.NotImplementedException();
         }
 
         private Cell At(int x, int y)
