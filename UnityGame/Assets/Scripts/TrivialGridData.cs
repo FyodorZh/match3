@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using Match3;
 
+// public class TrivialCellData : ICellObjectData
+// {
+//     
+// }
+
 public class TrivialGridData : ICellGridData
 {
-    
-    
     public int Width { get; }
     public int Height { get; }
 

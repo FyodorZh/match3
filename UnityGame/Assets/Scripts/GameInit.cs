@@ -1,26 +1,29 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Match3;
+﻿using Match3;
 using Match3.Core;
+using Match3.View;
 using UnityEngine;
+using ViewFactory = Match3.ViewFactory;
 
 public class GameInit : MonoBehaviour
 {
-    private IGame _game;
+    public ViewFactory _viewFactory;
+    public GameView _gameView;
 
     private void Awake()
     {
         ObjectFactory objectFactory = new ObjectFactory();
-        ViewFactory viewFactory = new ViewFactory();
-        
-        
-        IGameRules rules = new GameRules(objectFactory, viewFactory, new IFeature[] {});
+
+        IGameRules rules = new GameRules(objectFactory, _viewFactory, new IFeature[] {});
         ICellGridData[] data = new ICellGridData[]
         {
-            new TrivialGridData(1, 1), 
+            ConstructGridData(), 
         };
-        _game = new Game(rules, data);
+        var game = new Game(rules, data);
+        
+        var gameView = Instantiate(_gameView).GetComponent<GameView>();
+        gameView.name = "Match3";
+        gameView.transform.position = Vector3.zero;
+        gameView.Setup(game);
     }
 
     // Start is called before the first frame update
@@ -29,9 +32,10 @@ public class GameInit : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
+    private TrivialGridData ConstructGridData()
     {
-        _game.Tick((int)(Time.deltaTime * 1000));
+        var data = new TrivialGridData(10, 10);
+        
+        return data;
     }
 }

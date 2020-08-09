@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Match3.Core
 {
@@ -7,6 +8,8 @@ namespace Match3.Core
         private readonly Game _game;
         private readonly Cell[,] _cells;
         private readonly Border[,] _borders;
+
+        private readonly Cell[] _cellList;
         
         public GridId Id { get; }
         public int Width { get; }
@@ -25,16 +28,21 @@ namespace Match3.Core
             
             var rules = game.Rules;
             var objectFactory = rules.ObjectFactory;
-            
+
+            int pos = 0;
+            _cellList = new Cell[Width * Height];
             for (int x = 0; x < width; ++x)
             {
                 for (int y = 0; y < height; ++y)
                 {
-                    _cells[x, y] = new Cell(this, new CellPosition(x, y));
+                    var cell = new Cell(this, new CellPosition(x, y));
+
+                    _cells[x, y] = cell;
+                    _cellList[pos++] = cell;
+                    
                     var list = data.GetCellDataAt(x, y);
                     if (list != null)
                     {
-                        var cell = _cells[x, y];
                         cell.IsActive = true;
                         foreach (var objectData in list)
                         {
@@ -62,6 +70,8 @@ namespace Match3.Core
                 }
             }
         }
+
+        public IEnumerable<ICell> AllCells => _cellList;
         
         public ICell GetCell(CellPosition position)
         {

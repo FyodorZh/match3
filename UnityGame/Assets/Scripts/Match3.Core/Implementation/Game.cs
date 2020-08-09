@@ -8,7 +8,8 @@ namespace Match3
         private readonly Board _board;
         
         public IGameRules Rules { get; }
-        
+        public IBoard Board => _board;
+
         public Game(IGameRules rules, IEnumerable<ICellGridData> cellGridData)
         {
             Rules = rules;
