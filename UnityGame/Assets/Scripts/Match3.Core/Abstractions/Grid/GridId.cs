@@ -5,25 +5,25 @@ namespace Match3
     /// <summary>
     /// Уникальный идентификатор грида в рамках доски
     /// </summary>
-    public readonly struct CellGridId : IEquatable<CellGridId>
+    public readonly struct GridId : IEquatable<GridId>
     {
-        public static readonly CellGridId Invalid = new CellGridId();
+        public static readonly GridId Invalid = new GridId();
         
         public readonly int Id;
 
-        public CellGridId(int id)
+        public GridId(int id)
         {
             Id = id;
         }
 
-        public bool Equals(CellGridId other)
+        public bool Equals(GridId other)
         {
             return Id == other.Id;
         }
 
         public override bool Equals(object obj)
         {
-            return obj is CellGridId other && Equals(other);
+            return obj is GridId other && Equals(other);
         }
 
         public override int GetHashCode()
@@ -31,12 +31,12 @@ namespace Match3
             return Id;
         }
 
-        public static bool operator ==(CellGridId left, CellGridId right)
+        public static bool operator ==(GridId left, GridId right)
         {
             return left.Equals(right);
         }
 
-        public static bool operator !=(CellGridId left, CellGridId right)
+        public static bool operator !=(GridId left, GridId right)
         {
             return !left.Equals(right);
         }

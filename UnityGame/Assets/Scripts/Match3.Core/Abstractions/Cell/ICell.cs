@@ -5,6 +5,6 @@
         CellId Id { get; }
         CellPosition Position { get; }
         
-        ICellGrid Owner { get; }
+        IGrid Owner { get; }
     }
 }

@@ -1,15 +1,15 @@
 ﻿namespace Match3.Core
 {
-    class CellGrid : ICellGrid
+    class Grid : IGrid
     {
         private readonly Cell[,] _cells;
         private readonly Border[,] _borders;
         
-        public CellGridId Id { get; }
+        public GridId Id { get; }
         public int Width { get; }
         public int Height { get; }
         
-        public CellGrid(CellGridId id, int width, int height)
+        public Grid(GridId id, int width, int height)
         {
             _cells = new Cell[width, height];
             _borders = new Border[width + 1, height + 1];
@@ -33,7 +33,7 @@
             }
         }
 
-        public CellGrid(CellGridId id, ICellGridData data)
+        public Grid(GridId id, ICellGridData data)
             : this(id, data.Width, data.Height)
         {
             // todo

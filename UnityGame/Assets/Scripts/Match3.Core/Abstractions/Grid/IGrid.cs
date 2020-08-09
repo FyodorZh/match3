@@ -1,8 +1,8 @@
 ﻿namespace Match3
 {
-    public interface ICellGrid
+    public interface IGrid
     {
-        CellGridId Id { get; }
+        GridId Id { get; }
         int Width { get; }
         int Height { get; }
         

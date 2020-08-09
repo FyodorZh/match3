@@ -4,18 +4,18 @@ namespace Match3
 {
     public readonly struct BorderId : IEquatable<BorderId>
     {
-        public readonly CellGridId CellGridId;
+        public readonly GridId GridId;
         public readonly BorderPosition Position;
 
-        public BorderId(CellGridId cellGridId, BorderPosition position)
+        public BorderId(GridId gridId, BorderPosition position)
         {
-            CellGridId = cellGridId;
+            GridId = gridId;
             Position = position;
         }
 
         public bool Equals(BorderId other)
         {
-            return CellGridId.Equals(other.CellGridId) && Position.Equals(other.Position);
+            return GridId.Equals(other.GridId) && Position.Equals(other.Position);
         }
 
         public override bool Equals(object obj)
@@ -27,7 +27,7 @@ namespace Match3
         {
             unchecked
             {
-                return (CellGridId.GetHashCode() * 397) ^ Position.GetHashCode();
+                return (GridId.GetHashCode() * 397) ^ Position.GetHashCode();
             }
         }
 
