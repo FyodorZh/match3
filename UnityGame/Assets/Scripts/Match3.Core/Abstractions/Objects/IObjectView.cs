@@ -1,6 +1,6 @@
 ﻿namespace Match3
 {
-    public interface IObjectType
+    public interface IObjectView : IObject
     {
         
     }

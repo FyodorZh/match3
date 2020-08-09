@@ -1,6 +1,6 @@
 ﻿namespace Match3
 {
-    public interface ICellObjectType : IObjectType
+    public interface ICellObjectType : IType
     {
         
     }

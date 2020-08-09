@@ -1,7 +1,6 @@
 ﻿namespace Match3
 {
-    public interface IBorderObject : IObject
+    public interface IBorderObject : ILogicObject
     {
-        IBorderObjectType Type { get; }
     }
 }
