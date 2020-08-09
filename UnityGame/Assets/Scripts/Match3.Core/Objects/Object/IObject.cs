@@ -2,7 +2,7 @@
 {
     public interface IObject
     {
-        IType Type { get; }
+        ObjectTypeId TypeId { get; }
         void Release();
     }
 }

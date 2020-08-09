@@ -47,10 +47,10 @@ namespace Match3.Core
                 return false;
             }
             
-            string typeId = cellObject.Type.Id;
+            string typeId = cellObject.TypeId.Id;
             foreach (var obj in _content)
             {
-                if (typeId == obj.Type.Id)
+                if (typeId == obj.TypeId.Id)
                 {
                     return false;
                 }

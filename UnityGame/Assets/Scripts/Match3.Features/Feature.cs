@@ -2,14 +2,19 @@ namespace Match3.Features
 {
     public class Feature : IFeature
     {
+        protected IGameRules Rules { get; private set; }
+        
         public void Init(IGameRules rules)
         {
-            throw new System.NotImplementedException();
+            Rules = rules;
         }
 
-        public void Start()
+        public void Start(IGame game)
         {
-            throw new System.NotImplementedException();
+        }
+
+        public void Tick(IGame game)
+        {
         }
     }
 }

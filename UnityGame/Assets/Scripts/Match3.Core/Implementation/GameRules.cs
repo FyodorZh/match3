@@ -11,6 +11,8 @@ namespace Match3.Core
         
         public IViewFactory ViewFactory { get; }
         
+        public IReadOnlyList<IFeature> Features => _features;
+
         public GameRules(IObjectFactory objectFactory, IViewFactory viewFactory, IEnumerable<IFeature> features)
         {
             ObjectFactory = objectFactory;
@@ -20,11 +22,6 @@ namespace Match3.Core
             foreach (var feature in _features)
             {
                 feature.Init(this);
-            }
-            
-            foreach (var feature in _features)
-            {
-                feature.Start();
             }
         }
     }

@@ -16,9 +16,24 @@ namespace Match3
             _board = new Board(this, cellGridData);
         }
 
+        public void Start()
+        {
+            var features = Rules.Features;
+            var count = features.Count;
+            for (int i = 0; i < count; ++i)
+            {
+                features[i].Start(this);
+            }
+        }
+
         public void Tick(int dTimeMs)
         {
-            // TODO
+            var features = Rules.Features;
+            var count = features.Count;
+            for (int i = 0; i < count; ++i)
+            {
+                features[i].Tick(this);
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Match3
         
         public IObjectView Construct(IObject logicObject, IGameContext context)
         {
-            string typeId = logicObject?.Type.Id;
+            string typeId = logicObject?.TypeId.Id;
             if (typeId != null && _table.TryGetValue(typeId, out var ctor))
             {
                 return ctor(logicObject, context);
