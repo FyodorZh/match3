@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Match3.Features.CellObjects
+﻿namespace Match3.Features
 {
     public class ChipObject : CellObject
     {

@@ -12,7 +12,7 @@
             return new State();
         }
 
-        protected override void Process(IGame game, State state)
+        protected override void Process(IGame game, State state, int dTimeMs)
         {
             throw new System.NotImplementedException();
         }

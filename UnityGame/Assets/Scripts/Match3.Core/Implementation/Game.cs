@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Match3.Core;
 
 namespace Match3
 {
     public class Game : IGame, IGameContext
     {
-        private struct FeatureInfo
+        private readonly struct FeatureInfo
         {
             public readonly IFeature Feature;
             public readonly object State;
@@ -48,7 +47,7 @@ namespace Match3
         {
             foreach (var featureInfo in _features)
             {
-                featureInfo.Feature.Tick(this, featureInfo.State);
+                featureInfo.Feature.Tick(this, featureInfo.State, dTimeMs);
             }
         }
     }

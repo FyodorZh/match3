@@ -2,16 +2,16 @@
 {
     public abstract class StatelessFeature : Feature<object>
     {
-        protected abstract void Process(IGame game);
+        protected abstract void Process(IGame game, int dTimeMs);
         
         protected sealed override object ConstructData()
         {
             return null;
         }
 
-        protected sealed override void Process(IGame game, object state)
+        protected sealed override void Process(IGame game, object state, int dTimeMs)
         {
-            Process(game);
+            Process(game, dTimeMs);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Match3.Features
 
         protected abstract TData ConstructData();
 
-        protected abstract void Process(IGame game, TData state);
+        protected abstract void Process(IGame game, TData state, int dTimeMs);
         
         public void Init(IGameRules rules)
         {
@@ -19,9 +19,9 @@ namespace Match3.Features
             return ConstructData();
         }
 
-        public void Tick(IGame game, object state)
+        public void Tick(IGame game, object state, int dTimeMs)
         {
-            Process(game, (TData)state);
+            Process(game, (TData)state, dTimeMs);
         }
     }
 }

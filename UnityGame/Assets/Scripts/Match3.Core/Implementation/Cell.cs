@@ -34,7 +34,9 @@ namespace Match3.Core
             Id = new CellId(owner.Id, position);
             Position = position;
         }
-        
+
+        public IReadOnlyList<ICellObject> Content => _content;
+
         public bool TryAddContent(ICellObject cellObject)
         {
             if (cellObject == null)
