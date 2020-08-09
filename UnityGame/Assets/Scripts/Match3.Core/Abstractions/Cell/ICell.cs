@@ -6,5 +6,9 @@
         CellPosition Position { get; }
         
         IGrid Owner { get; }
+        
+        bool IsActive { get; set; }
+
+        bool TryAddContent(ICellObject cellObject);
     }
 }

@@ -5,14 +5,14 @@ namespace Match3
 {
     public class Game : IGame, IGameContext
     {
-        private readonly IGameRules _rules;
-
         private readonly Board _board;
+        
+        public IGameRules Rules { get; }
         
         public Game(IGameRules rules, IEnumerable<ICellGridData> cellGridData)
         {
-            _rules = rules;
-            _board = new Board(cellGridData);
+            Rules = rules;
+            _board = new Board(this, cellGridData);
         }
     }
 }

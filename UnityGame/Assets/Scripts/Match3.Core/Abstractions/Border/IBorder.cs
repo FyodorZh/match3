@@ -4,5 +4,8 @@
     {
         BorderId Id { get; }
         BorderPosition Position { get; }
+
+        IBorderObject Content { get; }
+        void SetContent(IBorderObject newObject);
     }
 }

@@ -9,7 +9,9 @@ public class GameInit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        IGameRules rules = new GameRules(new IFeature[] {});
+        IObjectFactory objectFactory = null;
+        IViewFactory viewFactory = null;
+        IGameRules rules = new GameRules(objectFactory, viewFactory, new IFeature[] {});
         ICellGridData[] data = new ICellGridData[] { };
         IGame game = new Game(rules, data);
     }

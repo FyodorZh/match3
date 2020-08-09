@@ -9,6 +9,6 @@ namespace Match3
 
         IEnumerable<ICellObjectData> GetCellDataAt(int x, int y);
         
-        IEnumerable<IBorderObjectData> GetBorderDataAt(int x, int y);
+        IBorderObjectData GetBorderDataAt(int x, int y);
     }
 }
