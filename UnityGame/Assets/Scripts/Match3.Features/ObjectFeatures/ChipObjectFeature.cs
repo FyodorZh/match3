@@ -13,6 +13,7 @@ namespace Match3.Features
         public IEnumerable<IComponentFeature> DependsOn { get; } = new IComponentFeature[]
         {
             ColorComponentFeature.Instance,
+            MassComponentFeature.Instance, 
         };
 
         public IObject Construct(IObjectData data)
@@ -32,6 +33,7 @@ namespace Match3.Features
         public interface IChipData : ICellObjectData
         {
             ColorComponentFeature.IColorData Color { get; }
+            MassComponentFeature.IMassData Mass { get; }
             int BodyType { get; }
         }
 
@@ -42,12 +44,17 @@ namespace Match3.Features
             public int BodyType { get; }
 
             public Chip(IChipData data)
-                : this(new ObjectTypeId(data.TypeId), ColorComponentFeature.Instance.Construct(data.Color))
+                : this(new ObjectTypeId(data.TypeId), 
+                    ColorComponentFeature.Instance.Construct(data.Color),
+                    MassComponentFeature.Instance.Construct(data.Mass))
             {
                 BodyType = data.BodyType;
             }
 
-            private Chip(ObjectTypeId typeId, ColorComponentFeature.IColor color)
+            private Chip(
+                ObjectTypeId typeId, 
+                ColorComponentFeature.IColor color,
+                MassComponentFeature.IMass mass)
                 : base(typeId, color)
             {
                 Color = color;

@@ -2,7 +2,7 @@
 {
     public interface ICellObject : IObject
     {
-        TCellObjectComponent TryGetComponent<TCellObjectComponent>(string componentTypeId)
+        TCellObjectComponent TryGetComponent<TCellObjectComponent>()
             where TCellObjectComponent : class, ICellObjectComponent;
     }
 }

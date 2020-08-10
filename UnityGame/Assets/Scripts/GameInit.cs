@@ -68,19 +68,37 @@ public class GameInit : MonoBehaviour
         return data;
     }
 
-    private class ChipData : ChipObjectFeature.IChipData, ColorComponentFeature.IColorData
+    private class ChipData : ChipObjectFeature.IChipData
     {
-        public string TypeId { get; }
-        public ColorComponentFeature.IColorData Color => this;
+        private class ColorData : ColorComponentFeature.IColorData
+        {
+            public string TypeId => ColorComponentFeature.Name;
+            public int ColorId { get; }
+
+            public ColorData(int colorId)
+            {
+                ColorId = colorId;
+            }
+        }
+
+        private class MassData : MassComponentFeature.IMassData
+        {
+            public string TypeId => MassComponentFeature.Name;
+        }
+
+        public string TypeId => ChipObjectFeature.Name;
+        public ColorComponentFeature.IColorData Color { get; }
+
+        public MassComponentFeature.IMassData Mass { get; }
+        
         public int BodyType => 0;
 
-        public int ColorId { get; }
+        public int ColorId => Color.ColorId;
 
         public ChipData(int colorId)
         {
-            TypeId = ChipObjectFeature.Name;
-            ColorId = colorId % 5;
+            Color = new ColorData(colorId % 5);
+            Mass = new MassData();
         }
-
     }
 }

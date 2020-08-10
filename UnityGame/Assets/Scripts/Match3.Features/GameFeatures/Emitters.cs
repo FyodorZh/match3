@@ -29,7 +29,7 @@ namespace Match3.Features
                     if (cell.Content.Count == 1)
                     {
                         var obj = cell.Content[0];
-                        var emitter = obj.TryGetComponent<EmitterComponentFeature.IEmitter>(EmitterComponentFeature.Name);
+                        var emitter = obj.TryGetComponent<EmitterComponentFeature.IEmitter>();
                         if (emitter != null)
                         {
                             var newObject = emitter.Emit(game);
