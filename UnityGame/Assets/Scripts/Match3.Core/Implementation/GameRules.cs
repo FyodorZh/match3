@@ -30,7 +30,7 @@ namespace Match3.Core
         {
             if (feature == null)
                 throw new ArgumentNullException(nameof(feature));
-            if (_componentFeatures.ContainsKey(feature.FeatureId))
+            if (_gameFeatures.ContainsKey(feature.FeatureId))
                 throw new InvalidOperationException();
             
             _gameFeatures.Add(feature.FeatureId, feature);
@@ -45,8 +45,6 @@ namespace Match3.Core
             {
                 RegisterComponentFeature(componentFeature);
             }
-            
-            feature.Register(this);
         }
 
         public void RegisterObjectFeature(IObjectFeature feature)
@@ -77,7 +75,10 @@ namespace Match3.Core
 
         public void BakeAllFeatures()
         {
-            // TODO
+            foreach (var feature in _gameFeatureList)
+            {
+                feature.Register(this);
+            }
         }
     }
 }
