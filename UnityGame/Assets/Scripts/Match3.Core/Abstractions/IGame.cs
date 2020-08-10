@@ -1,6 +1,6 @@
 namespace Match3
 {
-    public interface IGame
+    public interface IGame : IGameContext
     {
         IGameRules Rules { get; }
         IBoard Board { get; }

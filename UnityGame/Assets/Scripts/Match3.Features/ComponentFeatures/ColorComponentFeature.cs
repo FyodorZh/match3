@@ -1,4 +1,6 @@
-﻿namespace Match3.Features
+﻿using System;
+
+namespace Match3.Features
 {
     public class ColorComponentFeature : ICellObjectComponentFeature
     {
@@ -23,6 +25,18 @@
         
             //public Colored
             public string TypeId => Name;
+            
+            public void Setup(IObjectComponentData data)
+            {
+                if (!(data is IColorData colorData))
+                    throw new InvalidOperationException("Wrong data type");
+                ColorId = colorData.ColorId;
+            }
+        }
+
+        public interface IColorData : IObjectComponentData
+        {
+            int ColorId { get; }
         }
     }
 }

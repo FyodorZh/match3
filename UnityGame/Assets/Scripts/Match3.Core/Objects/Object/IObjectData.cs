@@ -1,7 +1,6 @@
 ﻿namespace Match3
 {
-    public interface IObjectData
+    public interface IObjectData : IData
     {
-        string TypeId { get; }
     }
 }

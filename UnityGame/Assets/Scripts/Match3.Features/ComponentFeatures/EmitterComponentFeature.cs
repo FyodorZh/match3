@@ -1,4 +1,6 @@
-﻿namespace Match3.Features
+﻿using System;
+
+namespace Match3.Features
 {
     public class EmitterComponentFeature : ICellObjectComponentFeature
     {
@@ -20,6 +22,26 @@
         public class Emitter : ICellObjectComponent
         {
             public string TypeId => Name;
+
+            private ICellObjectData _objectDataToEmit;
+            
+            public void Setup(IObjectComponentData data)
+            {
+                if (!(data is IEmitterData emitterData))
+                    throw new InvalidOperationException();
+                
+                _objectDataToEmit = emitterData.ObjectToEmit;
+            }
+
+            public ICellObject Emit(IGame game)
+            {
+                return game.Rules.ObjectFactory.Construct<ICellObject>(_objectDataToEmit, game);
+            }
+        }
+        
+        public interface IEmitterData : IObjectComponentData
+        {
+            ICellObjectData ObjectToEmit { get; }
         }
     }
 }
