@@ -9,28 +9,28 @@ namespace Match3.Features
         
         public string FeatureId => Name;
         
-        public IObjectComponent Construct()
+        public IObjectComponent Construct(IObjectComponentData data)
         {
-            return TypedConstruct();
+            if (!(data is IEmitterData typedData))
+                throw new InvalidOperationException();
+            
+            return Construct(typedData);
         }
 
-        public ICellObjectComponent TypedConstruct()
+        public ICellObjectComponent Construct(IEmitterData data)
         {
-            return new Emitter();
+            return new Emitter(data);
         }
 
         public class Emitter : ICellObjectComponent
         {
             public string TypeId => Name;
 
-            private ICellObjectData _objectDataToEmit;
-            
-            public void Setup(IObjectComponentData data)
+            private readonly ICellObjectData _objectDataToEmit;
+
+            public Emitter(IEmitterData data)
             {
-                if (!(data is IEmitterData emitterData))
-                    throw new InvalidOperationException();
-                
-                _objectDataToEmit = emitterData.ObjectToEmit;
+                _objectDataToEmit = data.ObjectToEmit;
             }
 
             public ICellObject Emit(IGame game)
@@ -39,7 +39,7 @@ namespace Match3.Features
             }
         }
         
-        public interface IEmitterData : IObjectComponentData
+        public interface IEmitterData : ICellObjectComponentData
         {
             ICellObjectData ObjectToEmit { get; }
         }

@@ -2,6 +2,6 @@
 {
     public interface ICellObjectComponentFeature : IComponentFeature
     {
-        ICellObjectComponent TypedConstruct();
+        //ICellObjectComponent TypedConstruct(ICellObjectComponentData data);
     }
 }

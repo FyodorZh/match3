@@ -9,14 +9,17 @@ namespace Match3.Features
 
         public string FeatureId => Name;
         
-        public IObjectComponent Construct()
+        public IObjectComponent Construct(IObjectComponentData data)
         {
-            return TypedConstruct();
+            if (!(data is IColorData colorData))
+                throw new InvalidOperationException();
+            
+            return Construct(colorData);
         }
 
-        public ICellObjectComponent TypedConstruct()
+        public ICellObjectComponent Construct(IColorData data)
         {
-            return new Color();
+            return new Color(data);
         }
 
         public class Color : ICellObjectComponent
@@ -26,15 +29,13 @@ namespace Match3.Features
             //public Colored
             public string TypeId => Name;
             
-            public void Setup(IObjectComponentData data)
+            public Color(IColorData data)
             {
-                if (!(data is IColorData colorData))
-                    throw new InvalidOperationException("Wrong data type");
-                ColorId = colorData.ColorId;
+                ColorId = data.ColorId;
             }
         }
 
-        public interface IColorData : IObjectComponentData
+        public interface IColorData : ICellObjectComponentData
         {
             int ColorId { get; }
         }

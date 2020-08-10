@@ -6,6 +6,6 @@ namespace Match3
     {
         IEnumerable<IComponentFeature> DependsOn { get; }
 
-        IObject Construct();
+        IObject Construct(IObjectData data);
     }
 }

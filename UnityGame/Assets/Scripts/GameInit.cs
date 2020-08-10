@@ -12,9 +12,7 @@ public class GameInit : MonoBehaviour
 
     private void Awake()
     {
-        ObjectFactory objectFactory = new ObjectFactory();
-
-        IGameRules rules = new GameRules(objectFactory, _viewFactory);
+        IGameRules rules = new GameRules(_viewFactory);
         rules.RegisterGameFeature(new Emitters());
         rules.RegisterGameFeature(new Gravity());
         rules.BakeAllFeatures();

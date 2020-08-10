@@ -14,15 +14,16 @@ namespace Match3.Core
         private readonly Dictionary<string, IComponentFeature> _componentFeatures = 
             new Dictionary<string, IComponentFeature>();
         
-        public IObjectFactory ObjectFactory { get; }
+        private readonly ObjectFactory _objectFactory = new ObjectFactory();
+
+        public IObjectFactory ObjectFactory => _objectFactory;
         
         public IViewFactory ViewFactory { get; }
         
         public IReadOnlyList<IGameFeature> GameFeatures => _gameFeatureList;
 
-        public GameRules(IObjectFactory objectFactory, IViewFactory viewFactory)
+        public GameRules(IViewFactory viewFactory)
         {
-            ObjectFactory = objectFactory;
             ViewFactory = viewFactory;
         }
         
@@ -59,6 +60,8 @@ namespace Match3.Core
                 {
                     RegisterComponentFeature(componentFeature);
                 }
+                
+                _objectFactory.Append(feature.FeatureId, (data, context) => feature.Construct(data));
             }
         }
 

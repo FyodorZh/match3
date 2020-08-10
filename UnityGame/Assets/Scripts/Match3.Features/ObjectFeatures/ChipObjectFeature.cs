@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Match3.Features
 {
@@ -14,10 +15,19 @@ namespace Match3.Features
             ColorComponentFeature.Instance,
         };
 
-        public IObject Construct()
+        public IObject Construct(IObjectData data)
         {
-            return new CellObject(new ObjectTypeId(Name),
-                ColorComponentFeature.Instance.TypedConstruct());
+            if (!(data is IChipData chipData))
+                throw  new InvalidOperationException();
+            
+            return new CellObject(
+                new ObjectTypeId(Name),
+                ColorComponentFeature.Instance.Construct(chipData.Color));
+        }
+        
+        public interface IChipData : ICellObjectData
+        {
+            ColorComponentFeature.IColorData Color { get; }
         }
     }
 }
