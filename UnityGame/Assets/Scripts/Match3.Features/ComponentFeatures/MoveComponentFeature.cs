@@ -1,4 +1,5 @@
 ﻿using System;
+using Match3.Core;
 using Match3.Math;
 
 namespace Match3.Features
@@ -25,22 +26,49 @@ namespace Match3.Features
         
         public interface IMove : ICellObjectComponent
         {
-            ITrajectory Trajectory { get; set; }
+            bool IsMoving { get; }
+            
+            FixedVector2 Offset { get; }
+            FixedVector2 Velocity { get; }
+
+            void SetTrajectory(ITrajectory trajectory);
+
+            void Update(Fixed dTimeSeconds);
         }
 
         public interface IMoveData : ICellObjectComponentData
         {
         }
         
-        private class Move : IMove
+        private class Move : CellObjectComponent, IMove
         {
-            public string TypeId => Name;
+            private ITrajectory _trajectory;
+            
+            public override string TypeId => Name;
 
             public Move(IMoveData data)
             {
             }
 
-            public ITrajectory Trajectory { get; set; }
+            public bool IsMoving => _trajectory != null;
+            
+            public FixedVector2 Offset { get; private set; }
+            public FixedVector2 Velocity { get; private set; }
+            public void SetTrajectory(ITrajectory trajectory)
+            {
+                Debug.Assert(_trajectory == null);
+                _trajectory = trajectory;
+            }
+
+            public void Update(Fixed dTimeSeconds)
+            {
+                if (_trajectory != null)
+                {
+                    _trajectory.Update(dTimeSeconds);
+                    Velocity = _trajectory.Position - Offset;
+                    Offset = _trajectory.Position;
+                }
+            }
         }
     }
 }

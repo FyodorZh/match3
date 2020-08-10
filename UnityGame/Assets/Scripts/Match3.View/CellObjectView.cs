@@ -13,19 +13,19 @@ namespace Match3.View
             base.OnInit();
             _cellObject = (ICellObject)Owner;
             _moveComponent = _cellObject.TryGetComponent<MoveComponentFeature.IMove>();
+
+            _cellObject.OwnerChanged += (newOwner) =>
+            {
+
+            };
         }
 
         protected override void Update()
         {
             base.Update();
-            var trajectory = _moveComponent.Trajectory;
-            if (trajectory != null)
+            if (_moveComponent != null)
             {
-                transform.localPosition = new Vector3(trajectory.Offset.X.ToFloat(), 0, trajectory.Offset.Y.ToFloat());
-            }
-            else
-            {
-                transform.localPosition = Vector3.zero;
+                transform.localPosition = new Vector3(_moveComponent.Offset.X.ToFloat(), 0, _moveComponent.Offset.Y.ToFloat());
             }
         }
     }

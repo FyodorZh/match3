@@ -24,22 +24,22 @@ namespace Match3.Features
         
         public interface IMass : ICellObjectComponent
         {
-            bool Locked { get; set; }
+            bool IsLocked { get; set; }
         }
 
         public interface IMassData : ICellObjectComponentData
         {
         }
         
-        private class Mass : IMass
+        private class Mass : CellObjectComponent, IMass
         {
-            public string TypeId => Name;
+            public override string TypeId => Name;
 
             public Mass(IMassData data)
             {
             }
 
-            public bool Locked { get; set; }
+            public bool IsLocked { get; set; }
         }
     }
 }

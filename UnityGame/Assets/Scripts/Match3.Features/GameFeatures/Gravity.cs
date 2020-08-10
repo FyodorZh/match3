@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Match3.Core;
 
 namespace Match3.Features
 {
@@ -25,7 +26,58 @@ namespace Match3.Features
         }
 
         protected override void Process(IGame game, State state, int dTimeMs)
-        {/*
+        {
+            foreach (var grid in game.Board.Grids)
+            {
+                for (int x = 0; x < grid.Width; ++x)
+                {
+                    for (int y = 1; y < grid.Height; ++y)
+                    {
+                        ICell cell = grid.GetCell(new CellPosition(x, y));
+                        MassComponentFeature.IMass massComponent = cell.FindComponent<MassComponentFeature.IMass>();
+                        if (massComponent != null && !massComponent.IsLocked)
+                        {
+                            var moveComponent = massComponent.Owner.TryGetComponent<MoveComponentFeature.IMove>();
+                            if (moveComponent != null && !moveComponent.IsMoving)
+                            {
+                                int k = y - 1;
+                                ICell freeCell = null;
+                                while (k >= 0)
+                                {
+                                    freeCell = grid.GetCell(new CellPosition(x, k));
+                                    if (freeCell.IsActive)
+                                    {
+                                        var freeMass = freeCell.FindComponent<MassComponentFeature.IMass>();
+                                        if (freeMass == null)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    freeCell = null;
+                                    --k;
+                                }
+
+                                if (freeCell != null)
+                                {
+                                    var obj = massComponent.Owner;
+                                    if (cell.DeattachObject(obj))
+                                    {
+                                        if (!freeCell.AttachObject(obj))
+                                        {
+                                            Debug.Assert(false);
+                                            cell.AttachObject(obj);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+
+
+            /*
             foreach (var grid in game.Board.Grids)
             {
                 for (int x = 0; x < grid.Width; ++x)

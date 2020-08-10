@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Match3.Core
 {
@@ -7,9 +8,10 @@ namespace Match3.Core
     {
         private readonly Grid _owner;
 
-        private readonly List<ICellObject> _content = new List<ICellObject>();
+        private readonly List<ICellObject> _objects = new List<ICellObject>();
 
         private bool _isActive;
+        private ICell _cellImplementation;
 
         public event Action<ICellObject> ContentAdded;
         
@@ -40,32 +42,75 @@ namespace Match3.Core
             Position = position;
         }
 
-        public IReadOnlyList<ICellObject> Content => _content;
+        public IReadOnlyList<ICellObject> Objects => _objects;
 
-        public bool TryAddContent(ICellObject cellObject)
+        public bool AddObject(ICellObject cellObject)
+        {
+            if (AttachObject(cellObject))
+            {
+                ContentAdded?.Invoke(cellObject);
+                return true;
+            }
+            else
+            {
+                Debug.Assert(false);
+                cellObject.Release();
+                return false;
+            }
+        }
+
+        public bool AttachObject(ICellObject cellObject)
         {
             if (cellObject == null)
             {
-                return false;
-            }
-
-            if (!IsActive)
-            {
-                return false;
+                throw new ArgumentNullException(nameof(cellObject));
             }
             
+            Debug.Assert(IsActive);
+            
             string typeId = cellObject.TypeId.Id;
-            foreach (var obj in _content)
+            foreach (var obj in _objects)
             {
                 if (typeId == obj.TypeId.Id)
                 {
                     return false;
                 }
             }
-            
-            _content.Add(cellObject);
-            ContentAdded?.Invoke(cellObject);
+            _objects.Add(cellObject);
+            cellObject.SetOwner(this);
             return true;
+        }
+
+        public bool DeattachObject(ICellObject cellObject)
+        {
+            if (cellObject == null)
+            {
+                throw new ArgumentNullException(nameof(cellObject));
+            }
+            
+            string typeId = cellObject.TypeId.Id;
+            int count = _objects.Count;
+            for (int i = 0; i < count; ++i)
+            {
+                if (typeId == _objects[i].TypeId.Id)
+                {
+                    _objects.RemoveAt(i);
+                    cellObject.SetOwner(null);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void RemoveObject(ICellObject cellObject)
+        {
+            if (DeattachObject(cellObject))
+            {
+                cellObject.Release();
+                return;
+            }
+            Debug.Assert(false);
         }
     }
 }

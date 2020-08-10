@@ -48,7 +48,7 @@ namespace Match3.Core
                         {
                             var obj = objectFactory.Construct<ICellObject>(objectData, _game);
                             Debug.Assert(obj != null);
-                            if (!cell.TryAddContent(obj))
+                            if (!cell.AddObject(obj))
                             {
                                 Debug.Assert(false);
                             }

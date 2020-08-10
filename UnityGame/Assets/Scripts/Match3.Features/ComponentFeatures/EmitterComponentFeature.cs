@@ -32,9 +32,9 @@ namespace Match3.Features
             ICellObjectData ObjectToEmit { get; }
         }
         
-        private class Emitter : IEmitter
+        private class Emitter : CellObjectComponent, IEmitter
         {
-            public string TypeId => Name;
+            public override string TypeId => Name;
 
             private readonly ICellObjectData _objectDataToEmit;
 

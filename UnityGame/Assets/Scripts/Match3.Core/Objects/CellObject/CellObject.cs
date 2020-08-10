@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Match3
@@ -21,7 +22,17 @@ namespace Match3
 
         protected override void OnRelease()
         {
-            // DO NOTHING
+            SetOwner(null);
+        }
+
+        public event Action<ICell> OwnerChanged;
+        
+        public ICell Owner { get; private set; }
+
+        public void SetOwner(ICell owner)
+        {
+            Owner = owner;
+            OwnerChanged?.Invoke(owner);
         }
 
         public TCellObjectComponent TryGetComponent<TCellObjectComponent>() 

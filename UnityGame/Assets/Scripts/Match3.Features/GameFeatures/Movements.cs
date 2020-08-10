@@ -33,13 +33,9 @@ namespace Match3.Features
                 foreach (var cell in grid.AllCells)
                 {
                     var moveComponent = cell.FindComponent<MoveComponentFeature.IMove>();
-                    if (moveComponent != null && moveComponent.Trajectory != null)
+                    if (moveComponent != null && moveComponent.IsMoving)
                     {
-                        var trajectory = moveComponent.Trajectory;
-                        if (!trajectory.Update(dTime))
-                        {
-                            moveComponent.Trajectory = null;
-                        }
+                        moveComponent.Update(dTime);
                     }
                 }
             }

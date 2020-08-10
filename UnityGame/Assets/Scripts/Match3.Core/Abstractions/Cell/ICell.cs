@@ -15,9 +15,11 @@ namespace Match3
         
         bool IsActive { get; set; }
         
-        IReadOnlyList<ICellObject> Content { get; }
+        IReadOnlyList<ICellObject> Objects { get; }
 
-        bool TryAddContent(ICellObject cellObject);
+        bool AddObject(ICellObject cellObject);
+        bool AttachObject(ICellObject cellObject);
+        bool DeattachObject(ICellObject cellObject);
     }
 
     public static class ICell_Ext
@@ -25,7 +27,7 @@ namespace Match3
         public static TCellObjectComponent FindComponent<TCellObjectComponent>(this ICell cell)
             where TCellObjectComponent : class, ICellObjectComponent
         {
-            var content = cell.Content;
+            var content = cell.Objects;
             int count = content.Count;
             for (int i = 0; i < count; ++i)
             {
@@ -42,7 +44,7 @@ namespace Match3
         public static (ICellObject, TCellObjectComponent) FindObjectWithComponent<TCellObjectComponent>(this ICell cell)
             where TCellObjectComponent : class, ICellObjectComponent
         {
-            var content = cell.Content;
+            var content = cell.Objects;
             int count = content.Count;
             for (int i = 0; i < count; ++i)
             {

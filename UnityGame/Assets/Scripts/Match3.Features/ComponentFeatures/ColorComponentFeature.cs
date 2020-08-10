@@ -32,11 +32,11 @@ namespace Match3.Features
             int ColorId { get; }
         }
         
-        private class Color : IColor
+        private class Color : CellObjectComponent, IColor
         {
             public int ColorId { get; }
         
-            public string TypeId => Name;
+            public override string TypeId => Name;
             
             public Color(IColorData data)
             {

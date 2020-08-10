@@ -2,8 +2,7 @@
 {
     public interface ITrajectory
     {
-        FixedVector2 Offset { get; set; }
-        FixedVector2 Velocity { get; set; }
+        FixedVector2 Position { get; set; }
 
         bool Update(Fixed timeSeconds);
     }

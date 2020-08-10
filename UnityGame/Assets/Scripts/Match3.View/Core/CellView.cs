@@ -12,7 +12,7 @@ namespace Match3.View
             _cell = cell;
             _rules = cell.Game.Rules;
 
-            foreach (var obj in cell.Content)
+            foreach (var obj in cell.Objects)
             {
                 OnContentAdded(obj);
             }
