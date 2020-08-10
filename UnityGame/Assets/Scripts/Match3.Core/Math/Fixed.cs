@@ -14,6 +14,11 @@ namespace Match3.Math
             _value = value;
         }
 
+        public Fixed(int nominator, int denominator)
+        {
+            _value = (nominator * Base) / denominator;
+        }
+
         public override string ToString()
         {
             return ToFloat().ToString();

@@ -9,7 +9,7 @@ namespace Match3.Features
 
         public string FeatureId { get; }
         
-        protected abstract TData ConstructData();
+        protected abstract TData ConstructState(IGame game);
 
         protected abstract void Process(IGame game, TData state, int dTimeMs);
 
@@ -28,7 +28,7 @@ namespace Match3.Features
 
         public object InitState(IGame game)
         {
-            return ConstructData();
+            return ConstructState(game);
         }
 
         public void Tick(IGame game, object state, int dTimeMs)

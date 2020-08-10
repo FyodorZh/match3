@@ -20,5 +20,9 @@ namespace Match3.View
         {
             Destroy(this);
         }
+
+        protected virtual void Update()
+        {
+        }
     }
 }

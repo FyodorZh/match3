@@ -1,4 +1,5 @@
 ﻿using System;
+using Match3.Math;
 
 namespace Match3.Features
 {
@@ -24,7 +25,7 @@ namespace Match3.Features
         
         public interface IMove : ICellObjectComponent
         {
-            bool Locked { get; set; }
+            ITrajectory Trajectory { get; set; }
         }
 
         public interface IMoveData : ICellObjectComponentData
@@ -39,7 +40,7 @@ namespace Match3.Features
             {
             }
 
-            public bool Locked { get; set; }
+            public ITrajectory Trajectory { get; set; }
         }
     }
 }

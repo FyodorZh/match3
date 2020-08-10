@@ -19,7 +19,7 @@ namespace Match3.Features
         {
         }
 
-        protected override State ConstructData()
+        protected override State ConstructState(IGame game)
         {
             return new State();
         }

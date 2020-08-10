@@ -9,7 +9,7 @@
         {
         }
         
-        protected sealed override object ConstructData()
+        protected sealed override object ConstructState(IGame game)
         {
             return null;
         }
