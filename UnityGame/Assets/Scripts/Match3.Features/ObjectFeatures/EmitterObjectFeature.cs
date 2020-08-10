@@ -5,7 +5,7 @@ namespace Match3.Features
 {
     public class EmitterObjectFeature : IObjectFeature
     {
-        public static readonly string Name = "Emitter";
+        public const string Name = "Emitter";
 
         public static readonly EmitterObjectFeature Instance = new EmitterObjectFeature();
 

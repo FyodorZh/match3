@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Match3.Core
 {
@@ -14,8 +13,9 @@ namespace Match3.Core
         public GridId Id { get; }
         public int Width { get; }
         public int Height { get; }
-        
-        public Grid(Game game, GridId id, ICellGridData data)
+        public IGame Game => _game;
+
+        public Grid(Game game, GridId id, IGridData data)
         {
             int width = data.Width;
             int height = data.Height;

@@ -14,6 +14,8 @@ namespace Match3.Core
         
         public CellPosition Position { get; }
         
+        public IGame Game => _owner.Game;
+
         public IGrid Owner => _owner;
         
         public bool IsActive

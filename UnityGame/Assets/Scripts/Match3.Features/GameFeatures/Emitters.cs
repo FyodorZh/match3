@@ -8,12 +8,12 @@ namespace Match3.Features
         
         public override IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; } = new IObjectFeature[]
         {
-
+            EmitterObjectFeature.Instance, 
         };
         
         public override IEnumerable<IComponentFeature> DependsOnComponentFeatures { get; } = new IComponentFeature[]
         {
-            
+            EmitterComponentFeature.Instance, 
         };
         
         public Emitters() 

@@ -7,7 +7,7 @@ namespace Match3.Core
         private readonly Game _game;
         private readonly List<Grid> _grids = new List<Grid>();
 
-        public Board(Game game, IEnumerable<ICellGridData> gridData)
+        public Board(Game game, IEnumerable<IGridData> gridData)
         {
             _game = game;
             foreach (var data in gridData)

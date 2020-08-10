@@ -4,7 +4,7 @@ namespace Match3.Features
 {
     public class ColorComponentFeature : ICellObjectComponentFeature
     {
-        public static readonly string Name = "Color"; 
+        public const string Name = "Color"; 
         public static readonly ColorComponentFeature Instance = new ColorComponentFeature();
 
         public string FeatureId => Name;

@@ -2,7 +2,7 @@
 
 namespace Match3
 {
-    public interface ICellGridData
+    public interface IGridData
     {
         int Width { get; }
         int Height { get; }

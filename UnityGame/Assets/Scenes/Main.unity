@@ -150,6 +150,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa4e97981c7e09f4090b05f8a3fe0304, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _emitterPrefab: {fileID: -2741436698417748446, guid: ac7264d1dc136ae4c8529bd491c8f7be,
+    type: 3}
 --- !u!4 &126628244
 Transform:
   m_ObjectHideFlags: 0
@@ -285,6 +287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d5ec2b9ed847a2479a38be5cb69b08f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _viewFactory: {fileID: 126628243}
   _gameView: {fileID: 6587211213142430148, guid: e713cd3d7e4eefa42b15d7667dd2f2bf,
     type: 3}
 --- !u!4 &893116738

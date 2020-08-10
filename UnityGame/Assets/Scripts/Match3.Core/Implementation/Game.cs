@@ -24,7 +24,7 @@ namespace Match3
         public IGameRules Rules { get; }
         public IBoard Board => _board;
 
-        public Game(IGameRules rules, IEnumerable<ICellGridData> cellGridData)
+        public Game(IGameRules rules, IEnumerable<IGridData> cellGridData)
         {
             Rules = rules;
             _board = new Board(this, cellGridData);

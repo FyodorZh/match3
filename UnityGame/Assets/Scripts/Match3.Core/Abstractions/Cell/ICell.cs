@@ -7,6 +7,7 @@ namespace Match3
         CellId Id { get; }
         CellPosition Position { get; }
         
+        IGame Game { get; }
         IGrid Owner { get; }
         
         bool IsActive { get; set; }

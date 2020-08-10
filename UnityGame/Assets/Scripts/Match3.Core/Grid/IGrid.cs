@@ -8,6 +8,8 @@ namespace Match3
         int Width { get; }
         int Height { get; }
         
+        IGame Game { get; }
+        
         IEnumerable<ICell> AllCells { get; }
 
         ICell GetCell(CellPosition position);

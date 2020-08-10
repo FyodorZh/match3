@@ -5,7 +5,7 @@ namespace Match3.Features
 {
     public class ChipObjectFeature : IObjectFeature
     {
-        public static readonly string Name = "Chip";
+        public const string Name = "Chip";
         public static readonly ChipObjectFeature Instance = new ChipObjectFeature();
         
         public string FeatureId => Name;

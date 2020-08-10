@@ -1,27 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Match3;
+﻿using System;
+using Match3.Features;
 using UnityEngine;
 
 namespace Match3.View
 {
     public class ViewFactory : MonoBehaviour, IViewFactory
     {
-        // Start is called before the first frame update
-        void Start()
+        public CellObjectView _emitterPrefab;
+        
+        public IObjectView Construct(IObject logicObject)
         {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
-        public IObjectView Construct(IObject logicObject, IGameContext context)
-        {
-            throw new System.NotImplementedException();
+            switch (logicObject.TypeId.Id)
+            {
+                case EmitterObjectFeature.Name:
+                    return Instantiate(_emitterPrefab);
+                default:
+                    throw new Exception();
+            }
         }
     }
 }
