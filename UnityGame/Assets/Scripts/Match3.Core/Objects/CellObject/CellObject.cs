@@ -24,15 +24,13 @@ namespace Match3
             // DO NOTHING
         }
 
-        public TCellObjectComponent TryGetFeature<TCellObjectComponent>() 
-            where TCellObjectComponent : ICellObjectComponent
+        public TCellObjectComponent TryGetComponent<TCellObjectComponent>(string componentTypeId) 
+            where TCellObjectComponent : class, ICellObjectComponent
         {
             foreach (var component in _components)
             {
-                if (component is TCellObjectComponent typedComponent)
-                {
-                    return typedComponent;
-                }
+                if (component.TypeId == componentTypeId)
+                    return component as TCellObjectComponent;
             }
 
             return default;

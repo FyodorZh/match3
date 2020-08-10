@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Match3.Core
 {
@@ -9,6 +10,8 @@ namespace Match3.Core
         private readonly List<ICellObject> _content = new List<ICellObject>();
 
         private bool _isActive;
+
+        public event Action<ICellObject> ContentAdded;
         
         public CellId Id { get; }
         
@@ -61,6 +64,7 @@ namespace Match3.Core
             }
             
             _content.Add(cellObject);
+            ContentAdded?.Invoke(cellObject);
             return true;
         }
     }

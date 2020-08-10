@@ -4,7 +4,7 @@ namespace Match3.Features
 {
     public class EmitterComponentFeature : ICellObjectComponentFeature
     {
-        private static readonly string Name = "Emitter";
+        public static readonly string Name = "Emitter";
         public static readonly EmitterComponentFeature Instance = new EmitterComponentFeature();
         
         public string FeatureId => Name;
@@ -17,12 +17,22 @@ namespace Match3.Features
             return Construct(typedData);
         }
 
-        public ICellObjectComponent Construct(IEmitterData data)
+        public IEmitter Construct(IEmitterData data)
         {
             return new Emitter(data);
         }
-
-        public class Emitter : ICellObjectComponent
+        
+        public interface IEmitter : ICellObjectComponent
+        {
+            ICellObject Emit(IGame game);
+        }
+     
+        public interface IEmitterData : ICellObjectComponentData
+        {
+            ICellObjectData ObjectToEmit { get; }
+        }
+        
+        private class Emitter : IEmitter
         {
             public string TypeId => Name;
 
@@ -37,11 +47,6 @@ namespace Match3.Features
             {
                 return game.Rules.ObjectFactory.Construct<ICellObject>(_objectDataToEmit, game);
             }
-        }
-        
-        public interface IEmitterData : ICellObjectComponentData
-        {
-            ICellObjectData ObjectToEmit { get; }
         }
     }
 }

@@ -17,27 +17,31 @@ namespace Match3.Features
             return Construct(colorData);
         }
 
-        public ICellObjectComponent Construct(IColorData data)
+        public IColor Construct(IColorData data)
         {
             return new Color(data);
         }
-
-        public class Color : ICellObjectComponent
-        {
-            public int ColorId { get; set; }
         
-            //public Colored
+        public interface IColor : ICellObjectComponent
+        {
+            int ColorId { get; }
+        }
+
+        public interface IColorData : ICellObjectComponentData
+        {
+            int ColorId { get; }
+        }
+        
+        private class Color : IColor
+        {
+            public int ColorId { get; }
+        
             public string TypeId => Name;
             
             public Color(IColorData data)
             {
                 ColorId = data.ColorId;
             }
-        }
-
-        public interface IColorData : ICellObjectComponentData
-        {
-            int ColorId { get; }
         }
     }
 }

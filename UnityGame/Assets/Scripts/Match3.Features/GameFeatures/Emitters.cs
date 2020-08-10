@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
+using Match3.Core;
 
 namespace Match3.Features
 {
     public sealed class Emitters : StatelessGameFeature
     {
-        public static readonly Emitters Instance = new Emitters();
-        
         public override IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; } = new IObjectFeature[]
         {
             EmitterObjectFeature.Instance, 
@@ -23,25 +22,25 @@ namespace Match3.Features
         
         protected override void Process(IGame game, int dTimeMs)
         {
-            return;
-            // foreach (var grid in game.Board.Grids)
-            // {
-            //     foreach (var cell in grid.AllCells)
-            //     {
-            //         foreach (var obj in cell.Content)
-            //         {
-            //             var emitter = obj.TryGetFeature<Emitter>();
-            //             if (emitter != null)
-            //             {
-            //                 if (cell.Content.Count == 1)
-            //                 {
-            //                     // TODO EMIT
-            //                 }
-            //                 break;
-            //             }
-            //         }
-            //     }
-            // }
+            foreach (var grid in game.Board.Grids)
+            {
+                foreach (var cell in grid.AllCells)
+                {
+                    if (cell.Content.Count == 1)
+                    {
+                        var obj = cell.Content[0];
+                        var emitter = obj.TryGetComponent<EmitterComponentFeature.IEmitter>(EmitterComponentFeature.Name);
+                        if (emitter != null)
+                        {
+                            var newObject = emitter.Emit(game);
+                            if (!cell.TryAddContent(newObject))
+                            {
+                                Debug.Assert(false);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

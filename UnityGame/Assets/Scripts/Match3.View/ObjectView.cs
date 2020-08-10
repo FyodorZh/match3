@@ -6,9 +6,14 @@ namespace Match3.View
     {
         public IObject Owner { get; private set; }
 
+        protected virtual void OnInit()
+        {
+        }
+
         public void SetOwner(IObject owner)
         {
             Owner = owner;
+            OnInit();
         }
         
         public void Release()

@@ -5,19 +5,26 @@ namespace Match3.View
     public class CellView : MonoBehaviour
     {
         private ICell _cell;
+        private IGameRules _rules;
 
         public void Setup(ICell cell)
         {
             _cell = cell;
+            _rules = cell.Game.Rules;
 
-            IGame game = cell.Game;
-            IGameRules rules = game.Rules;
             foreach (var obj in cell.Content)
             {
-                var view = rules.ViewFactory.Construct<CellObjectView>(obj);
-                view.transform.SetParent(transform, false);
-                view.name = obj.TypeId.Id;
+                OnContentAdded(obj);
             }
+
+            _cell.ContentAdded += OnContentAdded;
+        }
+
+        private void OnContentAdded(ICellObject obj)
+        {
+            var view = _rules.ViewFactory.Construct<CellObjectView>(obj);
+            view.transform.SetParent(transform, false);
+            view.name = obj.TypeId.Id;
         }
     }
 }

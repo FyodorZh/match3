@@ -4,8 +4,6 @@ namespace Match3.Features
 {
     public sealed class Gravity : GameFeature<Gravity.State>
     {
-        public static readonly Gravity Instance = new Gravity();
-
         public override IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; } = new IObjectFeature[]
         {
 

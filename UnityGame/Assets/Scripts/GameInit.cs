@@ -12,8 +12,12 @@ public class GameInit : MonoBehaviour
     private void Awake()
     {  
         IGameRules rules = new GameRules(_viewFactory);
+        
+        rules.RegisterObjectFeature(ChipObjectFeature.Instance);
+        
         rules.RegisterGameFeature(new Emitters());
         rules.RegisterGameFeature(new Gravity());
+        
         rules.BakeAllFeatures();
         
         IGridData[] data = new IGridData[]
@@ -55,10 +59,28 @@ public class GameInit : MonoBehaviour
             for (int y = 0; y < 10; ++y)
                 if ((x + y) % 2 == 0)
                     data.ActivateCell(x, y);
-        
+
         for (int x = 0; x < 10; ++x)
-            data.AddCellContent(x, 9, new EmitterData(null));
-        
+        {
+            data.AddCellContent(x, 9, new EmitterData(new ChipData(x)));
+        }
+
         return data;
+    }
+
+    private class ChipData : ChipObjectFeature.IChipData, ColorComponentFeature.IColorData
+    {
+        public string TypeId { get; }
+        public ColorComponentFeature.IColorData Color => this;
+        public int BodyType => 0;
+
+        public int ColorId { get; }
+
+        public ChipData(int colorId)
+        {
+            TypeId = ChipObjectFeature.Name;
+            ColorId = colorId % 5;
+        }
+
     }
 }

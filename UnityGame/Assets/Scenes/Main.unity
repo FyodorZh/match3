@@ -152,6 +152,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _emitterPrefab: {fileID: -2741436698417748446, guid: ac7264d1dc136ae4c8529bd491c8f7be,
     type: 3}
+  _chipPrefab: {fileID: -2030517449637485682, guid: 4a6cb24826553434ebb073f3ad6e55e6,
+    type: 3}
 --- !u!4 &126628244
 Transform:
   m_ObjectHideFlags: 0
