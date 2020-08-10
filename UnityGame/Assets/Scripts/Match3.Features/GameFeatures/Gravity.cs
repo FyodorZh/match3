@@ -1,11 +1,20 @@
-﻿namespace Match3.Features
+﻿using System.Collections.Generic;
+
+namespace Match3.Features
 {
     public sealed class Gravity : GameFeature<Gravity.State>
     {
-        public class State
+        public static readonly Gravity Instance = new Gravity();
+
+        public override IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; } = new IObjectFeature[]
+        {
+
+        };
+        
+        public override IEnumerable<IComponentFeature> DependsOnComponentFeatures { get; } = new IComponentFeature[]
         {
             
-        }
+        };
 
         public Gravity() 
             : base("Gravity")
@@ -19,6 +28,11 @@
 
         protected override void Process(IGame game, State state, int dTimeMs)
         {
+        }
+        
+        public class State
+        {
+            
         }
     }
 }

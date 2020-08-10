@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Match3.Features
 {
     public abstract class GameFeature<TData> : IGameFeature
@@ -5,7 +7,7 @@ namespace Match3.Features
     {
         protected IGameRules Rules { get; private set; }
 
-        public string Name { get; }
+        public string FeatureId { get; }
         
         protected abstract TData ConstructData();
 
@@ -13,9 +15,12 @@ namespace Match3.Features
 
         protected GameFeature(string featureName)
         {
-            Name = featureName;
+            FeatureId = featureName;
         }
-        
+
+        public abstract IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; }
+        public abstract IEnumerable<IComponentFeature> DependsOnComponentFeatures { get; }
+
         public void Register(IGameRules rules)
         {
             Rules = rules;

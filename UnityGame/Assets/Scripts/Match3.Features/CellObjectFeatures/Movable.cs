@@ -1,7 +1,7 @@
 ﻿namespace Match3.Features
 {
-    public class Movable : ICellObjectFeature
+    public class Movable : ICellObjectComponent
     {
-        
+        public string TypeId => "Movable";
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Match3
 {
-    public struct ObjectTypeId : IEquatable<ObjectTypeId>
+    public readonly struct ObjectTypeId : IEquatable<ObjectTypeId>
     {
         public readonly string Id;
 

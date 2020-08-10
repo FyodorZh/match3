@@ -2,6 +2,6 @@
 {
     public interface IFeature
     {
-        string Name { get; }
+        string FeatureId { get; }
     }
 }

@@ -5,18 +5,18 @@ namespace Match3
 {
     public class CellObject : Match3.Object, ICellObject
     {
-        private readonly ICellObjectFeature[] _features;
+        private readonly ICellObjectComponent[] _components;
         
-        public CellObject(ObjectTypeId type, IEnumerable<ICellObjectFeature> features) 
-            : this(type, features.ToArray())
+        public CellObject(ObjectTypeId type, IEnumerable<ICellObjectComponent> components) 
+            : this(type, components.ToArray())
         {
-            _features = features.ToArray();
+            _components = components.ToArray();
         }
         
-        public CellObject(ObjectTypeId type, params ICellObjectFeature[] features) 
+        public CellObject(ObjectTypeId type, params ICellObjectComponent[] components) 
             : base(type)
         {
-            _features = features.ToArray();
+            _components = components.ToArray();
         }
 
         protected override void OnRelease()
@@ -24,14 +24,14 @@ namespace Match3
             // DO NOTHING
         }
 
-        public TCellObjectFeature TryGetFeature<TCellObjectFeature>() 
-            where TCellObjectFeature : ICellObjectFeature
+        public TCellObjectComponent TryGetFeature<TCellObjectComponent>() 
+            where TCellObjectComponent : ICellObjectComponent
         {
-            foreach (var feature in _features)
+            foreach (var component in _components)
             {
-                if (feature is TCellObjectFeature typedFeature)
+                if (component is TCellObjectComponent typedComponent)
                 {
-                    return typedFeature;
+                    return typedComponent;
                 }
             }
 
