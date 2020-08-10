@@ -7,10 +7,10 @@ namespace Match3
     {
         private readonly struct FeatureInfo
         {
-            public readonly IFeature Feature;
+            public readonly IGameFeature Feature;
             public readonly object State;
 
-            public FeatureInfo(IFeature feature, object state)
+            public FeatureInfo(IGameFeature feature, object state)
             {
                 Feature = feature;
                 State = state;
@@ -28,12 +28,12 @@ namespace Match3
         {
             Rules = rules;
             _board = new Board(this, cellGridData);
-            _features = new FeatureInfo[rules.Features.Count];
+            _features = new FeatureInfo[rules.GameFeatures.Count];
         }
 
         public void Start()
         {
-            var features = Rules.Features;
+            var features = Rules.GameFeatures;
             var count = features.Count;
             
             for (int i = 0; i < count; ++i)

@@ -1,28 +1,43 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Match3.Core
 {
     public class GameRules : IGameRules
     {
-        private readonly IFeature[] _features;
+        private readonly List<IGameFeature> _gameFeatures;
+        private readonly List<IObjectFeature> _objectFeatures;
         
         public IObjectFactory ObjectFactory { get; }
         
         public IViewFactory ViewFactory { get; }
         
-        public IReadOnlyList<IFeature> Features => _features;
+        public IReadOnlyList<IGameFeature> GameFeatures => _gameFeatures;
 
-        public GameRules(IObjectFactory objectFactory, IViewFactory viewFactory, IEnumerable<IFeature> features)
+        public GameRules(IObjectFactory objectFactory, IViewFactory viewFactory)
         {
             ObjectFactory = objectFactory;
             ViewFactory = viewFactory;
+        }
+        
+        public void RegisterGameFeature(IGameFeature feature)
+        {
+            _gameFeatures.Add(feature);
+            feature.Register(this);
+        }
+
+        public void RegisterObjectFeature(IObjectFeature feature)
+        {
+            _objectFeatures.Add(feature);
+        }
+
+        public void RegisterComponentFeature(IComponentFeature feature)
+        {
             
-            _features = features.ToArray();
-            foreach (var feature in _features)
-            {
-                feature.Register(this);
-            }
+        }
+
+        public void BakeAllFeatures()
+        {
+            // TODO
         }
     }
 }

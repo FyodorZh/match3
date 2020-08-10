@@ -1,8 +1,13 @@
 ﻿namespace Match3.Features
 {
-    public abstract class StatelessFeature : Feature<object>
+    public abstract class StatelessGameFeature : GameFeature<object>
     {
         protected abstract void Process(IGame game, int dTimeMs);
+        
+        protected StatelessGameFeature(string featureName) 
+            : base(featureName)
+        {
+        }
         
         protected sealed override object ConstructData()
         {

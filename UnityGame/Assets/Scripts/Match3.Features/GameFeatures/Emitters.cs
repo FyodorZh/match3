@@ -1,9 +1,15 @@
 ﻿namespace Match3.Features
 {
-    public class Emitters : StatelessFeature
+    public sealed class Emitters : StatelessGameFeature
     {
+        public Emitters() 
+            : base("Emitters")
+        {
+        }
+        
         protected override void Process(IGame game, int dTimeMs)
         {
+            return;
             foreach (var grid in game.Board.Grids)
             {
                 foreach (var cell in grid.AllCells)

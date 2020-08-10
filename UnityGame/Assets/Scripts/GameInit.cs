@@ -1,5 +1,6 @@
 ﻿using Match3;
 using Match3.Core;
+using Match3.Features;
 using Match3.View;
 using UnityEngine;
 using ViewFactory = Match3.ViewFactory;
@@ -13,7 +14,11 @@ public class GameInit : MonoBehaviour
     {
         ObjectFactory objectFactory = new ObjectFactory();
 
-        IGameRules rules = new GameRules(objectFactory, _viewFactory, new IFeature[] {});
+        IGameRules rules = new GameRules(objectFactory, _viewFactory);
+        rules.RegisterGameFeature(new Emitters());
+        rules.RegisterGameFeature(new Gravity());
+        rules.BakeAllFeatures();
+        
         ICellGridData[] data = new ICellGridData[]
         {
             ConstructGridData(), 

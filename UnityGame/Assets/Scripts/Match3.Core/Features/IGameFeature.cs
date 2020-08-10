@@ -1,6 +1,6 @@
 ﻿namespace Match3
 {
-    public interface IFeature
+    public interface IGameFeature : IFeature
     {
         void Register(IGameRules rules);
         
