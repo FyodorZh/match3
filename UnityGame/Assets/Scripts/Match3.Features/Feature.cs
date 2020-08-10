@@ -9,12 +9,12 @@ namespace Match3.Features
 
         protected abstract void Process(IGame game, TData state, int dTimeMs);
         
-        public void Init(IGameRules rules)
+        public void Register(IGameRules rules)
         {
             Rules = rules;
         }
 
-        public object Start(IGame game)
+        public object InitState(IGame game)
         {
             return ConstructData();
         }

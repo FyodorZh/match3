@@ -38,7 +38,7 @@ namespace Match3
             
             for (int i = 0; i < count; ++i)
             {
-                var state = features[i].Start(this);
+                var state = features[i].InitState(this);
                 _features[i] = new FeatureInfo(features[i], state);
             }
         }

@@ -21,7 +21,7 @@ namespace Match3.Core
             _features = features.ToArray();
             foreach (var feature in _features)
             {
-                feature.Init(this);
+                feature.Register(this);
             }
         }
     }
