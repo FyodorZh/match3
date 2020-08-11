@@ -23,7 +23,9 @@ namespace Match3
 
         private readonly FeatureInfo[] _features;
         
-        private readonly List<ActionInfo> _pendingActions = new List<ActionInfo>();
+        private readonly List<ActionInfo> _externalActions = new List<ActionInfo>();
+
+        private readonly ActionStream _internalActions = new ActionStream();
         
         internal Board Board => _board;
         
@@ -53,15 +55,15 @@ namespace Match3
         {
             Fixed fixedTimeSeconds = new Fixed(dTimeMs, 1000);
 
-            foreach (var action in _pendingActions)
+            foreach (var action in _externalActions)
             {
                 action.ActionFeature.Process(this, action.Cells);
             }
-            _pendingActions.Clear();
+            _externalActions.Clear();
             
             _board.Tick(fixedTimeSeconds);
-            
-            
+            _internalActions.Process();
+
             foreach (var featureInfo in _features)
             {
                 featureInfo.Feature.Tick(this, featureInfo.State, dTimeMs);
@@ -80,9 +82,14 @@ namespace Match3
             if (feature == null)
                 throw new InvalidOperationException();
             
-            _pendingActions.Add(new ActionInfo(feature, cells));
+            _externalActions.Add(new ActionInfo(feature, cells));
         }
-        
+
+        public void InternalInvoke(Action action)
+        {
+            _internalActions.Put(action);
+        }
+
         private readonly struct ActionInfo
         {
             public readonly IActionFeature ActionFeature;

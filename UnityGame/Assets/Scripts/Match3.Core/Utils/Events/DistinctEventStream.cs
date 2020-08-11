@@ -3,22 +3,22 @@ using System.Collections.Generic;
 
 namespace Match3.Core
 {
-    public interface IEventStream<out TEvent>
-    {
-        event Action<TEvent> Event;
-    }
-    
-    public class EventStream<TEvent> : IEventStream<TEvent>
+    public class DistinctEventStream<TEvent> : IEventCollector<TEvent>
         where TEvent : IEquatable<TEvent>
     {
-        public event Action<TEvent> Event;
-        
         private readonly List<TEvent>[] _events = { new List<TEvent>(), new List<TEvent>() };
         private readonly HashSet<TEvent> _eventSet = new HashSet<TEvent>();
 
+        private readonly Action<TEvent> _onEvent;
+
         private int _listId = 0;
 
-        public void FireEvent(TEvent evt)
+        public DistinctEventStream(Action<TEvent> onEvent)
+        {
+            _onEvent = onEvent;
+        }
+
+        public void Put(TEvent evt)
         {
             if (_eventSet.Add(evt))
             {
@@ -33,7 +33,7 @@ namespace Match3.Core
             
             foreach (var evt in _events[1 - _listId])
             {
-                Event?.Invoke(evt);
+                _onEvent.Invoke(evt);
             }
             _events[1 - _listId].Clear();
         }

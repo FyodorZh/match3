@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Match3.Core;
 using Match3.Math;
 
@@ -98,15 +97,11 @@ namespace Match3.Features
         {
             
         }
-
-        private class FallTrajectory : ITrajectory
+     
+        private class FallTrajectory : Trajectory
         {
             private Fixed _height;
             private Fixed _velocity;
-
-            private bool _finished;
-
-            public event Action Finished;
             
             public FallTrajectory(Fixed height, Fixed velocity)
             {
@@ -116,14 +111,8 @@ namespace Match3.Features
                 Velocity = new FixedVector2(0, velocity);
             }
             
-            public FixedVector2 Position { get; private set; }
-            public FixedVector2 Velocity { get; private set; }
-
-            public bool Update(Fixed timeSeconds)
+            protected override bool OnUpdate(Fixed timeSeconds)
             {
-                if (_finished)
-                    return false;
-                
                 _velocity += timeSeconds * new Fixed(15, 100); // 0.1
                 _height -= _velocity;
                 
@@ -131,23 +120,12 @@ namespace Match3.Features
                 if (_height <= 0)
                 {
                     Position = new FixedVector2(0, 0);
-                    Finish();
                     return false;
                 }
                 else
                 {
                     Position = new FixedVector2(0, _height);
                     return true;
-                }
-            }
-
-            public void Finish()
-            {
-                if (!_finished)
-                {
-                    _finished = true;
-                    Finished?.Invoke();
-                    Finished = null;
                 }
             }
         }

@@ -42,22 +42,5 @@ namespace Match3
 
             return null;
         }
-
-        public static (ICellObject, TCellObjectComponent) FindObjectWithComponent<TCellObjectComponent>(this ICell cell)
-            where TCellObjectComponent : class, ICellObjectComponent
-        {
-            var content = cell.Objects;
-            int count = content.Count;
-            for (int i = 0; i < count; ++i)
-            {
-                var component = content[i].TryGetComponent<TCellObjectComponent>();
-                if (component != null)
-                {
-                    return (content[i], component);
-                }
-            }
-
-            return (null, null);
-        }
     }
 }

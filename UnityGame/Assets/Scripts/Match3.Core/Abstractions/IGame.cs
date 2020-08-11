@@ -1,3 +1,5 @@
+using System;
+
 namespace Match3
 {
     public interface IGame : IGameContext
@@ -7,5 +9,7 @@ namespace Match3
         void Tick(int dTimeMs);
 
         void Action(string actionFeatureName, params CellId[] cells);
+
+        void InternalInvoke(Action action);
     }
 }

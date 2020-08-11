@@ -1,4 +1,5 @@
-﻿using Match3;
+﻿using System;
+using Match3;
 using Match3.Features;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -62,7 +63,32 @@ public class CellTouch : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
         if (_inDrag)
         {
             var delta = eventData.position - _dragStartPos;
-            Debug.Log("End" + delta);    
+
+            delta = delta.normalized;
+
+            int dx = 0;
+            int dy = 0;
+
+            if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+            {
+                dx = delta.x > 0 ? 1 : -1;
+            }
+            else
+            {
+                dy = delta.y > 0 ? 1 : -1;
+            }
+            
+            var pos1 = _cell.Position;
+            var pos2 = new CellPosition(pos1.X + dx, pos1.Y + dy);
+
+            var cell2 = _cell.Owner.GetCell(pos2);
+
+            if (cell2 != null)
+            {
+                _cell.Game.Action(SwapActionFeature.Name, _cell.Id, cell2.Id);
+            }
+            
+            Debug.Log("End " + delta + "   " + dx + ";" + dy);    
         }
     }
 }

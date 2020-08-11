@@ -29,8 +29,7 @@ namespace Match3.Features
 
             CellId id = cells[0];
 
-            var grid = game.Board.GetGrid(id.GridId);
-            var cell = grid.GetCell(id.Position);
+            var cell = game.Board.GetCell(id);
             
             var mass = cell.FindComponent<MassComponentFeature.IMass>();
             mass?.Owner.Release();

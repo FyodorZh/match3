@@ -31,7 +31,7 @@ namespace Match3.Features
             FixedVector2 Offset { get; }
             FixedVector2 Velocity { get; }
 
-            void SetTrajectory(ITrajectory trajectory);
+            void SetTrajectory(ITrajectory trajectory, Action onFinish = null);
         }
 
         public interface IMoveData : ICellObjectComponentData
@@ -41,6 +41,7 @@ namespace Match3.Features
         private class Move : CellObjectComponent, IMove
         {
             private ITrajectory _trajectory;
+            private Action _onFinish;
             
             public override string TypeId => Name;
 
@@ -52,17 +53,26 @@ namespace Match3.Features
             
             public FixedVector2 Offset { get; private set; }
             public FixedVector2 Velocity { get; private set; }
-            public void SetTrajectory(ITrajectory trajectory)
+            
+            public void SetTrajectory(ITrajectory trajectory, Action onFinish)
             {
                 Debug.Assert(_trajectory == null);
                 Offset = trajectory.Position;
                 Velocity = trajectory.Velocity;
                 _trajectory = trajectory;
+                _onFinish = onFinish;
             }
 
             protected override void OnRelease()
             {
-                _trajectory?.Finish();
+                if (_trajectory != null)
+                {
+                    //_onFinish?.Invoke(); // ???
+                }
+
+                _trajectory = null;
+                _onFinish = null;
+                
                 base.OnRelease();
             }
 
@@ -75,7 +85,21 @@ namespace Match3.Features
                     Velocity = _trajectory.Velocity;
                     if (!inProgress)
                     {
+                        if (_onFinish != null)
+                        {
+                            var onFinish = _onFinish;
+                            Owner.Owner.Game.InternalInvoke(() =>
+                            {
+                                onFinish();
+                                Offset = new FixedVector2(0, 0);
+                            });
+                        }
+                        else
+                        {
+                            Offset = new FixedVector2(0, 0); 
+                        }
                         _trajectory = null;
+                        _onFinish = null;
                     }
                 }
                 else

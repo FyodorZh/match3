@@ -22,6 +22,7 @@ public class GameInit : MonoBehaviour
         rules.RegisterGameFeature(new Gravity());
         
         rules.RegisterActionFeature(new KillActionFeature());
+        rules.RegisterActionFeature(new SwapActionFeature());
 
         rules.BakeAllFeatures();
         
@@ -37,12 +38,6 @@ public class GameInit : MonoBehaviour
         gameView.name = "Match3";
         gameView.transform.position = Vector3.zero;
         gameView.Setup(game);
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
     }
 
     class EmitterData : EmitterObjectFeature.IEmitterObjectData, EmitterComponentFeature.IEmitterData

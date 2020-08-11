@@ -11,4 +11,13 @@ namespace Match3
         IEnumerable<IGrid> Grids { get; }
         IGrid GetGrid(GridId id);
     }
+    
+    public static class IBoard_Ext
+    {
+        public static ICell GetCell(this IBoard board, CellId cellId)
+        {
+            IGrid grid = board.GetGrid(cellId.GridId);
+            return grid?.GetCell(cellId.Position);
+        }
+    }
 }
