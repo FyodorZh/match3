@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Match3.Math;
 
 namespace Match3.Core
 {
@@ -9,18 +10,21 @@ namespace Match3.Core
         private readonly Border[,] _borders;
 
         private readonly Cell[] _cellList;
+
+        public Board Board { get; }
         
         public GridId Id { get; }
         public int Width { get; }
         public int Height { get; }
         public IGame Game => _game;
 
-        public Grid(Game game, GridId id, IGridData data)
+        public Grid(Game game, Board board, GridId id, IGridData data)
         {
             int width = data.Width;
             int height = data.Height;
 
             _game = game;
+            Board = board;
             _cells = new Cell[width, height];
             _borders = new Border[width + 1, height + 1];
             Width = width;
@@ -48,7 +52,7 @@ namespace Match3.Core
                         {
                             var obj = objectFactory.Construct<ICellObject>(objectData, _game);
                             Debug.Assert(obj != null);
-                            if (!cell.AddObject(obj))
+                            if (!cell.CanAttach(obj) || !cell.Attach(obj))
                             {
                                 Debug.Assert(false);
                             }
@@ -68,6 +72,14 @@ namespace Match3.Core
                         _borders[x, y].SetContent(objectFactory.Construct<IBorderObject>(borderData, _game));
                     }
                 }
+            }
+        }
+        
+        public void Tick(Fixed dTimeSeconds)
+        {
+            foreach (var cell in _cellList)
+            {
+                cell.Tick(dTimeSeconds);
             }
         }
 

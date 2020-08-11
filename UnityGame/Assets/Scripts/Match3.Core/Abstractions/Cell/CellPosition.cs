@@ -16,6 +16,11 @@ namespace Match3
             Y = y;
         }
 
+        public override string ToString()
+        {
+            return $"[{X}, {Y}]";
+        }
+
         public bool Equals(CellPosition other)
         {
             return X == other.X && Y == other.Y;

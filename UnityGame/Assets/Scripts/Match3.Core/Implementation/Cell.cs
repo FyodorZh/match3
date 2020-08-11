@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Match3.Math;
 
 namespace Match3.Core
 {
@@ -13,7 +13,7 @@ namespace Match3.Core
         private bool _isActive;
         private ICell _cellImplementation;
 
-        public event Action<ICellObject> ContentAdded;
+        private readonly List<object> _lockObjects = new List<object>();
         
         public CellId Id { get; }
         
@@ -35,82 +35,73 @@ namespace Match3.Core
             } 
         }
 
+        public bool IsLocked => _lockObjects.Count > 0;
+        public void AddLock(object lockObject)
+        {
+            Debug.Assert(!_lockObjects.Contains(lockObject));
+            _lockObjects.Add(lockObject);
+        }
+
+        public void RemoveLock(object lockObject)
+        {
+            _lockObjects.Remove(lockObject);
+        }
+
         public Cell(Grid owner, CellPosition position)
         {
             _owner = owner;
             Id = new CellId(owner.Id, position);
             Position = position;
         }
-
-        public IReadOnlyList<ICellObject> Objects => _objects;
-
-        public bool AddObject(ICellObject cellObject)
+        
+        public void Tick(Fixed dTimeSeconds)
         {
-            if (AttachObject(cellObject))
-            {
-                ContentAdded?.Invoke(cellObject);
-                return true;
-            }
-            else
-            {
-                Debug.Assert(false);
-                cellObject.Release();
-                return false;
-            }
-        }
-
-        public bool AttachObject(ICellObject cellObject)
-        {
-            if (cellObject == null)
-            {
-                throw new ArgumentNullException(nameof(cellObject));
-            }
-            
-            Debug.Assert(IsActive);
-            
-            string typeId = cellObject.TypeId.Id;
             foreach (var obj in _objects)
             {
-                if (typeId == obj.TypeId.Id)
-                {
-                    return false;
-                }
+                obj.Tick(dTimeSeconds);
             }
-            _objects.Add(cellObject);
-            cellObject.SetOwner(this);
-            return true;
         }
 
-        public bool DeattachObject(ICellObject cellObject)
+        public IReadOnlyList<ICellObject> Objects => _objects;
+        
+        public bool CanAttach(ICellObject cellObject)
+        {
+            return IsActive && !IsLocked;
+        }
+
+        public bool Attach(ICellObject cellObject)
         {
             if (cellObject == null)
-            {
-                throw new ArgumentNullException(nameof(cellObject));
-            }
+                throw new ArgumentNullException();
             
-            string typeId = cellObject.TypeId.Id;
-            int count = _objects.Count;
-            for (int i = 0; i < count; ++i)
+            if (ReferenceEquals(cellObject.Owner, this))
+                return true;
+
+            if (!CanAttach(cellObject))
+                return false;
+            
+            if (cellObject.Owner != null)
             {
-                if (typeId == _objects[i].TypeId.Id)
+                var owner = (Cell)cellObject.Owner;
+                
+                int count = owner._objects.Count;
+                for (int i = 0; i < count; ++i)
                 {
-                    _objects.RemoveAt(i);
-                    cellObject.SetOwner(null);
-                    return true;
+                    if (ReferenceEquals(cellObject, owner._objects[i]))
+                    {
+                        owner._objects.RemoveAt(i);
+                        break;
+                    }
                 }
             }
 
-            return false;
-        }
-
-        public void RemoveObject(ICellObject cellObject)
-        {
-            if (DeattachObject(cellObject))
-            {
-                cellObject.Release();
-                return;
-            }
-            Debug.Assert(false);
+            var prevOwner = cellObject.Owner;
+            
+            _objects.Add(cellObject);
+            cellObject.SetOwner(this);
+            
+            _owner.Board.OnCellObjectOwnerChange(cellObject, prevOwner);
+            return true;
         }
     }
 }

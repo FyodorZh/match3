@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Match3.Math;
 
 namespace Match3.Core
 {
@@ -7,12 +9,22 @@ namespace Match3.Core
         private readonly Game _game;
         private readonly List<Grid> _grids = new List<Grid>();
 
+        public event Action<ICellObject, ICell> CellObjectOwnerChange;
+        
         public Board(Game game, IEnumerable<IGridData> gridData)
         {
             _game = game;
             foreach (var data in gridData)
             {
-                _grids.Add(new Grid(game, new GridId(_grids.Count + 1), data));
+                _grids.Add(new Grid(game, this, new GridId(_grids.Count + 1), data));
+            }
+        }
+
+        public void Tick(Fixed dTimeSeconds)
+        {
+            foreach (var grid in _grids)
+            {
+                grid.Tick(dTimeSeconds);
             }
         }
 
@@ -24,6 +36,11 @@ namespace Match3.Core
             if (pos >= 0 && pos < _grids.Count)
                 return _grids[pos];
             return null;
+        }
+
+        public void OnCellObjectOwnerChange(ICellObject cellObject, ICell oldOwner)
+        {
+            CellObjectOwnerChange?.Invoke(cellObject, oldOwner);
         }
     }
 }

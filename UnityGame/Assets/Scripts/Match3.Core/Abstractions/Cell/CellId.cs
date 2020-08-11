@@ -12,6 +12,12 @@ namespace Match3
             GridId = gridId;
             Position = position;
         }
+        
+        
+        public override string ToString()
+        {
+            return $"[{GridId.Id}: {Position.X}, {Position.Y}]";
+        }
 
         public bool Equals(CellId other)
         {

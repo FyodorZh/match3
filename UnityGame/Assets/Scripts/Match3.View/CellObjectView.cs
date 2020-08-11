@@ -13,11 +13,6 @@ namespace Match3.View
             base.OnInit();
             _cellObject = (ICellObject)Owner;
             _moveComponent = _cellObject.TryGetComponent<MoveComponentFeature.IMove>();
-
-            _cellObject.OwnerChanged += (newOwner) =>
-            {
-
-            };
         }
 
         protected override void Update()
@@ -25,7 +20,9 @@ namespace Match3.View
             base.Update();
             if (_moveComponent != null)
             {
-                transform.localPosition = new Vector3(_moveComponent.Offset.X.ToFloat(), 0, _moveComponent.Offset.Y.ToFloat());
+                var pos = new Vector3(_moveComponent.Offset.X.ToFloat(), 0, _moveComponent.Offset.Y.ToFloat());
+                //Debug.Log("OFFSET " + _cellObject.Owner.Position + "   " + pos);
+                transform.localPosition = pos;
             }
         }
     }

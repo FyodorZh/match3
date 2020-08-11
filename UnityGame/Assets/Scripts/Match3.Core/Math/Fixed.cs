@@ -4,7 +4,7 @@ namespace Match3.Math
 {
     public readonly struct Fixed : IEquatable<Fixed>
     {
-        private const long Base = 1000;
+        private const long Base = 1000000;
         private const double InvBase = 1.0 / Base;
 
         private readonly long _value;
@@ -57,6 +57,26 @@ namespace Match3.Math
         public static bool operator !=(Fixed left, Fixed right)
         {
             return !left.Equals(right);
+        }
+        
+        public static bool operator <(Fixed left, Fixed right)
+        {
+            return left._value < right._value;
+        }
+        
+        public static bool operator >(Fixed left, Fixed right)
+        {
+            return left._value > right._value;
+        }
+        
+        public static bool operator <=(Fixed left, Fixed right)
+        {
+            return left._value <= right._value;
+        }
+        
+        public static bool operator >=(Fixed left, Fixed right)
+        {
+            return left._value >= right._value;
         }
 
         public static implicit operator Fixed(int value)

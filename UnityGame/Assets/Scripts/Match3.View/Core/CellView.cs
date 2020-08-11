@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Match3.View
 {
@@ -6,7 +7,15 @@ namespace Match3.View
     {
         private ICell _cell;
         private IGameRules _rules;
+        
+        private readonly List<CellObjectView> _objects = new List<CellObjectView>();
 
+        public GameObject _cellViewActive;
+        public GameObject _cellViewInactive;
+        
+        public GameObject _cellViewLock;
+        
+        
         public void Setup(ICell cell)
         {
             _cell = cell;
@@ -14,17 +23,45 @@ namespace Match3.View
 
             foreach (var obj in cell.Objects)
             {
-                OnContentAdded(obj);
+                Add(obj);
             }
-
-            _cell.ContentAdded += OnContentAdded;
+            
+            _cellViewActive.SetActive(_cell.IsActive);
+            _cellViewInactive.SetActive(!_cell.IsActive);
         }
 
-        private void OnContentAdded(ICellObject obj)
+        private void Update()
+        {
+            _cellViewLock.SetActive(_cell.IsLocked);
+        }
+
+        public void Add(ICellObject obj)
         {
             var view = _rules.ViewFactory.Construct<CellObjectView>(obj);
-            view.transform.SetParent(transform, false);
             view.name = obj.TypeId.Id;
+
+            Attach(view, false);
+        }
+        
+        public void Attach(CellObjectView cellObjectView, bool preserveWorldPosition)
+        {
+            _objects.Add(cellObjectView);
+            cellObjectView.transform.SetParent(transform, preserveWorldPosition);
+        }
+
+        public CellObjectView DeAttach(ICellObject cellObject)
+        {
+            int count = _objects.Count;
+            for (int i = 0; i < count; ++i)
+            {
+                if (cellObject == _objects[i].Owner)
+                {
+                    CellObjectView view = _objects[i];
+                    return view;
+                }
+            }
+
+            return null;
         }
     }
 }

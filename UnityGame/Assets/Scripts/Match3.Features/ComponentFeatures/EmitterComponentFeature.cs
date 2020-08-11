@@ -45,8 +45,13 @@ namespace Match3.Features
 
             public ICellObject Emit(IGame game)
             {
+                // if (flag >= 2)
+                //     return null;
+                // flag += 1;
                 return game.Rules.ObjectFactory.Construct<ICellObject>(_objectDataToEmit, game);
             }
+
+            //private int flag;
         }
     }
 }

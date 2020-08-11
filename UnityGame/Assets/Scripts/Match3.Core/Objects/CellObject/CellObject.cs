@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Match3.Math;
 
 namespace Match3
 {
@@ -11,28 +12,32 @@ namespace Match3
         public CellObject(ObjectTypeId type, IEnumerable<ICellObjectComponent> components) 
             : this(type, components.ToArray())
         {
-            _components = components.ToArray();
         }
         
         public CellObject(ObjectTypeId type, params ICellObjectComponent[] components) 
             : base(type)
         {
-            _components = components.ToArray();
+            _components = components;
+            foreach (var component in _components)
+            {
+                component.SetOwner(this);
+            }
         }
 
         protected override void OnRelease()
         {
             SetOwner(null);
+            foreach (var component in _components)
+            {
+                component.Release();
+            }
         }
-
-        public event Action<ICell> OwnerChanged;
         
         public ICell Owner { get; private set; }
 
         public void SetOwner(ICell owner)
         {
             Owner = owner;
-            OwnerChanged?.Invoke(owner);
         }
 
         public TCellObjectComponent TryGetComponent<TCellObjectComponent>() 
@@ -47,6 +52,14 @@ namespace Match3
             }
 
             return default;
+        }
+        
+        public void Tick(Fixed dTimeSeconds)
+        {
+            foreach (var component in _components)
+            {
+                component.Tick(dTimeSeconds);
+            }
         }
     }
 }

@@ -3,6 +3,7 @@
     public interface IObjectComponent
     {
         string TypeId { get; }
-        //IObject Owner { get; }
+        bool IsReleased { get; }
+        void Release();
     }
 }

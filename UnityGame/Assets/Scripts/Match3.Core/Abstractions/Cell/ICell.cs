@@ -1,25 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Match3
 {
     public interface ICell
     {
-        event Action<ICellObject> ContentAdded;
-        
         CellId Id { get; }
         CellPosition Position { get; }
         
         IGame Game { get; }
         IGrid Owner { get; }
         
-        bool IsActive { get; set; }
+        bool IsActive { get; }
+        
+        bool IsLocked { get; }
+        void AddLock(object lockObject);
+        void RemoveLock(object lockObject);
         
         IReadOnlyList<ICellObject> Objects { get; }
 
-        bool AddObject(ICellObject cellObject);
-        bool AttachObject(ICellObject cellObject);
-        bool DeattachObject(ICellObject cellObject);
+        bool CanAttach(ICellObject cellObject);
+        bool Attach(ICellObject cellObject);
     }
 
     public static class ICell_Ext

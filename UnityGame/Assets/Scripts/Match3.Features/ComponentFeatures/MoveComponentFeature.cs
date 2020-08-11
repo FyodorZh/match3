@@ -32,8 +32,6 @@ namespace Match3.Features
             FixedVector2 Velocity { get; }
 
             void SetTrajectory(ITrajectory trajectory);
-
-            void Update(Fixed dTimeSeconds);
         }
 
         public interface IMoveData : ICellObjectComponentData
@@ -57,16 +55,32 @@ namespace Match3.Features
             public void SetTrajectory(ITrajectory trajectory)
             {
                 Debug.Assert(_trajectory == null);
+                Offset = trajectory.Position;
+                Velocity = trajectory.Velocity;
                 _trajectory = trajectory;
             }
 
-            public void Update(Fixed dTimeSeconds)
+            protected override void OnRelease()
+            {
+                _trajectory?.Finish();
+                base.OnRelease();
+            }
+
+            public override void Tick(Fixed dTimeSeconds)
             {
                 if (_trajectory != null)
                 {
-                    _trajectory.Update(dTimeSeconds);
-                    Velocity = _trajectory.Position - Offset;
+                    bool inProgress = _trajectory.Update(dTimeSeconds);
                     Offset = _trajectory.Position;
+                    Velocity = _trajectory.Velocity;
+                    if (!inProgress)
+                    {
+                        _trajectory = null;
+                    }
+                }
+                else
+                {
+                    Velocity = new FixedVector2(0, 0);
                 }
             }
         }

@@ -32,10 +32,16 @@ namespace Match3.Features
                         var emitter = obj.TryGetComponent<EmitterComponentFeature.IEmitter>();
                         if (emitter != null)
                         {
-                            var newObject = emitter.Emit(game);
-                            if (!cell.AddObject(newObject))
+                            if (cell.IsActive && !cell.IsLocked)
                             {
-                                Debug.Assert(false);
+                                var newObject = emitter.Emit(game);
+                                if (newObject != null)
+                                {
+                                    if (!cell.CanAttach(newObject) || !cell.Attach(newObject))
+                                    {
+                                        Debug.Assert(false);
+                                    }
+                                }
                             }
                         }
                     }

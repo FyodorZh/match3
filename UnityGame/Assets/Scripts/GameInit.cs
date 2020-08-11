@@ -3,6 +3,7 @@ using Match3.Core;
 using Match3.Features;
 using Match3.View;
 using UnityEngine;
+using Debug = Match3.Core.Debug;
 
 public class GameInit : MonoBehaviour
 {
@@ -10,7 +11,9 @@ public class GameInit : MonoBehaviour
     public GameView _gameView;
 
     private void Awake()
-    {  
+    {
+        Debug.OnLog += s => UnityEngine.Debug.Log(s); 
+        
         IGameRules rules = new GameRules(_viewFactory);
         
         rules.RegisterObjectFeature(ChipObjectFeature.Instance);
@@ -86,8 +89,14 @@ public class GameInit : MonoBehaviour
             public string TypeId => MassComponentFeature.Name;
         }
 
+        private class MoveData : MoveComponentFeature.IMoveData
+        {
+            public string TypeId => MoveComponentFeature.Name;
+        }
+
         public string TypeId => ChipObjectFeature.Name;
         public ColorComponentFeature.IColorData Color { get; }
+        public MoveComponentFeature.IMoveData Movement { get; }
 
         public MassComponentFeature.IMassData Mass { get; }
         
@@ -99,6 +108,7 @@ public class GameInit : MonoBehaviour
         {
             Color = new ColorData(colorId % 5);
             Mass = new MassData();
+            Movement = new MoveData();
         }
     }
 }

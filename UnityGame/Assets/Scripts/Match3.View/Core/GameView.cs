@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Match3;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Match3.View
 {

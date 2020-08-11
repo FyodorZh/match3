@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Match3.Core;
+using Match3.Math;
 
 namespace Match3
 {
-    public class Game : IGame, IGameContext
+    public class Game : IGame
     {
         private readonly struct FeatureInfo
         {
@@ -21,8 +22,10 @@ namespace Match3
 
         private readonly FeatureInfo[] _features;
         
+        internal Board Board => _board;
+        
         public IGameRules Rules { get; }
-        public IBoard Board => _board;
+        IBoard IGame.Board => _board;
 
         public Game(IGameRules rules, IEnumerable<IGridData> cellGridData)
         {
@@ -45,6 +48,8 @@ namespace Match3
 
         public void Tick(int dTimeMs)
         {
+            Fixed fixedTimeSeconds = new Fixed(dTimeMs, 1000);
+            _board.Tick(fixedTimeSeconds);
             foreach (var featureInfo in _features)
             {
                 featureInfo.Feature.Tick(this, featureInfo.State, dTimeMs);
