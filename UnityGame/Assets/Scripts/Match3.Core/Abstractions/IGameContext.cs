@@ -2,6 +2,6 @@
 {
     public interface IGameContext
     {
-        
+        int GetRandom();
     }
 }

@@ -60,8 +60,8 @@ namespace Match3.Features
                     var o1 = move1.Owner;
                     var o2 = move2.Owner;
                     
-                    move1.SetTrajectory(t1, () => cell2.Attach(o1));
-                    move2.SetTrajectory(t2, () => cell1.Attach(o2));
+                    move1.SetTrajectory(t1, null, () => cell2.Attach(o1));
+                    move2.SetTrajectory(t2, null, () => cell1.Attach(o2));
                 }
             }
         }

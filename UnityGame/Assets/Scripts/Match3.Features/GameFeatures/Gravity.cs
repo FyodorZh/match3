@@ -73,10 +73,9 @@ namespace Match3.Features
                                         Fixed initialSpeed = moveComponent.Velocity.Y;
                                         var trajectory = new FallTrajectory(distanceToFall, initialSpeed);
                                         
-                                        //cell.AddLock(objectToFall);
-                                        //trajectory.Finished += () => cell.RemoveLock(objectToFall);
-                                            
-                                        moveComponent.SetTrajectory(trajectory);
+                                        freeCell.AddLock(objectToFall);
+                                        
+                                        moveComponent.SetTrajectory(trajectory, null, () => freeCell.RemoveLock(objectToFall));
 
                                         //Debug.Log("FALL " + cell.Position + " -> " + freeCell.Position);
                                     }

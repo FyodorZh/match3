@@ -20,6 +20,7 @@ public class GameInit : MonoBehaviour
         
         rules.RegisterGameFeature(new Emitters());
         rules.RegisterGameFeature(new Gravity());
+        rules.RegisterGameFeature(new Match());
         
         rules.RegisterActionFeature(new KillActionFeature());
         rules.RegisterActionFeature(new SwapActionFeature());
@@ -44,12 +45,12 @@ public class GameInit : MonoBehaviour
     {
         public string TypeId => EmitterObjectFeature.Name;
         public EmitterComponentFeature.IEmitterData Data => this;
-        public ICellObjectData ObjectToEmit { get; }
+        public ICellObjectData[] ObjectsToEmit { get; }
         public int TimeOutMs { get; }
 
-        public EmitterData(ICellObjectData objectToEmit, int timeOutMs)
+        public EmitterData(ICellObjectData[] objectsToEmit, int timeOutMs)
         {
-            ObjectToEmit = objectToEmit;
+            ObjectsToEmit = objectsToEmit;
             TimeOutMs = timeOutMs;
         }
     }
@@ -59,12 +60,18 @@ public class GameInit : MonoBehaviour
         var data = new TrivialGridData(10, 10);
         for (int x = 0; x < 10; ++x)
             for (int y = 0; y < 10; ++y)
-                //if ((x + y) % 2 == 0)
+                if (!(x == 4 && y == 4 || x == 5 && y == 5 || x == 6 && y == 6))
+                {
                     data.ActivateCell(x, y);
+                }
 
+        ChipData[] chips = new ChipData[5];
+        for (int i = 0; i < chips.Length; ++i)
+            chips[i] = new ChipData(i);
+        
         for (int x = 0; x < 10; ++x)
         {
-            data.AddCellContent(x, 9, new EmitterData(new ChipData(x), 125));
+            data.AddCellContent(x, 9, new EmitterData(chips, 400));
         }
 
         return data;
@@ -105,7 +112,7 @@ public class GameInit : MonoBehaviour
 
         public ChipData(int colorId)
         {
-            Color = new ColorData(colorId % 5);
+            Color = new ColorData(colorId);
             Mass = new MassData();
             Movement = new MoveData();
         }

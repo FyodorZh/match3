@@ -14,6 +14,7 @@ namespace Match3.Features
         public IEnumerable<IComponentFeature> DependsOn { get; } = new IComponentFeature[]
         {
             EmitterComponentFeature.Instance,
+            MoveComponentFeature.Instance, 
         };
 
         public IObject Construct(IObjectData data)

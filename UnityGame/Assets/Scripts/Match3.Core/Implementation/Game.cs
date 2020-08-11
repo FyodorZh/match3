@@ -27,6 +27,8 @@ namespace Match3
 
         private readonly ActionStream _internalActions = new ActionStream();
         
+        private readonly Random _random = new Random(777);
+        
         internal Board Board => _board;
         
         public IGameRules Rules { get; }
@@ -60,6 +62,7 @@ namespace Match3
                 action.ActionFeature.Process(this, action.Cells);
             }
             _externalActions.Clear();
+            _internalActions.Process();
             
             _board.Tick(fixedTimeSeconds);
             _internalActions.Process();
@@ -68,6 +71,7 @@ namespace Match3
             {
                 featureInfo.Feature.Tick(this, featureInfo.State, dTimeMs);
             }
+            _internalActions.Process();
         }
 
         public void Action(string actionFeatureName, params CellId[] cells)
@@ -100,6 +104,11 @@ namespace Match3
                 ActionFeature = actionFeature;
                 Cells = cells;
             }
+        }
+
+        public int GetRandom()
+        {
+            return _random.Next();
         }
     }
 }

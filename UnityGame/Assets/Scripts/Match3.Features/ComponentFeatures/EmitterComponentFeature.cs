@@ -30,7 +30,7 @@ namespace Match3.Features
      
         public interface IEmitterData : ICellObjectComponentData
         {
-            ICellObjectData ObjectToEmit { get; }
+            ICellObjectData[] ObjectsToEmit { get; }
             int TimeOutMs { get; }
         }
         
@@ -38,14 +38,16 @@ namespace Match3.Features
         {
             public override string TypeId => Name;
 
-            private readonly ICellObjectData _objectDataToEmit;
+            private readonly ICellObjectData[] _objectDataToEmit;
             private readonly Fixed _timeout;
 
             private Fixed _timeTillSpawn;
 
+            private MoveComponentFeature.IMove _prevObjectMoveComponent;
+
             public Emitter(IEmitterData data)
             {
-                _objectDataToEmit = data.ObjectToEmit;
+                _objectDataToEmit = data.ObjectsToEmit;
                 _timeout = new Fixed(data.TimeOutMs, 1000);
             }
 
@@ -57,7 +59,16 @@ namespace Match3.Features
                 }
 
                 _timeTillSpawn = _timeout;
-                return game.Rules.ObjectFactory.Construct<ICellObject>(_objectDataToEmit, game);
+                ICellObject obj = game.Rules.ObjectFactory.Construct<ICellObject>(_objectDataToEmit[game.GetRandom() % _objectDataToEmit.Length], game);
+
+                var move = obj.TryGetComponent<MoveComponentFeature.IMove>();
+                if (_prevObjectMoveComponent != null && !_prevObjectMoveComponent.IsReleased)
+                {
+                    move.Velocity = _prevObjectMoveComponent.Velocity;
+                }
+                _prevObjectMoveComponent = move;
+
+                return obj;
             }
 
             public override void Tick(Fixed dTimeSeconds)
@@ -68,6 +79,12 @@ namespace Match3.Features
                 {
                     _timeTillSpawn = 0;
                 }
+            }
+
+            protected override void OnRelease()
+            {
+                base.OnRelease();
+                _prevObjectMoveComponent = null;
             }
         }
     }
