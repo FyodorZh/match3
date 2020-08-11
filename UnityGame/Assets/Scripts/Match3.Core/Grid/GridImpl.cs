@@ -25,6 +25,7 @@ namespace Match3.Core
 
             _game = game;
             Board = board;
+            Id = id;    
             _cells = new Cell[width, height];
             _borders = new Border[width + 1, height + 1];
             Width = width;

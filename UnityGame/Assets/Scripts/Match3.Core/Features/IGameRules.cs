@@ -8,7 +8,10 @@ namespace Match3
         IViewFactory ViewFactory { get; }
         IReadOnlyList<IGameFeature> GameFeatures { get; }
 
+        IActionFeature FindActionFeature(string featureName);
+
         void RegisterGameFeature(IGameFeature feature);
+        void RegisterActionFeature(IActionFeature feature);
         void RegisterObjectFeature(IObjectFeature feature);
         void RegisterComponentFeature(IComponentFeature feature);
         

@@ -21,6 +21,8 @@ public class GameInit : MonoBehaviour
         rules.RegisterGameFeature(new Emitters());
         rules.RegisterGameFeature(new Gravity());
         
+        rules.RegisterActionFeature(new KillActionFeature());
+
         rules.BakeAllFeatures();
         
         IGridData[] data = new IGridData[]

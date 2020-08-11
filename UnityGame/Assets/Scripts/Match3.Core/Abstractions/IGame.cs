@@ -5,5 +5,7 @@ namespace Match3
         IGameRules Rules { get; }
         IBoard Board { get; }
         void Tick(int dTimeMs);
+
+        void Action(string actionFeatureName, params CellId[] cells);
     }
 }

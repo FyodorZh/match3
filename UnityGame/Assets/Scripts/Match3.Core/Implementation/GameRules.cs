@@ -9,6 +9,8 @@ namespace Match3.Core
 
         private readonly Dictionary<string, IGameFeature> _gameFeatures = 
             new Dictionary<string, IGameFeature>();
+        private readonly Dictionary<string, IActionFeature> _actionFeature = 
+            new Dictionary<string, IActionFeature>();
         private readonly Dictionary<string, IObjectFeature> _objectFeatures = 
             new Dictionary<string, IObjectFeature>();
         private readonly Dictionary<string, IComponentFeature> _componentFeatures = 
@@ -21,12 +23,18 @@ namespace Match3.Core
         public IViewFactory ViewFactory { get; }
         
         public IReadOnlyList<IGameFeature> GameFeatures => _gameFeatureList;
-
+        
         public GameRules(IViewFactory viewFactory)
         {
             ViewFactory = viewFactory;
         }
-        
+
+        public IActionFeature FindActionFeature(string featureName)
+        {
+            _actionFeature.TryGetValue(featureName, out var result);
+            return result;
+        }
+
         public void RegisterGameFeature(IGameFeature feature)
         {
             if (feature == null)
@@ -37,6 +45,26 @@ namespace Match3.Core
             _gameFeatures.Add(feature.FeatureId, feature);
             _gameFeatureList.Add(feature);
 
+            foreach (var objectFeature in feature.DependsOnObjectFeatures)
+            {
+                RegisterObjectFeature(objectFeature);
+            }
+
+            foreach (var componentFeature in feature.DependsOnComponentFeatures)
+            {
+                RegisterComponentFeature(componentFeature);
+            }
+        }
+
+        public void RegisterActionFeature(IActionFeature feature)
+        {
+            if (feature == null)
+                throw new ArgumentNullException(nameof(feature));
+            if (_actionFeature.ContainsKey(feature.FeatureId))
+                throw new InvalidOperationException();
+            
+            _actionFeature.Add(feature.FeatureId, feature);
+  
             foreach (var objectFeature in feature.DependsOnObjectFeatures)
             {
                 RegisterObjectFeature(objectFeature);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Match3.Core;
 using Match3.Math;
 
@@ -21,6 +22,8 @@ namespace Match3
         private readonly Board _board;
 
         private readonly FeatureInfo[] _features;
+        
+        private readonly List<ActionInfo> _pendingActions = new List<ActionInfo>();
         
         internal Board Board => _board;
         
@@ -49,10 +52,46 @@ namespace Match3
         public void Tick(int dTimeMs)
         {
             Fixed fixedTimeSeconds = new Fixed(dTimeMs, 1000);
+
+            foreach (var action in _pendingActions)
+            {
+                action.ActionFeature.Process(this, action.Cells);
+            }
+            _pendingActions.Clear();
+            
             _board.Tick(fixedTimeSeconds);
+            
+            
             foreach (var featureInfo in _features)
             {
                 featureInfo.Feature.Tick(this, featureInfo.State, dTimeMs);
+            }
+        }
+
+        public void Action(string actionFeatureName, params CellId[] cells)
+        {
+            if (actionFeatureName == null)
+                throw new ArgumentException(nameof(actionFeatureName));
+
+            if (cells == null)
+                throw new ArgumentException(nameof(cells));
+            
+            var feature = Rules.FindActionFeature(actionFeatureName);
+            if (feature == null)
+                throw new InvalidOperationException();
+            
+            _pendingActions.Add(new ActionInfo(feature, cells));
+        }
+        
+        private readonly struct ActionInfo
+        {
+            public readonly IActionFeature ActionFeature;
+            public readonly CellId[] Cells;
+
+            public ActionInfo(IActionFeature actionFeature, CellId[] cells)
+            {
+                ActionFeature = actionFeature;
+                Cells = cells;
             }
         }
     }
