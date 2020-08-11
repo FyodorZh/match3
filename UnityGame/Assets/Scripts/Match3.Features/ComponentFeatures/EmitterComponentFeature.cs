@@ -1,4 +1,5 @@
 ﻿using System;
+using Match3.Math;
 
 namespace Match3.Features
 {
@@ -30,6 +31,7 @@ namespace Match3.Features
         public interface IEmitterData : ICellObjectComponentData
         {
             ICellObjectData ObjectToEmit { get; }
+            int TimeOutMs { get; }
         }
         
         private class Emitter : CellObjectComponent, IEmitter
@@ -37,21 +39,36 @@ namespace Match3.Features
             public override string TypeId => Name;
 
             private readonly ICellObjectData _objectDataToEmit;
+            private readonly Fixed _timeout;
+
+            private Fixed _timeTillSpawn;
 
             public Emitter(IEmitterData data)
             {
                 _objectDataToEmit = data.ObjectToEmit;
+                _timeout = new Fixed(data.TimeOutMs, 1000);
             }
 
             public ICellObject Emit(IGame game)
             {
-                // if (flag >= 2)
-                //     return null;
-                // flag += 1;
+                if (_timeTillSpawn > 0)
+                {
+                    return null;
+                }
+
+                _timeTillSpawn = _timeout;
                 return game.Rules.ObjectFactory.Construct<ICellObject>(_objectDataToEmit, game);
             }
 
-            //private int flag;
+            public override void Tick(Fixed dTimeSeconds)
+            {
+                base.Tick(dTimeSeconds);
+                _timeTillSpawn -= dTimeSeconds;
+                if (_timeTillSpawn < 0)
+                {
+                    _timeTillSpawn = 0;
+                }
+            }
         }
     }
 }

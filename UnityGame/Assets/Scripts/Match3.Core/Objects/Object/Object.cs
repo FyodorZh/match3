@@ -17,8 +17,8 @@
         {
             if (!_isReleased)
             {
-                OnRelease();
                 _isReleased = true;
+                OnRelease();
             }
         }
     }

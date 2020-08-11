@@ -48,10 +48,12 @@ public class GameInit : MonoBehaviour
         public string TypeId => EmitterObjectFeature.Name;
         public EmitterComponentFeature.IEmitterData Data => this;
         public ICellObjectData ObjectToEmit { get; }
+        public int TimeOutMs { get; }
 
-        public EmitterData(ICellObjectData objectToEmit)
+        public EmitterData(ICellObjectData objectToEmit, int timeOutMs)
         {
             ObjectToEmit = objectToEmit;
+            TimeOutMs = timeOutMs;
         }
     }
     
@@ -60,12 +62,12 @@ public class GameInit : MonoBehaviour
         var data = new TrivialGridData(10, 10);
         for (int x = 0; x < 10; ++x)
             for (int y = 0; y < 10; ++y)
-                if ((x + y) % 2 == 0)
+                //if ((x + y) % 2 == 0)
                     data.ActivateCell(x, y);
 
         for (int x = 0; x < 10; ++x)
         {
-            data.AddCellContent(x, 9, new EmitterData(new ChipData(x)));
+            data.AddCellContent(x, 9, new EmitterData(new ChipData(x), 125));
         }
 
         return data;

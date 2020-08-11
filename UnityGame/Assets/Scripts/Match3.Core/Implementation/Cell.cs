@@ -103,5 +103,30 @@ namespace Match3.Core
             _owner.Board.OnCellObjectOwnerChange(cellObject, prevOwner);
             return true;
         }
+        
+        public bool Destroy(ICellObject cellObject)
+        {
+            if (cellObject == null)
+                throw new ArgumentNullException();
+
+            if (!ReferenceEquals(cellObject.Owner, this))
+                throw new InvalidOperationException();
+
+            int count = _objects.Count;
+            for (int i = 0; i < count; ++i)
+            {
+                if (ReferenceEquals(cellObject, _objects[i]))
+                {
+                    _owner.Board.OnCellObjectDestroy(cellObject);
+                    
+                    _objects.RemoveAt(i);
+                    cellObject.SetOwner(null);
+                    cellObject.Release();
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

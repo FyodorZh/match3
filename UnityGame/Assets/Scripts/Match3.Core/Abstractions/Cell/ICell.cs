@@ -20,6 +20,8 @@ namespace Match3
 
         bool CanAttach(ICellObject cellObject);
         bool Attach(ICellObject cellObject);
+
+        bool Destroy(ICellObject cellObject);
     }
 
     public static class ICell_Ext

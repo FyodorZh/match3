@@ -10,6 +10,7 @@ namespace Match3.Core
         private readonly List<Grid> _grids = new List<Grid>();
 
         public event Action<ICellObject, ICell> CellObjectOwnerChange;
+        public event Action<ICellObject> CellObjectDestroy;
         
         public Board(Game game, IEnumerable<IGridData> gridData)
         {
@@ -41,6 +42,11 @@ namespace Match3.Core
         public void OnCellObjectOwnerChange(ICellObject cellObject, ICell oldOwner)
         {
             CellObjectOwnerChange?.Invoke(cellObject, oldOwner);
+        }
+        
+        public void OnCellObjectDestroy(ICellObject cellObject)
+        {
+            CellObjectDestroy?.Invoke(cellObject);
         }
     }
 }

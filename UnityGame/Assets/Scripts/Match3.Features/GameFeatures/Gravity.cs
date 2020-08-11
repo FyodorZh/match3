@@ -46,24 +46,22 @@ namespace Match3.Features
                                 ICell freeCell = null;
                                 while (k >= 0)
                                 {
-                                    freeCell = grid.GetCell(new CellPosition(x, k));
-                                    if (freeCell.IsActive)
+                                    ICell cellToCheck = grid.GetCell(new CellPosition(x, k));
+                                    if (cellToCheck.IsActive)
                                     {
-                                        if (freeCell.IsLocked)
+                                        if (cellToCheck.IsLocked)
                                         {
-                                            freeCell = null;
                                             break;
                                         }
                                         
-                                        var freeMass = freeCell.FindComponent<MassComponentFeature.IMass>();
+                                        var freeMass = cellToCheck.FindComponent<MassComponentFeature.IMass>();
                                         if (freeMass != null)
                                         {
-                                            freeCell = null;
+                                            break;
                                         }
 
-                                        break;
+                                        freeCell = cellToCheck;
                                     }
-                                    freeCell = null;
                                     --k;
                                 }
 
@@ -81,7 +79,7 @@ namespace Match3.Features
                                             
                                         moveComponent.SetTrajectory(trajectory);
 
-                                        Debug.Log("FALL " + cell.Position + " -> " + freeCell.Position);
+                                        //Debug.Log("FALL " + cell.Position + " -> " + freeCell.Position);
                                     }
                                     else
                                     {
@@ -126,7 +124,7 @@ namespace Match3.Features
                 if (_finished)
                     return false;
                 
-                _velocity += timeSeconds * new Fixed(1, 100); // 0.1
+                _velocity += timeSeconds * new Fixed(15, 100); // 0.1
                 _height -= _velocity;
                 
                 Velocity = new FixedVector2(0, _velocity);

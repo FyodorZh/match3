@@ -14,6 +14,8 @@ namespace Match3.View
         public GameObject _cellViewInactive;
         
         public GameObject _cellViewLock;
+
+        public CellTouch _cellTouch;
         
         
         public void Setup(ICell cell)
@@ -28,6 +30,8 @@ namespace Match3.View
             
             _cellViewActive.SetActive(_cell.IsActive);
             _cellViewInactive.SetActive(!_cell.IsActive);
+            
+            _cellTouch.Setup(cell);
         }
 
         private void Update()
@@ -57,11 +61,27 @@ namespace Match3.View
                 if (cellObject == _objects[i].Owner)
                 {
                     CellObjectView view = _objects[i];
+                    _objects.RemoveAt(i);
                     return view;
                 }
             }
 
             return null;
+        }
+        
+        public void Destroy(ICellObject cellObject)
+        {
+            int count = _objects.Count;
+            for (int i = 0; i < count; ++i)
+            {
+                if (cellObject == _objects[i].Owner)
+                {
+                    CellObjectView view = _objects[i];
+                    _objects.RemoveAt(i);
+                    Destroy(view.gameObject);
+                    return;
+                }
+            }
         }
     }
 }

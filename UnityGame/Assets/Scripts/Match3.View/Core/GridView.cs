@@ -42,5 +42,11 @@ namespace Match3.View
             CellView oldCell = _cells[oldPosition.X, oldPosition.Y];
             return oldCell.DeAttach(cellObject);
         }
+        
+        public void Destroy(ICellObject cellObject)
+        {
+            CellView cellView = _cells[cellObject.Owner.Position.X, cellObject.Owner.Position.Y];
+            cellView.Destroy(cellObject);
+        }
     }
 }

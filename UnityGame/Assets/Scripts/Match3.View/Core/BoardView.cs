@@ -22,13 +22,14 @@ namespace Match3.View
             }
 
             board.CellObjectOwnerChange += OnCellObjectOwnerChange;
+            board.CellObjectDestroy += OnCellObjectDestroy;
         }
         
         private void OnCellObjectOwnerChange(ICellObject cellObject, ICell oldOwner)
         {
-            string to = (cellObject.Owner != null) ? cellObject.Owner.Id.ToString() : "null";
-            string from = oldOwner != null ? oldOwner.Id.ToString() : "null";
-            Debug.Log($"Move {from} -> {to}");
+            //string to = (cellObject.Owner != null) ? cellObject.Owner.Id.ToString() : "null";
+            //string from = oldOwner != null ? oldOwner.Id.ToString() : "null";
+            //Debug.Log($"Move {from} -> {to}");
 
             var fromGrid = oldOwner != null ? _grids[oldOwner.Id.GridId] : null;
             var toGrid = _grids[cellObject.Owner.Id.GridId];
@@ -42,6 +43,12 @@ namespace Match3.View
             {
                 toGrid.Add(cellObject, cellObject.Owner.Position);
             }
+        }
+
+        private void OnCellObjectDestroy(ICellObject cellObject)
+        {
+            var grid = _grids[cellObject.Owner.Id.GridId];
+            grid.Destroy(cellObject);
         }
     }
 }

@@ -26,6 +26,8 @@ namespace Match3
 
         protected override void OnRelease()
         {
+            Owner?.Destroy(this);
+
             SetOwner(null);
             foreach (var component in _components)
             {
