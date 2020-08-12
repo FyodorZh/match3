@@ -10,6 +10,15 @@
             X = x;
             Y = y;
         }
+
+        public FixedVector2 Normalized
+        {
+            get
+            {
+                Fixed len = FixedMath.Sqrt(X * X + Y * Y);
+                return new FixedVector2(X / len, Y / len);
+            }
+        }
         
         public static FixedVector2 operator +(FixedVector2 v)
         {

@@ -4,7 +4,7 @@ namespace Match3.Math
 {
     public readonly struct Fixed : IEquatable<Fixed>
     {
-        private const long Base = 1000000;
+        public const long Base = 1000_000;
         private const double InvBase = 1.0 / Base;
 
         private readonly long _value;
@@ -27,6 +27,16 @@ namespace Match3.Math
         public float ToFloat()
         {
             return (float)(_value * InvBase);
+        }
+
+        public long GetRaw()
+        {
+            return _value;
+        }
+
+        public static Fixed FromRaw(long raw)
+        {
+            return new Fixed(raw);
         }
         
         public static Fixed operator /(Fixed left, Fixed right)

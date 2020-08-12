@@ -1,6 +1,8 @@
-﻿using Match3;
+﻿using System;
+using Match3;
 using Match3.Core;
 using Match3.Features;
+using Match3.Math;
 using Match3.View;
 using UnityEngine;
 using Debug = Match3.Core.Debug;
@@ -12,6 +14,19 @@ public class GameInit : MonoBehaviour
 
     private void Awake()
     {
+        // for (int i = 0; i < 100000; ++i)
+        // {
+        //     Fixed x = new Fixed(i, 100);
+        //     Fixed xx = x * x;
+        //     Fixed y = FixedMath.Sqrt(xx);
+        //     if (y != x)
+        //     {
+        //         Fixed yy = FixedMath.Sqrt(xx);
+        //         throw new Exception();
+        //     }
+        // }
+        
+        
         Debug.OnLog += UnityEngine.Debug.Log;
         Debug.OnWarning += UnityEngine.Debug.LogWarning;
         
