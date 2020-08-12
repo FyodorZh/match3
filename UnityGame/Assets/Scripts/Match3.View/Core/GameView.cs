@@ -20,7 +20,10 @@ namespace Match3.View
 
         void Update()
         {
-            _game.Tick((int)(Time.deltaTime * 1000));
+            int dt = (int)(Time.deltaTime * 1000);
+            if (dt <= 0)
+                dt = 1;
+            _game.Tick(dt);
         }
     }
 }

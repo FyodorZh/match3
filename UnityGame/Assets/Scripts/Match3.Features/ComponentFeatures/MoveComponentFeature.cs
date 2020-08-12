@@ -111,4 +111,15 @@ namespace Match3.Features
             }
         }
     }
+
+    public static class MoveComponentFeature_Ext
+    {
+        public static FixedVector2 VisualPosition(this MoveComponentFeature.IMove move)
+        {
+            if (move.IsReleased)
+                return new FixedVector2();
+            var cellPos = move.Owner.Owner.Position;
+            return move.Offset + new FixedVector2(cellPos.X, cellPos.Y);
+        }
+    }
 }

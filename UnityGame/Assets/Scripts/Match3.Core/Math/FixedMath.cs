@@ -8,5 +8,15 @@
                 return x;
             return -x;
         }
+
+        public static Fixed Max(Fixed a, Fixed b)
+        {
+            return a > b ? a : b;
+        }
+        
+        public static Fixed Min(Fixed a, Fixed b)
+        {
+            return a < b ? a : b;
+        }
     }
 }

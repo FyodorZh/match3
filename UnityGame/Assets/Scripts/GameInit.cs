@@ -12,7 +12,8 @@ public class GameInit : MonoBehaviour
 
     private void Awake()
     {
-        Debug.OnLog += s => UnityEngine.Debug.Log(s); 
+        Debug.OnLog += UnityEngine.Debug.Log;
+        Debug.OnWarning += UnityEngine.Debug.LogWarning;
         
         IGameRules rules = new GameRules(_viewFactory);
         
