@@ -55,8 +55,11 @@ namespace Match3.Features
             private bool _isFinished;
             private ReleasableLock _lock;
 
+            public FixedVector2 Direction;
+            public Fixed Speed;
+
             public FixedVector2 Position { get; set; }
-            public FixedVector2 Velocity { get; set; }
+            public FixedVector2 Velocity => Direction * Speed;
 
             public bool IsFinished => _isFinished;
             
@@ -66,7 +69,17 @@ namespace Match3.Features
                 FallingObjectMover = info.FallingObjectMover;
 
                 Position = info.FallOffset;
-                Velocity = FallingObjectMover.Velocity;
+
+                if (Position.X == 0)
+                {
+                    Direction = new FixedVector2(0, -1);
+                    Speed = -FallingObjectMover.Velocity.Y;
+                }
+                else
+                {
+                    Direction = info.FallOffset.Normalized;
+                    Speed = -FallingObjectMover.Velocity.Y;
+                }
 
                 _lock = info.Lock;
                 
@@ -186,6 +199,91 @@ namespace Match3.Features
                 }
             }
 
+            public void FindNewObjectsToSideFall(IGame game)
+            {
+                foreach (var grid in game.Board.Grids)
+                {
+                    for (int x = 0; x < grid.Width; ++x)
+                    {
+                        for (int y = grid.Height; y >= 0; --y)
+                        {
+                            bool block = false;
+                            if (y == grid.Height)
+                            {
+                                block = true;
+                            }
+                            else
+                            {
+                                ICell cellBlock = grid.GetCell(new CellPosition(x, y));
+                                if (!cellBlock.IsActive || cellBlock.IsLocked)
+                                {
+                                    block = true;
+                                }
+                                else
+                                {
+                                    var mass = cellBlock.FindComponent<MassComponentFeature.IMass>();
+                                    if (mass != null && mass.IsLocked)
+                                    {
+                                        block = true;
+                                    }
+                                }
+                            }
+
+                            if (block)
+                            {
+                                for (int i = y - 1; i >= 0; --i)
+                                {
+                                    ICell emptyCell = grid.GetCell(new CellPosition(x, i));
+                                    if (emptyCell.IsActive && !emptyCell.IsLocked && emptyCell.FindComponent<MassComponentFeature.IMass>() == null)
+                                    {
+                                        MoveComponentFeature.IMove sourceCellMove = null;
+
+                                        ICell cellLeft = grid.GetCell(new CellPosition(x - 1, i + 1));
+                                        if (cellLeft != null && !cellLeft.IsLocked)
+                                        {
+                                            var mass = cellLeft.FindComponent<MassComponentFeature.IMass>();
+                                            if (mass != null && !mass.IsLocked)
+                                            {
+                                                sourceCellMove = cellLeft.FindComponent<MoveComponentFeature.IMove>();
+                                            }
+                                        }
+
+                                        if (sourceCellMove == null)
+                                        {
+                                            ICell cellRight = grid.GetCell(new CellPosition(x + 1, i + 1));
+                                            if (cellRight != null && !cellRight.IsLocked)
+                                            {
+                                                var mass = cellRight.FindComponent<MassComponentFeature.IMass>();
+                                                if (mass != null && !mass.IsLocked)
+                                                {
+                                                    sourceCellMove = cellRight.FindComponent<MoveComponentFeature.IMove>();
+                                                }
+                                            }
+                                        }
+
+                                        if (sourceCellMove != null)
+                                        {
+                                            var sourceCell = sourceCellMove.Owner.Owner;
+                                            var currentPosition = sourceCellMove.VisualPosition();
+                                            if (emptyCell.Attach(sourceCellMove.Owner))
+                                            {
+                                                FixedVector2 finalPosition = new FixedVector2(emptyCell.Position.X, emptyCell.Position.Y);
+                                                var fallRequest = new FallRequestInfo(grid, sourceCellMove, sourceCell.Position, currentPosition - finalPosition);
+                                                FallRequests.Add(fallRequest);
+                                            }
+                                            else
+                                            {
+                                                Debug.Assert(false);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             public void ConstructNewAgents()
             {
                 foreach (var fallRequest in FallRequests)
@@ -227,19 +325,19 @@ namespace Match3.Features
                         MoveAgent prevAgent = null;
                         foreach (var agent in column)
                         {
-                            Fixed possibleDistance = agent.Position.Y;
+                            Fixed possibleDistanceY = agent.Position.Y;
                             if (prevAgent != null)
                             {
-                                var obstaclePos = agent.VisualPos.Y;
-                                var selfPos = prevAgent.VisualPos.Y;
-                                possibleDistance = FixedMath.Min(possibleDistance, obstaclePos - selfPos - 1);
-                                if (possibleDistance <= 0)
+                                var obstaclePosY = agent.VisualPos.Y;
+                                var selfPosY = prevAgent.VisualPos.Y;
+                                possibleDistanceY = FixedMath.Min(possibleDistanceY, obstaclePosY - selfPosY - 1);
+                                if (possibleDistanceY <= 0)
                                 {
                                     Debug.Warning("Strange!!!");
                                 }
                             }
 
-                            if (possibleDistance <= 0)
+                            if (possibleDistanceY <= 0)
                             {
                                 agent.Position = new FixedVector2(0, 0);
                                 agent.Finish();
@@ -247,10 +345,30 @@ namespace Match3.Features
                             }
                             else
                             {
-                                Fixed maxVelocity = possibleDistance / dTimeSeconds;
+                                Fixed maxVelocityY = possibleDistanceY / dTimeSeconds;
 
-                                agent.Velocity = new FixedVector2(0, FixedMath.Min(agent.Velocity.Y + speedUp, maxVelocity));
-                                agent.Position -= agent.Velocity * dTimeSeconds;
+                                Fixed velocity;
+                                if (agent.Position.X == 0)
+                                {
+                                    velocity = 
+                                }
+
+                                FixedVector2 desiredVelocity = agent.Velocity;
+                                if (desiredVelocity.X == 0)
+                                {
+                                    desiredVelocity.Y -= speedUp;
+                                    if (desiredVelocity.Y > maxVelocityY)
+                                        desiredVelocity.Y = maxVelocityY;
+                                }
+                                else
+                                {
+                                    if (desiredVelocity.Y > maxVelocityY)
+                                        desiredVelocity *= (maxVelocityY / desiredVelocity.Y);
+                                }
+
+                                agent.Velocity = desiredVelocity;
+                                
+                                agent.Position += agent.Velocity * dTimeSeconds;
                                 if (agent.Position.Y <= 0)
                                 {
                                     agent.Position = new FixedVector2(0, 0);
@@ -274,6 +392,7 @@ namespace Match3.Features
         protected override void Process(IGame game, State state, int dTimeMs)
         {
             state.FindNewObjectsToFall(game);
+            state.FindNewObjectsToSideFall(game);
             state.ConstructNewAgents();
             state.ProcessAgents(new Fixed(dTimeMs, 1000));
         }

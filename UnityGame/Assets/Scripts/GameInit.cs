@@ -87,7 +87,7 @@ public class GameInit : MonoBehaviour
         for (int i = 0; i < chips.Length; ++i)
             chips[i] = new ChipData(i);
         
-        for (int x = 0; x < 10; ++x)
+        for (int x = 0; x < 1; ++x)
         {
             data.AddCellContent(x, 9, new EmitterData(chips));
         }
