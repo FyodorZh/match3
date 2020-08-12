@@ -1,13 +1,13 @@
-﻿namespace Match3.Core
+﻿namespace Match3.Utils
 {
-    public class ReleasableLock : ILock
+    public class ReleasableBoolAgent : IBoolAgent
     {
-        public bool Equals(ILock other)
+        public bool Equals(IBoolAgent other)
         {
             return ReferenceEquals(this, other);
         }
 
-        public bool IsActive => true;
+        public bool Value { get; } = true;
         public bool IsValid { get; private set; } = true;
 
         public void Release()

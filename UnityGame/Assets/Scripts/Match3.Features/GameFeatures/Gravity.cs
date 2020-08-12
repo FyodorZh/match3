@@ -210,7 +210,7 @@ namespace Match3.Features
 
             public void ProcessAgents(Fixed dTimeSeconds)
             {
-                Fixed gravity = new Fixed(600, 100);
+                Fixed gravity = new Fixed(900, 100);
 
                 Fixed speedUp = gravity * dTimeSeconds;
                 
