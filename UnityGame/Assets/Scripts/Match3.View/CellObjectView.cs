@@ -7,6 +7,8 @@ namespace Match3.View
     {
         private ICellObject _cellObject;
         private MoveComponentFeature.IMove _moveComponent;
+
+        protected ICellObject CellObject => _cellObject;
         
         protected override void OnInit()
         {

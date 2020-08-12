@@ -69,13 +69,36 @@ namespace Match3.Features
                                 {
                                     if (freeCell.Attach(objectToFall))
                                     {
-                                        Fixed distanceToFall = cell.Position.Y - freeCell.Position.Y;
+                                        Fixed visiblePosY = cell.Position.Y + moveComponent.Offset.Y;
+                                        Fixed distanceToFall = visiblePosY - freeCell.Position.Y;
                                         Fixed initialSpeed = moveComponent.Velocity.Y;
                                         var trajectory = new FallTrajectory(distanceToFall, initialSpeed);
+
+                                        List<PredicateLock> locks = new List<PredicateLock>();
+                                        for (int i = freeCell.Position.Y + 1; i <= cell.Position.Y; ++i)
+                                        {
+                                            int targetOffset = i - freeCell.Position.Y;
+                                            PredicateLock lockObject = new PredicateLock(() =>
+                                            {
+                                                var delta = targetOffset - moveComponent.Offset.Y;
+                                                return delta > -1 && delta < 0;
+                                            });
+                                            var cellToLock = grid.GetCell(new CellPosition(freeCell.Position.X, i));
+                                            cellToLock.AddLock(lockObject);
+                                            locks.Add(lockObject);
+                                        }
                                         
-                                        freeCell.AddLock(objectToFall);
+                                        freeCell.AddLock(objectToFall.LockObject);
                                         
-                                        moveComponent.SetTrajectory(trajectory, null, () => freeCell.RemoveLock(objectToFall));
+                                        moveComponent.SetTrajectory(trajectory, null, () =>
+                                        {
+                                            foreach (var lockObject in locks)
+                                            {
+                                                lockObject.Release();
+                                            }
+                                            freeCell.RemoveLock(objectToFall.LockObject);
+                                            //Debug.Log("STOP at" + freeCell.Position);
+                                        });
 
                                         //Debug.Log("FALL " + cell.Position + " -> " + freeCell.Position);
                                     }
@@ -116,16 +139,8 @@ namespace Match3.Features
                 _height -= _velocity;
                 
                 Velocity = new FixedVector2(0, _velocity);
-                if (_height <= 0)
-                {
-                    Position = new FixedVector2(0, 0);
-                    return false;
-                }
-                else
-                {
-                    Position = new FixedVector2(0, _height);
-                    return true;
-                }
+                Position = new FixedVector2(0, _height);
+                return _height > 0;
             }
         }
     }

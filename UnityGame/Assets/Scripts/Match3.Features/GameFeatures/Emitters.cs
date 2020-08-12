@@ -34,12 +34,17 @@ namespace Match3.Features
                         {
                             if (cell.IsActive && !cell.IsLocked)
                             {
-                                var newObject = emitter.Emit(game);
-                                if (newObject != null)
+                                var cellUnder = cell.Under();
+                                Debug.Assert(cellUnder != null && cellUnder.IsActive);
+                                if (!cellUnder.IsLocked)
                                 {
-                                    if (!cell.CanAttach(newObject) || !cell.Attach(newObject))
+                                    var newObject = emitter.Emit(game);
+                                    if (newObject != null)
                                     {
-                                        Debug.Assert(false);
+                                        if (!cell.CanAttach(newObject) || !cell.Attach(newObject))
+                                        {
+                                            Debug.Assert(false);
+                                        }
                                     }
                                 }
                             }

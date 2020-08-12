@@ -13,7 +13,7 @@ namespace Match3.Core
         private bool _isActive;
         private ICell _cellImplementation;
 
-        private readonly List<object> _lockObjects = new List<object>();
+        private readonly LockStack _lockStack = new LockStack();
         
         public CellId Id { get; }
         
@@ -35,16 +35,16 @@ namespace Match3.Core
             } 
         }
 
-        public bool IsLocked => _lockObjects.Count > 0;
-        public void AddLock(object lockObject)
+        public bool IsLocked => _lockStack.IsLocked;
+        
+        public void AddLock(ILock lockObject)
         {
-            Debug.Assert(!_lockObjects.Contains(lockObject));
-            _lockObjects.Add(lockObject);
+            _lockStack.AddLock(lockObject);
         }
 
-        public void RemoveLock(object lockObject)
+        public void RemoveLock(ILock lockObject)
         {
-            _lockObjects.Remove(lockObject);
+            _lockStack.RemoveLock(lockObject);
         }
 
         public Cell(Grid owner, CellPosition position)

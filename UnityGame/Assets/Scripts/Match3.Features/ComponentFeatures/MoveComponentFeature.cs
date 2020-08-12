@@ -96,16 +96,7 @@ namespace Match3.Features
                     {
                         if (_onFinish != null)
                         {
-                            var onFinish = _onFinish;
-                            Owner.Owner.Game.InternalInvoke(() =>
-                            {
-                                onFinish();
-                                Offset = new FixedVector2(0, 0);
-                            });
-                        }
-                        else
-                        {
-                            Offset = new FixedVector2(0, 0); 
+                            Owner.Owner.Game.InternalInvoke(_onFinish);
                         }
                         _trajectory = null;
                         _onUpdate = null;
@@ -115,6 +106,7 @@ namespace Match3.Features
                 else
                 {
                     Velocity = new FixedVector2(0, 0);
+                    Offset = new FixedVector2(0, 0);
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Match3.Core;
 
 namespace Match3
 {
@@ -13,8 +14,8 @@ namespace Match3
         bool IsActive { get; }
         
         bool IsLocked { get; }
-        void AddLock(object lockObject);
-        void RemoveLock(object lockObject);
+        void AddLock(ILock lockObject);
+        void RemoveLock(ILock lockObject);
         
         IReadOnlyList<ICellObject> Objects { get; }
 
@@ -41,6 +42,13 @@ namespace Match3
             }
 
             return null;
+        }
+
+        public static ICell Under(this ICell cell)
+        {
+            var pos = cell.Position;
+            pos = new CellPosition(pos.X, pos.Y - 1);
+            return cell.Owner.GetCell(pos);
         }
     }
 }

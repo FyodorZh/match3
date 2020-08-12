@@ -1,4 +1,5 @@
 ﻿using System;
+using Match3.Core;
 using Match3.Math;
 
 namespace Match3.Features
@@ -31,7 +32,6 @@ namespace Match3.Features
         public interface IEmitterData : ICellObjectComponentData
         {
             ICellObjectData[] ObjectsToEmit { get; }
-            int TimeOutMs { get; }
         }
         
         private class Emitter : CellObjectComponent, IEmitter
@@ -39,26 +39,27 @@ namespace Match3.Features
             public override string TypeId => Name;
 
             private readonly ICellObjectData[] _objectDataToEmit;
-            private readonly Fixed _timeout;
-
-            private Fixed _timeTillSpawn;
-
+            
             private MoveComponentFeature.IMove _prevObjectMoveComponent;
 
             public Emitter(IEmitterData data)
             {
                 _objectDataToEmit = data.ObjectsToEmit;
-                _timeout = new Fixed(data.TimeOutMs, 1000);
             }
 
             public ICellObject Emit(IGame game)
             {
-                if (_timeTillSpawn > 0)
+                if (_prevObjectMoveComponent != null && !_prevObjectMoveComponent.IsReleased)
                 {
-                    return null;
+                    var prevObject = _prevObjectMoveComponent.Owner;
+                    
+                    var visiblePosY = prevObject.Owner.Position.Y + _prevObjectMoveComponent.Offset.Y;
+                    if (Owner.Owner.Position.Y - visiblePosY < new Fixed(11, 10))
+                    {
+                        return null;
+                    }
                 }
-
-                _timeTillSpawn = _timeout;
+                
                 ICellObject obj = game.Rules.ObjectFactory.Construct<ICellObject>(_objectDataToEmit[game.GetRandom() % _objectDataToEmit.Length], game);
 
                 var move = obj.TryGetComponent<MoveComponentFeature.IMove>();
@@ -69,16 +70,6 @@ namespace Match3.Features
                 _prevObjectMoveComponent = move;
 
                 return obj;
-            }
-
-            public override void Tick(Fixed dTimeSeconds)
-            {
-                base.Tick(dTimeSeconds);
-                _timeTillSpawn -= dTimeSeconds;
-                if (_timeTillSpawn < 0)
-                {
-                    _timeTillSpawn = 0;
-                }
             }
 
             protected override void OnRelease()
