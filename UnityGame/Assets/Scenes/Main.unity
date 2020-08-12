@@ -154,6 +154,8 @@ MonoBehaviour:
     type: 3}
   _chipPrefab: {fileID: -2030517449637485682, guid: 4a6cb24826553434ebb073f3ad6e55e6,
     type: 3}
+  _chainPrefab: {fileID: -2741436698417748446, guid: 0b8cf67a72a0db04186c2426777d28c2,
+    type: 3}
 --- !u!4 &126628244
 Transform:
   m_ObjectHideFlags: 0

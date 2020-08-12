@@ -22,14 +22,29 @@ namespace Match3.Features
             if (!(data is IEmitterObjectData emitterObjectData))
                 throw new InvalidOperationException();
             
-            return new CellObject(
-                new ObjectTypeId(Name), 
-                EmitterComponentFeature.Instance.Construct(emitterObjectData.Data));
+            return new Emitter(emitterObjectData);
         }
 
         public interface IEmitterObjectData : ICellObjectData
         {
             EmitterComponentFeature.IEmitterData Data { get; }
+        }
+        
+        public interface IEmitter : ICellObject
+        {
+        }
+        
+        private class Emitter : CellObject, IEmitter
+        {
+            public Emitter(IEmitterObjectData data) : 
+                base(new ObjectTypeId(Name), EmitterComponentFeature.Instance.Construct(data.Data))
+            {
+            }
+
+            public override bool CanAttachSibling(ICellObject sibling)
+            {
+                return false;
+            }
         }
     }
 }

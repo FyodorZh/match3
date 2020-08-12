@@ -9,6 +9,7 @@ namespace Match3.View
     {
         public CellObjectView _emitterPrefab;
         public ChipView _chipPrefab;
+        public CellObjectView _chainPrefab;
         
         public IObjectView Construct(IObject logicObject)
         {
@@ -20,6 +21,9 @@ namespace Match3.View
                     break;
                 case ChipObjectFeature.Name:
                     view = Instantiate(_chipPrefab);
+                    break;
+                case ChainObjectFeature.Name:
+                    view = Instantiate(_chainPrefab);
                     break;
                 default:
                     throw new Exception();

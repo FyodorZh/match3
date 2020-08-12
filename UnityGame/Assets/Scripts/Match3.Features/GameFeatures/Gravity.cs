@@ -157,6 +157,10 @@ namespace Match3.Features
 
                                             freeCell = cellToCheck;
                                         }
+                                        else
+                                        {
+                                            break;
+                                        }
 
                                         --k;
                                     }

@@ -10,6 +10,8 @@ namespace Match3
 
         void SetOwner(ICell owner);
 
+        bool CanAttachSibling(ICellObject sibling);
+
         TCellObjectComponent TryGetComponent<TCellObjectComponent>()
             where TCellObjectComponent : class, ICellObjectComponent;
 

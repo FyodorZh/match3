@@ -66,7 +66,17 @@ namespace Match3.Core
         
         public bool CanAttach(ICellObject cellObject)
         {
-            return IsActive && !IsLocked;
+            if (!IsActive)
+                return false;
+            if (IsLocked)
+                return false;
+            foreach (var obj in _objects)
+            {
+                if (!obj.CanAttachSibling(cellObject))
+                    return false;
+            }
+
+            return true;
         }
 
         public bool Attach(ICellObject cellObject)
@@ -76,9 +86,6 @@ namespace Match3.Core
             
             if (ReferenceEquals(cellObject.Owner, this))
                 return true;
-
-            if (!CanAttach(cellObject))
-                return false;
             
             if (cellObject.Owner != null)
             {

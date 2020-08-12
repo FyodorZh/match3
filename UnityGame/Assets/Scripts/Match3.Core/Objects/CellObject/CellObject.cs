@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Match3.Math;
 
@@ -24,6 +23,10 @@ namespace Match3
             }
         }
 
+        protected virtual void OnChangeOwner(ICell newOwner)
+        {
+        }
+
         protected override void OnRelease()
         {
             Owner?.Destroy(this);
@@ -39,7 +42,13 @@ namespace Match3
 
         public void SetOwner(ICell owner)
         {
+            OnChangeOwner(owner);
             Owner = owner;
+        }
+
+        public virtual bool CanAttachSibling(ICellObject sibling)
+        {
+            return true;
         }
 
         public TCellObjectComponent TryGetComponent<TCellObjectComponent>() 

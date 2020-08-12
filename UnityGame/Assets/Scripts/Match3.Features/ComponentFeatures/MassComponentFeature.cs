@@ -1,4 +1,5 @@
 ﻿using System;
+using Match3.Utils;
 
 namespace Match3.Features
 {
@@ -24,7 +25,7 @@ namespace Match3.Features
         
         public interface IMass : ICellObjectComponent
         {
-            bool IsLocked { get; set; }
+            BoolStack IsLocked { get; }
         }
 
         public interface IMassData : ICellObjectComponentData
@@ -37,9 +38,10 @@ namespace Match3.Features
 
             public Mass(IMassData data)
             {
+                IsLocked = new BoolStack();
             }
 
-            public bool IsLocked { get; set; }
+            public BoolStack IsLocked { get; }
         }
     }
 }

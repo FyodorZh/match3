@@ -50,5 +50,10 @@ namespace Match3.Utils
         {
             _agents.Remove(agent);
         }
+        
+        public static implicit operator bool(BoolStack stack)
+        {
+            return stack.Value;
+        }
     }
 }

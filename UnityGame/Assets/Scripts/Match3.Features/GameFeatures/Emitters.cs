@@ -41,7 +41,7 @@ namespace Match3.Features
                                     var newObject = emitter.Emit(game);
                                     if (newObject != null)
                                     {
-                                        if (!cell.CanAttach(newObject) || !cell.Attach(newObject))
+                                        if (!cell.Attach(newObject))
                                         {
                                             Debug.Assert(false);
                                         }

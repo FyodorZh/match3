@@ -18,6 +18,7 @@ public class GameInit : MonoBehaviour
         IGameRules rules = new GameRules(_viewFactory);
         
         rules.RegisterObjectFeature(ChipObjectFeature.Instance);
+        rules.RegisterObjectFeature(ChainObjectFeature.Instance);
         
         rules.RegisterGameFeature(new Emitters());
         rules.RegisterGameFeature(new Gravity());
@@ -63,6 +64,9 @@ public class GameInit : MonoBehaviour
                 {
                     data.ActivateCell(x, y);
                 }
+        
+        data.AddCellContent(7, 4, new ChipData(3));
+        data.AddCellContent(7, 4, new ChainData());
 
         ChipData[] chips = new ChipData[5];
         for (int i = 0; i < chips.Length; ++i)
@@ -115,5 +119,10 @@ public class GameInit : MonoBehaviour
             Mass = new MassData();
             Movement = new MoveData();
         }
+    }
+
+    private class ChainData : ChainObjectFeature.IChainData
+    {
+        public string TypeId => ChainObjectFeature.Name;
     }
 }
