@@ -7,12 +7,14 @@ using UnityEngine.EventSystems;
 public class CellTouch : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private ICell _cell;
-    
-    public void Setup(ICell cell)
+    private IGameController _controller;
+
+    public void Setup(ICell cell, IGameController controller)
     {
         _cell = cell;
+        _controller = controller;
     }
-    
+
     private void OnMouseDown()
     {
         if (Input.GetMouseButtonDown(1))
@@ -24,7 +26,7 @@ public class CellTouch : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
             }
         }
     }
-   
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)
@@ -36,8 +38,8 @@ public class CellTouch : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
             if (mass != null)
             {
                 var cell = mass.Owner.Owner;
-                
-                cell.Game.Action(KillActionFeature.Name, cell.Id);
+
+                _controller.Action(KillActionFeature.Name, cell.Id);
             }
         }
     }
@@ -77,7 +79,7 @@ public class CellTouch : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
             {
                 dy = delta.y > 0 ? 1 : -1;
             }
-            
+
             var pos1 = _cell.Position;
             var pos2 = new CellPosition(pos1.X + dx, pos1.Y + dy);
 
@@ -85,10 +87,10 @@ public class CellTouch : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
 
             if (cell2 != null)
             {
-                _cell.Game.Action(SwapActionFeature.Name, _cell.Id, cell2.Id);
+                _controller.Action(SwapActionFeature.Name, _cell.Id, cell2.Id);
             }
-            
-            Debug.Log("End " + delta + "   " + dx + ";" + dy);    
+
+            Debug.Log("End " + delta + "   " + dx + ";" + dy);
         }
     }
 }

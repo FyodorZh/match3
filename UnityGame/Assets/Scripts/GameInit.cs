@@ -1,9 +1,9 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Match3;
 using Match3.Core;
 using Match3.Features;
-using Match3.Math;
 using Match3.View;
+using Replays;
 using UnityEngine;
 using Debug = Match3.Core.Debug;
 
@@ -12,24 +12,57 @@ public class GameInit : MonoBehaviour
     public ViewFactory _viewFactory;
     public GameView _gameView;
 
+    private ReplayWriter _replayWriter;
+
     private void Awake()
     {
-        // for (int i = 0; i < 100000; ++i)
-        // {
-        //     Fixed x = new Fixed(i, 100);
-        //     Fixed xx = x * x;
-        //     Fixed y = FixedMath.Sqrt(xx);
-        //     if (y != x)
-        //     {
-        //         Fixed yy = FixedMath.Sqrt(xx);
-        //         throw new Exception();
-        //     }
-        // }
-
-
         Debug.OnLog += UnityEngine.Debug.Log;
         Debug.OnWarning += UnityEngine.Debug.LogWarning;
 
+        ConstructGame(new IGridData[] { ConstructGridData() }, out var gamePresenter, out var gameController);
+
+        _replayWriter = new ReplayWriter(gameController);
+        gameController = _replayWriter;
+
+        StartGame(gamePresenter, gameController, "Match3");
+    }
+
+    private void OnGUI()
+    {
+        if (GUI.Button(new Rect(100, 100, 100, 50), "Replay"))
+        {
+            ConstructGame(new IGridData[] { ConstructGridData() }, out var gamePresenter, out var gameController);
+
+            gameController = new ReplayPlayer(_replayWriter.GetReplay(), gameController);
+
+            var go = StartGame(gamePresenter, gameController, "Replay");
+
+            go.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            go.transform.localPosition = new Vector3(-6, 0, 1);
+
+        }
+    }
+
+
+
+    public GameObject StartGame(IGame gamePresenter, IGameController gameController, string name)
+    {
+        gameController.Start();
+
+        var obj = GameObject.Find(name);
+        if (obj != null)
+            Destroy(obj);
+
+        var gameView = Instantiate(_gameView).GetComponent<GameView>();
+        gameView.name = name;
+        gameView.transform.position = Vector3.zero;
+        gameView.Setup(gamePresenter, gameController);
+
+        return gameView.gameObject;
+    }
+
+    public void ConstructGame(IEnumerable<IGridData> gridData, out IGame game, out IGameController gameController)
+    {
         IGameRules rules = new GameRules(_viewFactory);
 
         rules.RegisterObjectFeature(ChipObjectFeature.Instance);
@@ -44,18 +77,9 @@ public class GameInit : MonoBehaviour
 
         rules.BakeAllFeatures();
 
-        IGridData[] data = new IGridData[]
-        {
-            ConstructGridData(),
-        };
-        var game = new Game(rules, data);
-
-        game.Start();
-
-        var gameView = Instantiate(_gameView).GetComponent<GameView>();
-        gameView.name = "Match3";
-        gameView.transform.position = Vector3.zero;
-        gameView.Setup(game);
+        var gameInstance = new Game(rules, gridData);
+        game = gameInstance;
+        gameController = gameInstance;
     }
 
     class EmitterData : EmitterObjectFeature.IEmitterObjectData, EmitterComponentFeature.IEmitterData

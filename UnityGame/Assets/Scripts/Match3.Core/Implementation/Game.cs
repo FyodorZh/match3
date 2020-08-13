@@ -5,7 +5,7 @@ using Match3.Math;
 
 namespace Match3
 {
-    public class Game : IGame
+    public class Game : IGame, IGameController
     {
         private readonly struct FeatureInfo
         {
@@ -18,19 +18,19 @@ namespace Match3
                 State = state;
             }
         }
-        
+
         private readonly Board _board;
 
         private readonly FeatureInfo[] _features;
-        
+
         private readonly List<ActionInfo> _externalActions = new List<ActionInfo>();
 
         private readonly ActionStream _internalActions = new ActionStream();
-        
+
         private readonly Random _random = new Random(777);
-        
+
         internal Board Board => _board;
-        
+
         public IGameRules Rules { get; }
         IBoard IGame.Board => _board;
 
@@ -45,7 +45,7 @@ namespace Match3
         {
             var features = Rules.GameFeatures;
             var count = features.Count;
-            
+
             for (int i = 0; i < count; ++i)
             {
                 var state = features[i].InitState(this);
@@ -63,7 +63,7 @@ namespace Match3
             }
             _externalActions.Clear();
             _internalActions.Process();
-            
+
             _board.Tick(fixedTimeSeconds);
             _internalActions.Process();
 
@@ -81,11 +81,11 @@ namespace Match3
 
             if (cells == null)
                 throw new ArgumentException(nameof(cells));
-            
+
             var feature = Rules.FindActionFeature(actionFeatureName);
             if (feature == null)
                 throw new InvalidOperationException();
-            
+
             _externalActions.Add(new ActionInfo(feature, cells));
         }
 

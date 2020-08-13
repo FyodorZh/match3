@@ -7,18 +7,18 @@ namespace Match3.View
     {
         private ICell _cell;
         private IGameRules _rules;
-        
+
         private readonly List<CellObjectView> _objects = new List<CellObjectView>();
 
         public GameObject _cellViewActive;
         public GameObject _cellViewInactive;
-        
+
         public GameObject _cellViewLock;
 
         public CellTouch _cellTouch;
-        
-        
-        public void Setup(ICell cell)
+
+
+        public void Setup(ICell cell, IGameController controller)
         {
             _cell = cell;
             _rules = cell.Game.Rules;
@@ -27,11 +27,11 @@ namespace Match3.View
             {
                 Add(obj);
             }
-            
+
             _cellViewActive.SetActive(_cell.IsActive);
             _cellViewInactive.SetActive(!_cell.IsActive);
-            
-            _cellTouch.Setup(cell);
+
+            _cellTouch.Setup(cell, controller);
         }
 
         private void Update()
@@ -46,7 +46,7 @@ namespace Match3.View
 
             Attach(view, false);
         }
-        
+
         public void Attach(CellObjectView cellObjectView, bool preserveWorldPosition)
         {
             _objects.Add(cellObjectView);
@@ -68,7 +68,7 @@ namespace Match3.View
 
             return null;
         }
-        
+
         public void Destroy(ICellObject cellObject)
         {
             int count = _objects.Count;

@@ -9,8 +9,8 @@ namespace Match3.View
         public CellView _cellViewPrefab;
 
         private CellView[,] _cells;
-        
-        public void Setup(IGrid grid)
+
+        public void Setup(IGrid grid, IGameController controller)
         {
             _grid = grid;
 
@@ -20,17 +20,17 @@ namespace Match3.View
                 CellView view = Instantiate(_cellViewPrefab, transform);
                 view.name = "cell." + cell.Position.X + "x" + cell.Position.Y;
                 view.transform.position = new Vector3(cell.Position.X, 0, cell.Position.Y);
-                view.Setup(cell);
+                view.Setup(cell, controller);
                 _cells[cell.Position.X, cell.Position.Y] = view;
             }
         }
-        
+
         public void Add(ICellObject cellObject, CellPosition position)
         {
             CellView cellView = _cells[position.X, position.Y];
             cellView.Add(cellObject);
         }
-        
+
         public void Attach(CellObjectView cellObjectView, CellPosition position)
         {
             CellView cellView = _cells[position.X, position.Y];
@@ -42,7 +42,7 @@ namespace Match3.View
             CellView oldCell = _cells[oldPosition.X, oldPosition.Y];
             return oldCell.DeAttach(cellObject);
         }
-        
+
         public void Destroy(ICellObject cellObject)
         {
             CellView cellView = _cells[cellObject.Owner.Position.X, cellObject.Owner.Position.Y];

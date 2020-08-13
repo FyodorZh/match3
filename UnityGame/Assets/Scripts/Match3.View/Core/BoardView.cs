@@ -6,25 +6,25 @@ namespace Match3.View
     public class BoardView : MonoBehaviour
     {
         private IBoard _board;
-        
+
         public GridView _gridViewPrefab;
 
         private Dictionary<GridId, GridView> _grids = new Dictionary<GridId, GridView>();
-        public void Setup(IBoard board)
+        public void Setup(IBoard board, IGameController controller)
         {
             _board = board;
             foreach (var grid in board.Grids)
             {
                 GridView gridView = Instantiate(_gridViewPrefab, transform);
                 gridView.name = "grid" + grid.Id.Id;
-                gridView.Setup(grid);
+                gridView.Setup(grid, controller);
                 _grids.Add(grid.Id, gridView);
             }
 
             board.CellObjectOwnerChange += OnCellObjectOwnerChange;
             board.CellObjectDestroy += OnCellObjectDestroy;
         }
-        
+
         private void OnCellObjectOwnerChange(ICellObject cellObject, ICell oldOwner)
         {
             //string to = (cellObject.Owner != null) ? cellObject.Owner.Id.ToString() : "null";
