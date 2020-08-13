@@ -5,20 +5,24 @@ namespace Match3.Features
 {
     public sealed class Match : StatelessGameFeature
     {
+        public override IEnumerable<ICellComponentFeature> DependsOnCellComponentFeatures { get; } = new ICellComponentFeature[]
+        {
+        };
+        
         public override IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; } = new IObjectFeature[]
         {
         };
-        
+
         public override IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; } = new IObjectComponentFeature[]
         {
-            ColorObjectComponentFeature.Instance,  
+            ColorObjectComponentFeature.Instance,
         };
-        
-        public Match() 
+
+        public Match()
             : base("Match")
         {
         }
-        
+
         protected override void Process(IGame game, int dTimeMs)
         {
             foreach (var grid in game.Board.Grids)
@@ -86,7 +90,7 @@ namespace Match3.Features
             }
         }
 
-        
+
         private readonly Pattern[] _patterns = new Pattern[]
         {
             new Pattern(new int[][]{new[]{0,0}, new[]{0,1}, new[]{0, 2}, new[]{0,3}, new[]{0,4}}),
@@ -95,7 +99,7 @@ namespace Match3.Features
             new Pattern(new int[][]{new[]{0,0}, new[]{1,0}, new[]{2, 0}, new[]{3,0}}),
             new Pattern(new int[][]{new[]{0,0}, new[]{0,1}, new[]{0, 2}}),
             new Pattern(new int[][]{new[]{0,0}, new[]{1,0}, new[]{2, 0}}),
-            
+
             new Pattern(new int[][]{new[]{0,0}, new[]{1,0}, new[]{0, 1}, new[]{1, 1}}),
         };
 
@@ -106,7 +110,7 @@ namespace Match3.Features
             public readonly int Height;
             public readonly int[] OffsetsX;
             public readonly int[] OffsetsY;
-            
+
             public Pattern(int[][] list)
             {
                 Length = list.Length;

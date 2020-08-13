@@ -8,7 +8,7 @@ namespace Match3.Features
         protected IGameRules Rules { get; private set; }
 
         public string FeatureId { get; }
-        
+
         protected abstract TData ConstructState(IGame game);
 
         protected abstract void Process(IGame game, TData state, int dTimeMs);
@@ -18,6 +18,7 @@ namespace Match3.Features
             FeatureId = featureName;
         }
 
+        public abstract IEnumerable<ICellComponentFeature> DependsOnCellComponentFeatures { get; }
         public abstract IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; }
         public abstract IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; }
 

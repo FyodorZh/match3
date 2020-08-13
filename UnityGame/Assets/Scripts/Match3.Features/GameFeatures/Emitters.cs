@@ -5,21 +5,25 @@ namespace Match3.Features
 {
     public sealed class Emitters : StatelessGameFeature
     {
+        public override IEnumerable<ICellComponentFeature> DependsOnCellComponentFeatures { get; } = new ICellComponentFeature[]
+        {
+        };
+
         public override IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; } = new IObjectFeature[]
         {
-            EmitterObjectFeature.Instance, 
+            EmitterObjectFeature.Instance,
         };
-        
+
         public override IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; } = new IObjectComponentFeature[]
         {
-            EmitterObjectComponentFeature.Instance, 
+            EmitterObjectComponentFeature.Instance,
         };
-        
-        public Emitters() 
+
+        public Emitters()
             : base("Emitters")
         {
         }
-        
+
         protected override void Process(IGame game, int dTimeMs)
         {
             foreach (var grid in game.Board.Grids)

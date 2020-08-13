@@ -19,6 +19,9 @@ namespace Match3
 
         IReadOnlyList<ICellObject> Objects { get; }
 
+        IReadOnlyList<ICellComponent> Components { get; }
+        void AddComponent(ICellComponent component);
+
         bool CanAttach(ICellObject cellObject);
         bool Attach(ICellObject cellObject);
 

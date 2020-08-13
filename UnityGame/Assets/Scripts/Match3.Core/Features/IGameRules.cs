@@ -12,8 +12,9 @@ namespace Match3
 
         void RegisterGameFeature(IGameFeature feature);
         void RegisterActionFeature(IActionFeature feature);
+        void RegisterCellComponentFeature(ICellComponentFeature feature);
         void RegisterObjectFeature(IObjectFeature feature);
-        void RegisterComponentFeature(IObjectComponentFeature feature);
+        //void RegisterObjectComponentFeature(IObjectComponentFeature feature);
 
         void BakeAllFeatures();
     }

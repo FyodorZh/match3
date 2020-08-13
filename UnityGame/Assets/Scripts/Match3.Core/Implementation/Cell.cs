@@ -10,6 +10,8 @@ namespace Match3.Core
 
         private readonly List<ICellObject> _objects = new List<ICellObject>();
 
+        private readonly List<ICellComponent> _components = new List<ICellComponent>();
+
         private bool _isActive;
         private ICell _cellImplementation;
 
@@ -63,7 +65,14 @@ namespace Match3.Core
         }
 
         public IReadOnlyList<ICellObject> Objects => _objects;
-        
+
+        public IReadOnlyList<ICellComponent> Components => _components;
+
+        public void AddComponent(ICellComponent component)
+        {
+            _components.Add(component);
+        }
+
         public bool CanAttach(ICellObject cellObject)
         {
             if (!IsActive)

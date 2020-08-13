@@ -11,9 +11,11 @@ namespace Match3.Core
             new Dictionary<string, IGameFeature>();
         private readonly Dictionary<string, IActionFeature> _actionFeature =
             new Dictionary<string, IActionFeature>();
+        private readonly Dictionary<string, ICellComponentFeature> _cellComponentFeatures =
+            new Dictionary<string, ICellComponentFeature>();
         private readonly Dictionary<string, IObjectFeature> _objectFeatures =
             new Dictionary<string, IObjectFeature>();
-        private readonly Dictionary<string, IObjectComponentFeature> _componentFeatures =
+        private readonly Dictionary<string, IObjectComponentFeature> _objectComponentFeatures =
             new Dictionary<string, IObjectComponentFeature>();
 
         private readonly ObjectFactory _objectFactory = new ObjectFactory();
@@ -52,7 +54,7 @@ namespace Match3.Core
 
             foreach (var componentFeature in feature.DependsOnObjectComponentFeatures)
             {
-                RegisterComponentFeature(componentFeature);
+                RegisterObjectComponentFeature(componentFeature);
             }
         }
 
@@ -72,35 +74,56 @@ namespace Match3.Core
 
             foreach (var componentFeature in feature.DependsOnComponentFeatures)
             {
-                RegisterComponentFeature(componentFeature);
+                RegisterObjectComponentFeature(componentFeature);
+            }
+        }
+
+        public void RegisterCellComponentFeature(ICellComponentFeature feature)
+        {
+            if (feature == null)
+                throw new ArgumentNullException(nameof(feature));
+
+            if (!_cellComponentFeatures.ContainsKey(feature.FeatureId))
+            {
+                _cellComponentFeatures.Add(feature.FeatureId, feature);
+
+                foreach (var objectFeature in feature.DependsOnObjectFeatures)
+                {
+                    RegisterObjectFeature(objectFeature);
+                }
+
+                foreach (var componentFeature in feature.DependsOnObjectComponentFeatures)
+                {
+                    RegisterObjectComponentFeature(componentFeature);
+                }
             }
         }
 
         public void RegisterObjectFeature(IObjectFeature feature)
         {
             if (feature == null)
-                throw  new ArgumentNullException(nameof(feature));
+                throw new ArgumentNullException(nameof(feature));
 
             if (!_objectFeatures.ContainsKey(feature.FeatureId))
             {
                 _objectFeatures.Add(feature.FeatureId, feature);
                 foreach (var componentFeature in feature.DependsOn)
                 {
-                    RegisterComponentFeature(componentFeature);
+                    RegisterObjectComponentFeature(componentFeature);
                 }
 
                 _objectFactory.Append(feature.FeatureId, (data, context) => feature.Construct(data));
             }
         }
 
-        public void RegisterComponentFeature(IObjectComponentFeature feature)
+        public void RegisterObjectComponentFeature(IObjectComponentFeature feature)
         {
             if (feature == null)
                 throw  new ArgumentNullException(nameof(feature));
 
-            if (!_componentFeatures.ContainsKey(feature.FeatureId))
+            if (!_objectComponentFeatures.ContainsKey(feature.FeatureId))
             {
-                _componentFeatures.Add(feature.FeatureId, feature);
+                _objectComponentFeatures.Add(feature.FeatureId, feature);
             }
         }
 

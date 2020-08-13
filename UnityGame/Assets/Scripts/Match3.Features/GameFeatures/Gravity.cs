@@ -6,6 +6,10 @@ namespace Match3.Features
 {
     public sealed class Gravity : GameFeature<Gravity.State>
     {
+        public override IEnumerable<ICellComponentFeature> DependsOnCellComponentFeatures { get; } = new ICellComponentFeature[]
+        {
+        };
+
         public override IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; } = new IObjectFeature[]
         {
         };

@@ -2,15 +2,11 @@
 
 namespace Match3
 {
-    public interface IGameFeature : IFeature
+    public interface ICellComponentFeature : IFeature
     {
-        IEnumerable<ICellComponentFeature> DependsOnCellComponentFeatures { get; }
         IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; }
         IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; }
 
         void Register(IGameRules rules);
-
-        object InitState(IGame game);
-        void Tick(IGame game, object state, int dTimeMs);
     }
 }
