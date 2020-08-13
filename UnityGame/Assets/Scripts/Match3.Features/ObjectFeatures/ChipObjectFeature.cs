@@ -36,6 +36,7 @@ namespace Match3.Features
             ColorObjectComponentFeature.IColorData Color { get; }
             MoveObjectComponentFeature.IMoveData Movement { get; }
             MassObjectComponentFeature.IMassData Mass { get; }
+            HealthObjectComponentFeature.IHealthData Health { get; }
 
             int BodyType { get; }
         }
@@ -50,7 +51,8 @@ namespace Match3.Features
                 : this(new ObjectTypeId(data.TypeId),
                     ColorObjectComponentFeature.Instance.Construct(data.Color),
                     MassObjectComponentFeature.Instance.Construct(data.Mass),
-                    MoveObjectComponentFeature.Instance.Construct(data.Movement))
+                    MoveObjectComponentFeature.Instance.Construct(data.Movement),
+                    HealthObjectComponentFeature.Instance.Construct(data.Health))
             {
                 BodyType = data.BodyType;
             }
@@ -59,8 +61,9 @@ namespace Match3.Features
                 ObjectTypeId typeId,
                 ColorObjectComponentFeature.IColor color,
                 MassObjectComponentFeature.IMass mass,
-                MoveObjectComponentFeature.IMove move)
-                : base(typeId, color, mass, move)
+                MoveObjectComponentFeature.IMove move,
+                HealthObjectComponentFeature.IHealth health)
+                : base(typeId, color, mass, move, health)
             {
                 Color = color;
             }

@@ -7,6 +7,6 @@ namespace Match3
         IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; }
         IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; }
 
-        void Register(IGameRules rules);
+        void InitState(IGame game);
     }
 }

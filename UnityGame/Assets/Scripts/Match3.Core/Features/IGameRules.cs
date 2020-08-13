@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Match3.Core;
 
 namespace Match3
 {
@@ -7,6 +8,7 @@ namespace Match3
         IObjectFactory ObjectFactory { get; }
         IViewFactory ViewFactory { get; }
         IReadOnlyList<IGameFeature> GameFeatures { get; }
+        IEnumerable<ICellComponentFeature> CellComponentFeatures { get; }
 
         IActionFeature FindActionFeature(string featureName);
 

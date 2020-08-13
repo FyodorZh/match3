@@ -43,6 +43,11 @@ namespace Match3
 
         public void Start()
         {
+            foreach (var feature in Rules.CellComponentFeatures)
+            {
+                feature.InitState(this);
+            }
+
             var features = Rules.GameFeatures;
             var count = features.Count;
 

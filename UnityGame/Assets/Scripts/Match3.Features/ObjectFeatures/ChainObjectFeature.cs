@@ -9,28 +9,29 @@ namespace Match3.Features
     {
         public const string Name = "Chain";
         public static readonly ChainObjectFeature Instance = new ChainObjectFeature();
-        
+
         public string FeatureId => Name;
-        
+
         public IEnumerable<IObjectComponentFeature> DependsOn { get; } = new IObjectComponentFeature[]
         {
-            MassObjectComponentFeature.Instance, 
+            MassObjectComponentFeature.Instance,
         };
 
         public IObject Construct(IObjectData data)
         {
             if (!(data is IChainData chainData))
-                throw  new InvalidOperationException();
+                throw new InvalidOperationException();
 
             return new Chain(chainData);
         }
-        
+
         public interface IChain : ICellObject
         {
         }
-        
+
         public interface IChainData : ICellObjectData
         {
+            HealthObjectComponentFeature.IHealthData Health { get; }
         }
 
         private class Chain : CellObject, IChain
@@ -38,7 +39,7 @@ namespace Match3.Features
             private ReleasableBoolAgent _lockOfMass;
 
             public Chain(IChainData data)
-                : base(new ObjectTypeId(data.TypeId))
+                : base(new ObjectTypeId(data.TypeId), HealthObjectComponentFeature.Instance.Construct(data.Health))
             {
             }
 

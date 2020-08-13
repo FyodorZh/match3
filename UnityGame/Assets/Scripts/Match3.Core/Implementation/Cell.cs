@@ -62,15 +62,23 @@ namespace Match3.Core
             {
                 obj.Tick(dTimeSeconds);
             }
+
+            foreach (var component in _components)
+            {
+                component.Tick(dTimeSeconds);
+            }
         }
 
         public IReadOnlyList<ICellObject> Objects => _objects;
 
         public IReadOnlyList<ICellComponent> Components => _components;
 
-        public void AddComponent(ICellComponent component)
+        public void AddComponent<TComponent>(TComponent component)
+            where TComponent : class, ICellComponent, ICellComponentInitializer
         {
+            Debug.Assert(_components.Find(c => c.GetType() == component.GetType()) == null);
             _components.Add(component);
+            component.SetOwner(this);
         }
 
         public bool CanAttach(ICellObject cellObject)

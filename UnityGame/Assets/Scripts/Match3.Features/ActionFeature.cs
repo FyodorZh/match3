@@ -7,15 +7,16 @@ namespace Match3.Features
         protected IGameRules Rules { get; private set; }
 
         public string FeatureId { get; }
-        
+
 
         protected ActionFeature(string featureName)
         {
             FeatureId = featureName;
         }
 
+        public abstract IEnumerable<ICellComponentFeature> DependsOnCellComponentFeatures { get; }
         public abstract IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; }
-        public abstract IEnumerable<IObjectComponentFeature> DependsOnComponentFeatures { get; }
+        public abstract IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; }
 
         public void Register(IGameRules rules)
         {

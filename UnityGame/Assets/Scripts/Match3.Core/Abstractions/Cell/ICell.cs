@@ -20,7 +20,9 @@ namespace Match3
         IReadOnlyList<ICellObject> Objects { get; }
 
         IReadOnlyList<ICellComponent> Components { get; }
-        void AddComponent(ICellComponent component);
+
+        void AddComponent<TComponent>(TComponent component)
+            where TComponent : class, ICellComponent, ICellComponentInitializer;
 
         bool CanAttach(ICellObject cellObject);
         bool Attach(ICellObject cellObject);
@@ -30,6 +32,22 @@ namespace Match3
 
     public static class ICell_Ext
     {
+        public static TCellComponent FindComponent<TCellComponent>(this ICell cell)
+            where TCellComponent : class, ICellComponent
+        {
+            var list = cell.Components;
+            var count = list.Count;
+            for (int i = 0; i < count; ++i)
+            {
+                if (list[i] is TCellComponent typedComponent)
+                {
+                    return typedComponent;
+                }
+            }
+
+            return null;
+        }
+
         public static TCellObjectComponent FindObjectComponent<TCellObjectComponent>(this ICell cell)
             where TCellObjectComponent : class, ICellObjectComponent
         {

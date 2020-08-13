@@ -2,6 +2,7 @@
 using Match3;
 using Match3.Core;
 using Match3.Features;
+using Match3.Features.CellComponentFeatures;
 using Match3.View;
 using Replays;
 using UnityEngine;
@@ -68,9 +69,12 @@ public class GameInit : MonoBehaviour
         rules.RegisterObjectFeature(ChipObjectFeature.Instance);
         rules.RegisterObjectFeature(ChainObjectFeature.Instance);
 
+        rules.RegisterCellComponentFeature(HealthCellComponentFeature.Instance);
+
         rules.RegisterGameFeature(new Emitters());
         rules.RegisterGameFeature(new Gravity());
         rules.RegisterGameFeature(new Match());
+
 
         rules.RegisterActionFeature(new KillActionFeature());
         rules.RegisterActionFeature(new SwapActionFeature());
@@ -147,6 +151,7 @@ public class GameInit : MonoBehaviour
         public MoveObjectComponentFeature.IMoveData Movement { get; }
 
         public MassObjectComponentFeature.IMassData Mass { get; }
+        public HealthObjectComponentFeature.IHealthData Health { get; }
 
         public int BodyType => 0;
 
@@ -157,11 +162,30 @@ public class GameInit : MonoBehaviour
             Color = new ColorData(colorId);
             Mass = new MassData();
             Movement = new MoveData();
+            Health = new HealthData(1, 1, DamageType.Match);
         }
     }
 
     private class ChainData : ChainObjectFeature.IChainData
     {
         public string TypeId => ChainObjectFeature.Name;
+
+        public HealthObjectComponentFeature.IHealthData Health { get; } = new HealthData(10, 1, DamageType.Match);
     }
+
+    private class HealthData : HealthObjectComponentFeature.IHealthData
+    {
+        public string TypeId => HealthObjectComponentFeature.Name;
+        public int Priority { get; }
+        public int HealthValue { get; }
+        public DamageType Vulnerability { get; }
+
+        public HealthData(int priority, int value, DamageType vulnerability)
+        {
+            Priority = priority;
+            HealthValue = value;
+            Vulnerability = vulnerability;
+        }
+    }
+
 }

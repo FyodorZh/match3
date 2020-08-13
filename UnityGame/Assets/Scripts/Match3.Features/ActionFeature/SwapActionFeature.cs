@@ -13,11 +13,15 @@ namespace Match3.Features
         {
         }
 
+        public override IEnumerable<ICellComponentFeature> DependsOnCellComponentFeatures { get; } = new ICellComponentFeature[]
+        {
+        };
+
         public override IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; } = new IObjectFeature[]
         {
         };
 
-        public override IEnumerable<IObjectComponentFeature> DependsOnComponentFeatures { get; } = new IObjectComponentFeature[]
+        public override IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; } = new IObjectComponentFeature[]
         {
             MassObjectComponentFeature.Instance,
             MoveObjectComponentFeature.Instance,

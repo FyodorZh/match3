@@ -25,6 +25,7 @@ namespace Match3.Core
         public IViewFactory ViewFactory { get; }
 
         public IReadOnlyList<IGameFeature> GameFeatures => _gameFeatureList;
+        public IEnumerable<ICellComponentFeature> CellComponentFeatures => _cellComponentFeatures.Values;
 
         public GameRules(IViewFactory viewFactory)
         {
@@ -47,6 +48,11 @@ namespace Match3.Core
             _gameFeatures.Add(feature.FeatureId, feature);
             _gameFeatureList.Add(feature);
 
+            foreach (var objectFeature in feature.DependsOnCellComponentFeatures)
+            {
+                RegisterCellComponentFeature(objectFeature);
+            }
+
             foreach (var objectFeature in feature.DependsOnObjectFeatures)
             {
                 RegisterObjectFeature(objectFeature);
@@ -67,12 +73,17 @@ namespace Match3.Core
 
             _actionFeature.Add(feature.FeatureId, feature);
 
+            foreach (var objectFeature in feature.DependsOnCellComponentFeatures)
+            {
+                RegisterCellComponentFeature(objectFeature);
+            }
+
             foreach (var objectFeature in feature.DependsOnObjectFeatures)
             {
                 RegisterObjectFeature(objectFeature);
             }
 
-            foreach (var componentFeature in feature.DependsOnComponentFeatures)
+            foreach (var componentFeature in feature.DependsOnObjectComponentFeatures)
             {
                 RegisterObjectComponentFeature(componentFeature);
             }
