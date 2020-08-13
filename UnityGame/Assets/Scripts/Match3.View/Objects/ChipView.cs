@@ -20,7 +20,7 @@ namespace Match3.View.Objects
         protected override void Update()
         {
             base.Update();
-            var move = CellObject.TryGetComponent<MoveComponentFeature.IMove>();
+            var move = CellObject.TryGetComponent<MoveObjectComponentFeature.IMove>();
             _moveStateView.SetActive(move.IsMoving);
         }
     }

@@ -7,16 +7,16 @@ namespace Match3
     {
         CellId Id { get; }
         CellPosition Position { get; }
-        
+
         IGame Game { get; }
         IGrid Owner { get; }
-        
+
         bool IsActive { get; }
-        
+
         bool IsLocked { get; }
         void AddLock(ILock lockObject);
         void RemoveLock(ILock lockObject);
-        
+
         IReadOnlyList<ICellObject> Objects { get; }
 
         bool CanAttach(ICellObject cellObject);
@@ -27,7 +27,7 @@ namespace Match3
 
     public static class ICell_Ext
     {
-        public static TCellObjectComponent FindComponent<TCellObjectComponent>(this ICell cell)
+        public static TCellObjectComponent FindObjectComponent<TCellObjectComponent>(this ICell cell)
             where TCellObjectComponent : class, ICellObjectComponent
         {
             var content = cell.Objects;

@@ -2,10 +2,10 @@
 
 namespace Match3.Features
 {
-    public class ColorComponentFeature : ICellObjectComponentFeature
+    public class ColorObjectComponentFeature : ICellObjectObjectComponentFeature
     {
         public const string Name = "Color"; 
-        public static readonly ColorComponentFeature Instance = new ColorComponentFeature();
+        public static readonly ColorObjectComponentFeature Instance = new ColorObjectComponentFeature();
 
         public string FeatureId => Name;
         

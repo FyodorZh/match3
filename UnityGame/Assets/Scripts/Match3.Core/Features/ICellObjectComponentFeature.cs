@@ -1,7 +1,6 @@
 ﻿namespace Match3
 {
-    public interface ICellObjectComponentFeature : IComponentFeature
+    public interface ICellObjectObjectComponentFeature : IObjectComponentFeature
     {
-        //ICellObjectComponent TypedConstruct(ICellObjectComponentData data);
     }
 }

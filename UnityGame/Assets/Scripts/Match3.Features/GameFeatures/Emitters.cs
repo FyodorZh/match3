@@ -10,9 +10,9 @@ namespace Match3.Features
             EmitterObjectFeature.Instance, 
         };
         
-        public override IEnumerable<IComponentFeature> DependsOnComponentFeatures { get; } = new IComponentFeature[]
+        public override IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; } = new IObjectComponentFeature[]
         {
-            EmitterComponentFeature.Instance, 
+            EmitterObjectComponentFeature.Instance, 
         };
         
         public Emitters() 
@@ -29,7 +29,7 @@ namespace Match3.Features
                     if (cell.Objects.Count == 1)
                     {
                         var obj = cell.Objects[0];
-                        var emitter = obj.TryGetComponent<EmitterComponentFeature.IEmitter>();
+                        var emitter = obj.TryGetComponent<EmitterObjectComponentFeature.IEmitter>();
                         if (emitter != null)
                         {
                             if (cell.IsActive && !cell.IsLocked)

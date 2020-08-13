@@ -17,9 +17,9 @@ namespace Match3.Features
 
         };
 
-        public override IEnumerable<IComponentFeature> DependsOnComponentFeatures { get; } = new IComponentFeature[]
+        public override IEnumerable<IObjectComponentFeature> DependsOnComponentFeatures { get; } = new IObjectComponentFeature[]
         {
-            MassComponentFeature.Instance, 
+            MassObjectComponentFeature.Instance, 
         };
         
         public override void Process(IGame game, params CellId[] cells)
@@ -31,7 +31,7 @@ namespace Match3.Features
 
             var cell = game.Board.GetCell(id);
             
-            var mass = cell.FindComponent<MassComponentFeature.IMass>();
+            var mass = cell.FindObjectComponent<MassObjectComponentFeature.IMass>();
             mass?.Owner.Release();
         }
     }

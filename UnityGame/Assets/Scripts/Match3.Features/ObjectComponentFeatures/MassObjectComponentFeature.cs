@@ -3,10 +3,10 @@ using Match3.Utils;
 
 namespace Match3.Features
 {
-    public class MassComponentFeature : ICellObjectComponentFeature
+    public class MassObjectComponentFeature : ICellObjectObjectComponentFeature
     {
         public const string Name = "Mass"; 
-        public static readonly MassComponentFeature Instance = new MassComponentFeature();
+        public static readonly MassObjectComponentFeature Instance = new MassObjectComponentFeature();
 
         public string FeatureId => Name;
         

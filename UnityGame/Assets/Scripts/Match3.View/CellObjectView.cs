@@ -6,7 +6,7 @@ namespace Match3.View
     public class CellObjectView : ObjectView, ICellObjectView
     {
         private ICellObject _cellObject;
-        private MoveComponentFeature.IMove _moveComponent;
+        private MoveObjectComponentFeature.IMove _moveComponent;
 
         protected ICellObject CellObject => _cellObject;
         
@@ -14,7 +14,7 @@ namespace Match3.View
         {
             base.OnInit();
             _cellObject = (ICellObject)Owner;
-            _moveComponent = _cellObject.TryGetComponent<MoveComponentFeature.IMove>();
+            _moveComponent = _cellObject.TryGetComponent<MoveObjectComponentFeature.IMove>();
         }
 
         protected override void Update()

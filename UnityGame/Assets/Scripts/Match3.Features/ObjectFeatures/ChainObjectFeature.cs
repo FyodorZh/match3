@@ -12,9 +12,9 @@ namespace Match3.Features
         
         public string FeatureId => Name;
         
-        public IEnumerable<IComponentFeature> DependsOn { get; } = new IComponentFeature[]
+        public IEnumerable<IObjectComponentFeature> DependsOn { get; } = new IObjectComponentFeature[]
         {
-            MassComponentFeature.Instance, 
+            MassObjectComponentFeature.Instance, 
         };
 
         public IObject Construct(IObjectData data)
@@ -47,7 +47,7 @@ namespace Match3.Features
                 _lockOfMass?.Release();
                 if (newOwner != null)
                 {
-                    var mass = newOwner.FindComponent<MassComponentFeature.IMass>();
+                    var mass = newOwner.FindObjectComponent<MassObjectComponentFeature.IMass>();
                     Debug.Assert(mass != null);
                     mass?.IsLocked.AddAgent(_lockOfMass = new ReleasableLock());
                 }

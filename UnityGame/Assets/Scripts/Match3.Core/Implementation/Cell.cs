@@ -14,15 +14,15 @@ namespace Match3.Core
         private ICell _cellImplementation;
 
         private readonly LockStack _lockStack = new LockStack();
-        
+
         public CellId Id { get; }
-        
+
         public CellPosition Position { get; }
-        
+
         public IGame Game => _owner.Game;
 
         public IGrid Owner => _owner;
-        
+
         public bool IsActive
         {
             get => _isActive;
@@ -32,11 +32,11 @@ namespace Match3.Core
                 {
                     _isActive = value;
                 }
-            } 
+            }
         }
 
         public bool IsLocked => _lockStack.IsLocked;
-        
+
         public void AddLock(ILock lockObject)
         {
             _lockStack.AddLock(lockObject);
@@ -53,7 +53,7 @@ namespace Match3.Core
             Id = new CellId(owner.Id, position);
             Position = position;
         }
-        
+
         public void Tick(Fixed dTimeSeconds)
         {
             foreach (var obj in _objects)
@@ -83,14 +83,14 @@ namespace Match3.Core
         {
             if (cellObject == null)
                 throw new ArgumentNullException();
-            
+
             if (ReferenceEquals(cellObject.Owner, this))
                 return true;
-            
+
             if (cellObject.Owner != null)
             {
                 var owner = (Cell)cellObject.Owner;
-                
+
                 int count = owner._objects.Count;
                 for (int i = 0; i < count; ++i)
                 {
@@ -103,14 +103,14 @@ namespace Match3.Core
             }
 
             var prevOwner = cellObject.Owner;
-            
+
             _objects.Add(cellObject);
             cellObject.SetOwner(this);
-            
+
             _owner.Board.OnCellObjectOwnerChange(cellObject, prevOwner);
             return true;
         }
-        
+
         public bool Destroy(ICellObject cellObject)
         {
             if (cellObject == null)
@@ -125,7 +125,7 @@ namespace Match3.Core
                 if (ReferenceEquals(cellObject, _objects[i]))
                 {
                     _owner.Board.OnCellObjectDestroy(cellObject);
-                    
+
                     _objects.RemoveAt(i);
                     cellObject.SetOwner(null);
                     cellObject.Release();

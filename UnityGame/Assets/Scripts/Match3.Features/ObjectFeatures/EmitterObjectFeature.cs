@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Match3.Core;
 
 namespace Match3.Features
 {
@@ -11,33 +12,33 @@ namespace Match3.Features
 
         public string FeatureId => Name;
 
-        public IEnumerable<IComponentFeature> DependsOn { get; } = new IComponentFeature[]
+        public IEnumerable<IObjectComponentFeature> DependsOn { get; } = new IObjectComponentFeature[]
         {
-            EmitterComponentFeature.Instance,
-            MoveComponentFeature.Instance, 
+            EmitterObjectComponentFeature.Instance,
+            MoveObjectComponentFeature.Instance,
         };
 
         public IObject Construct(IObjectData data)
         {
             if (!(data is IEmitterObjectData emitterObjectData))
                 throw new InvalidOperationException();
-            
+
             return new Emitter(emitterObjectData);
         }
 
         public interface IEmitterObjectData : ICellObjectData
         {
-            EmitterComponentFeature.IEmitterData Data { get; }
+            EmitterObjectComponentFeature.IEmitterData Data { get; }
         }
-        
+
         public interface IEmitter : ICellObject
         {
         }
-        
+
         private class Emitter : CellObject, IEmitter
         {
-            public Emitter(IEmitterObjectData data) : 
-                base(new ObjectTypeId(Name), EmitterComponentFeature.Instance.Construct(data.Data))
+            public Emitter(IEmitterObjectData data) :
+                base(new ObjectTypeId(Name), EmitterObjectComponentFeature.Instance.Construct(data.Data))
             {
             }
 

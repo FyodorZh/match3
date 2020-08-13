@@ -7,23 +7,23 @@ namespace Match3.Core
     {
         private readonly List<IGameFeature> _gameFeatureList = new List<IGameFeature>();
 
-        private readonly Dictionary<string, IGameFeature> _gameFeatures = 
+        private readonly Dictionary<string, IGameFeature> _gameFeatures =
             new Dictionary<string, IGameFeature>();
-        private readonly Dictionary<string, IActionFeature> _actionFeature = 
+        private readonly Dictionary<string, IActionFeature> _actionFeature =
             new Dictionary<string, IActionFeature>();
-        private readonly Dictionary<string, IObjectFeature> _objectFeatures = 
+        private readonly Dictionary<string, IObjectFeature> _objectFeatures =
             new Dictionary<string, IObjectFeature>();
-        private readonly Dictionary<string, IComponentFeature> _componentFeatures = 
-            new Dictionary<string, IComponentFeature>();
-        
+        private readonly Dictionary<string, IObjectComponentFeature> _componentFeatures =
+            new Dictionary<string, IObjectComponentFeature>();
+
         private readonly ObjectFactory _objectFactory = new ObjectFactory();
 
         public IObjectFactory ObjectFactory => _objectFactory;
-        
+
         public IViewFactory ViewFactory { get; }
-        
+
         public IReadOnlyList<IGameFeature> GameFeatures => _gameFeatureList;
-        
+
         public GameRules(IViewFactory viewFactory)
         {
             ViewFactory = viewFactory;
@@ -41,7 +41,7 @@ namespace Match3.Core
                 throw new ArgumentNullException(nameof(feature));
             if (_gameFeatures.ContainsKey(feature.FeatureId))
                 throw new InvalidOperationException();
-            
+
             _gameFeatures.Add(feature.FeatureId, feature);
             _gameFeatureList.Add(feature);
 
@@ -50,7 +50,7 @@ namespace Match3.Core
                 RegisterObjectFeature(objectFeature);
             }
 
-            foreach (var componentFeature in feature.DependsOnComponentFeatures)
+            foreach (var componentFeature in feature.DependsOnObjectComponentFeatures)
             {
                 RegisterComponentFeature(componentFeature);
             }
@@ -62,9 +62,9 @@ namespace Match3.Core
                 throw new ArgumentNullException(nameof(feature));
             if (_actionFeature.ContainsKey(feature.FeatureId))
                 throw new InvalidOperationException();
-            
+
             _actionFeature.Add(feature.FeatureId, feature);
-  
+
             foreach (var objectFeature in feature.DependsOnObjectFeatures)
             {
                 RegisterObjectFeature(objectFeature);
@@ -88,12 +88,12 @@ namespace Match3.Core
                 {
                     RegisterComponentFeature(componentFeature);
                 }
-                
+
                 _objectFactory.Append(feature.FeatureId, (data, context) => feature.Construct(data));
             }
         }
 
-        public void RegisterComponentFeature(IComponentFeature feature)
+        public void RegisterComponentFeature(IObjectComponentFeature feature)
         {
             if (feature == null)
                 throw  new ArgumentNullException(nameof(feature));

@@ -9,9 +9,9 @@ namespace Match3.Features
         {
         };
         
-        public override IEnumerable<IComponentFeature> DependsOnComponentFeatures { get; } = new IComponentFeature[]
+        public override IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; } = new IObjectComponentFeature[]
         {
-            ColorComponentFeature.Instance,  
+            ColorObjectComponentFeature.Instance,  
         };
         
         public Match() 
@@ -29,7 +29,7 @@ namespace Match3.Features
                 {
                     if (cell.IsActive && !cell.IsLocked)
                     {
-                        var color = cell.FindComponent<ColorComponentFeature.IColor>();
+                        var color = cell.FindObjectComponent<ColorObjectComponentFeature.IColor>();
                         if (color != null)
                         {
                             colors[cell.Position.X, cell.Position.Y] = color.ColorId;
@@ -72,7 +72,7 @@ namespace Match3.Features
                                     {
                                         colors[x + pattern.OffsetsX[i], y + pattern.OffsetsY[i]] = -1;
                                         var cell = grid.GetCell(new CellPosition(x + pattern.OffsetsX[i], y + pattern.OffsetsY[i]));
-                                        var colorComponent = cell.FindComponent<ColorComponentFeature.IColor>();
+                                        var colorComponent = cell.FindObjectComponent<ColorObjectComponentFeature.IColor>();
                                         var colorObject = colorComponent.Owner;
                                         game.InternalInvoke(() => colorObject.Release());
                                     }

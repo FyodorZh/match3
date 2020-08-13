@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Match3.Core;
 
 namespace Match3.Features
 {
@@ -7,13 +8,13 @@ namespace Match3.Features
     {
         public const string Name = "Chip";
         public static readonly ChipObjectFeature Instance = new ChipObjectFeature();
-        
+
         public string FeatureId => Name;
-        
-        public IEnumerable<IComponentFeature> DependsOn { get; } = new IComponentFeature[]
+
+        public IEnumerable<IObjectComponentFeature> DependsOn { get; } = new IObjectComponentFeature[]
         {
-            ColorComponentFeature.Instance,
-            MassComponentFeature.Instance, 
+            ColorObjectComponentFeature.Instance,
+            MassObjectComponentFeature.Instance,
         };
 
         public IObject Construct(IObjectData data)
@@ -23,42 +24,42 @@ namespace Match3.Features
 
             return new Chip(chipData);
         }
-        
+
         public interface IChip : ICellObject
         {
-            ColorComponentFeature.IColor Color { get; }
+            ColorObjectComponentFeature.IColor Color { get; }
             int BodyType { get; }
         }
-        
+
         public interface IChipData : ICellObjectData
         {
-            ColorComponentFeature.IColorData Color { get; }
-            MoveComponentFeature.IMoveData Movement { get; }
-            MassComponentFeature.IMassData Mass { get; }
-            
+            ColorObjectComponentFeature.IColorData Color { get; }
+            MoveObjectComponentFeature.IMoveData Movement { get; }
+            MassObjectComponentFeature.IMassData Mass { get; }
+
             int BodyType { get; }
         }
 
         private class Chip : CellObject, IChip
         {
-            public ColorComponentFeature.IColor Color { get; }
-            
+            public ColorObjectComponentFeature.IColor Color { get; }
+
             public int BodyType { get; }
 
             public Chip(IChipData data)
-                : this(new ObjectTypeId(data.TypeId), 
-                    ColorComponentFeature.Instance.Construct(data.Color),
-                    MassComponentFeature.Instance.Construct(data.Mass),
-                    MoveComponentFeature.Instance.Construct(data.Movement))
+                : this(new ObjectTypeId(data.TypeId),
+                    ColorObjectComponentFeature.Instance.Construct(data.Color),
+                    MassObjectComponentFeature.Instance.Construct(data.Mass),
+                    MoveObjectComponentFeature.Instance.Construct(data.Movement))
             {
                 BodyType = data.BodyType;
             }
 
             private Chip(
-                ObjectTypeId typeId, 
-                ColorComponentFeature.IColor color,
-                MassComponentFeature.IMass mass,
-                MoveComponentFeature.IMove move)
+                ObjectTypeId typeId,
+                ColorObjectComponentFeature.IColor color,
+                MassObjectComponentFeature.IMass mass,
+                MoveObjectComponentFeature.IMove move)
                 : base(typeId, color, mass, move)
             {
                 Color = color;

@@ -15,7 +15,7 @@ namespace Match3.Features
         }
 
         public abstract IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; }
-        public abstract IEnumerable<IComponentFeature> DependsOnComponentFeatures { get; }
+        public abstract IEnumerable<IObjectComponentFeature> DependsOnComponentFeatures { get; }
 
         public void Register(IGameRules rules)
         {

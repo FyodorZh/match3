@@ -19,7 +19,7 @@ public class CellTouch : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
     {
         if (Input.GetMouseButtonDown(1))
         {
-            var mass = _cell.FindComponent<MassComponentFeature.IMass>();
+            var mass = _cell.FindObjectComponent<MassObjectComponentFeature.IMass>();
             if (mass != null)
             {
                 mass.Owner.Release();
@@ -34,7 +34,7 @@ public class CellTouch : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
         }
         if (eventData.button == PointerEventData.InputButton.Right)
         {
-            var mass = _cell.FindComponent<MassComponentFeature.IMass>();
+            var mass = _cell.FindObjectComponent<MassObjectComponentFeature.IMass>();
             if (mass != null)
             {
                 var cell = mass.Owner.Owner;

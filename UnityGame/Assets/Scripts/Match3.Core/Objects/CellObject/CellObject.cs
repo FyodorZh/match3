@@ -2,18 +2,18 @@
 using System.Linq;
 using Match3.Math;
 
-namespace Match3
+namespace Match3.Core
 {
-    public class CellObject : Match3.Object, ICellObject
+    public class CellObject : Core.Object, ICellObject
     {
         private readonly ICellObjectComponent[] _components;
-        
-        public CellObject(ObjectTypeId type, IEnumerable<ICellObjectComponent> components) 
+
+        public CellObject(ObjectTypeId type, IEnumerable<ICellObjectComponent> components)
             : this(type, components.ToArray())
         {
         }
-        
-        public CellObject(ObjectTypeId type, params ICellObjectComponent[] components) 
+
+        public CellObject(ObjectTypeId type, params ICellObjectComponent[] components)
             : base(type)
         {
             _components = components;
@@ -37,7 +37,7 @@ namespace Match3
                 component.Release();
             }
         }
-        
+
         public ICell Owner { get; private set; }
 
         public void SetOwner(ICell owner)
@@ -51,7 +51,7 @@ namespace Match3
             return true;
         }
 
-        public TCellObjectComponent TryGetComponent<TCellObjectComponent>() 
+        public TCellObjectComponent TryGetComponent<TCellObjectComponent>()
             where TCellObjectComponent : class, ICellObjectComponent
         {
             foreach (var component in _components)
@@ -64,7 +64,7 @@ namespace Match3
 
             return default;
         }
-        
+
         public void Tick(Fixed dTimeSeconds)
         {
             foreach (var component in _components)

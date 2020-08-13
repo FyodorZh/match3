@@ -82,10 +82,10 @@ public class GameInit : MonoBehaviour
         gameController = gameInstance;
     }
 
-    class EmitterData : EmitterObjectFeature.IEmitterObjectData, EmitterComponentFeature.IEmitterData
+    class EmitterData : EmitterObjectFeature.IEmitterObjectData, EmitterObjectComponentFeature.IEmitterData
     {
         public string TypeId => EmitterObjectFeature.Name;
-        public EmitterComponentFeature.IEmitterData Data => this;
+        public EmitterObjectComponentFeature.IEmitterData Data => this;
         public ICellObjectData[] ObjectsToEmit { get; }
 
         public EmitterData(ICellObjectData[] objectsToEmit)
@@ -121,9 +121,9 @@ public class GameInit : MonoBehaviour
 
     private class ChipData : ChipObjectFeature.IChipData
     {
-        private class ColorData : ColorComponentFeature.IColorData
+        private class ColorData : ColorObjectComponentFeature.IColorData
         {
-            public string TypeId => ColorComponentFeature.Name;
+            public string TypeId => ColorObjectComponentFeature.Name;
             public int ColorId { get; }
 
             public ColorData(int colorId)
@@ -132,21 +132,21 @@ public class GameInit : MonoBehaviour
             }
         }
 
-        private class MassData : MassComponentFeature.IMassData
+        private class MassData : MassObjectComponentFeature.IMassData
         {
-            public string TypeId => MassComponentFeature.Name;
+            public string TypeId => MassObjectComponentFeature.Name;
         }
 
-        private class MoveData : MoveComponentFeature.IMoveData
+        private class MoveData : MoveObjectComponentFeature.IMoveData
         {
-            public string TypeId => MoveComponentFeature.Name;
+            public string TypeId => MoveObjectComponentFeature.Name;
         }
 
         public string TypeId => ChipObjectFeature.Name;
-        public ColorComponentFeature.IColorData Color { get; }
-        public MoveComponentFeature.IMoveData Movement { get; }
+        public ColorObjectComponentFeature.IColorData Color { get; }
+        public MoveObjectComponentFeature.IMoveData Movement { get; }
 
-        public MassComponentFeature.IMassData Mass { get; }
+        public MassObjectComponentFeature.IMassData Mass { get; }
 
         public int BodyType => 0;
 

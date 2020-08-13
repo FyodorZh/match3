@@ -4,10 +4,10 @@ using Match3.Math;
 
 namespace Match3.Features
 {
-    public class MoveComponentFeature : ICellObjectComponentFeature
+    public class MoveObjectComponentFeature : ICellObjectObjectComponentFeature
     {
         public const string Name = "Move"; 
-        public static readonly MoveComponentFeature Instance = new MoveComponentFeature();
+        public static readonly MoveObjectComponentFeature Instance = new MoveObjectComponentFeature();
 
         public string FeatureId => Name;
         
@@ -114,7 +114,7 @@ namespace Match3.Features
 
     public static class MoveComponentFeature_Ext
     {
-        public static FixedVector2 VisualPosition(this MoveComponentFeature.IMove move)
+        public static FixedVector2 VisualPosition(this MoveObjectComponentFeature.IMove move)
         {
             if (move.IsReleased)
                 return new FixedVector2();

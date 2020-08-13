@@ -1,16 +1,10 @@
-﻿using Match3.Core;
-
-namespace Match3
+﻿namespace Match3.Core
 {
     public abstract class Object : IObject
     {
         private bool _isReleased;
 
-        private readonly ReleasableLock _lockObject = new ReleasableLock();
-        
         public ObjectTypeId TypeId { get; }
-
-        public ILock LockObject => _lockObject;
 
         protected abstract void OnRelease();
 
@@ -18,13 +12,12 @@ namespace Match3
         {
             TypeId = type;
         }
-        
+
         public void Release()
         {
             if (!_isReleased)
             {
                 _isReleased = true;
-                _lockObject.Release();
                 OnRelease();
             }
         }

@@ -4,10 +4,10 @@ using Match3.Math;
 
 namespace Match3.Features
 {
-    public class EmitterComponentFeature : ICellObjectComponentFeature
+    public class EmitterObjectComponentFeature : ICellObjectObjectComponentFeature
     {
         public static readonly string Name = "Emitter";
-        public static readonly EmitterComponentFeature Instance = new EmitterComponentFeature();
+        public static readonly EmitterObjectComponentFeature Instance = new EmitterObjectComponentFeature();
 
         public string FeatureId => Name;
 
@@ -40,7 +40,7 @@ namespace Match3.Features
 
             private readonly ICellObjectData[] _objectDataToEmit;
 
-            private MoveComponentFeature.IMove _prevObjectMoveComponent;
+            private MoveObjectComponentFeature.IMove _prevObjectMoveComponent;
 
             public Emitter(IEmitterData data)
             {
@@ -62,7 +62,7 @@ namespace Match3.Features
 
                 ICellObject obj = game.Rules.ObjectFactory.Construct<ICellObject>(_objectDataToEmit[game.GetRandom() % _objectDataToEmit.Length], game);
 
-                var move = obj.TryGetComponent<MoveComponentFeature.IMove>();
+                var move = obj.TryGetComponent<MoveObjectComponentFeature.IMove>();
                 if (_prevObjectMoveComponent != null && !_prevObjectMoveComponent.IsReleased)
                 {
                     move.Velocity = new FixedVector2(0, -_prevObjectMoveComponent.Velocity.Length);
