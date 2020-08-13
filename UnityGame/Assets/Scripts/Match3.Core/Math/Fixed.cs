@@ -4,6 +4,8 @@ namespace Match3.Math
 {
     public readonly struct Fixed : IEquatable<Fixed>
     {
+        public static readonly Fixed Eps = new Fixed(10, (int)Base);
+
         public const long Base = 1000_000;
         private const double InvBase = 1.0 / Base;
 
@@ -38,7 +40,7 @@ namespace Match3.Math
         {
             return new Fixed(raw);
         }
-        
+
         public static Fixed operator /(Fixed left, Fixed right)
         {
             return new Fixed(left._value * Base / right._value);
@@ -68,22 +70,22 @@ namespace Match3.Math
         {
             return !left.Equals(right);
         }
-        
+
         public static bool operator <(Fixed left, Fixed right)
         {
             return left._value < right._value;
         }
-        
+
         public static bool operator >(Fixed left, Fixed right)
         {
             return left._value > right._value;
         }
-        
+
         public static bool operator <=(Fixed left, Fixed right)
         {
             return left._value <= right._value;
         }
-        
+
         public static bool operator >=(Fixed left, Fixed right)
         {
             return left._value >= right._value;
@@ -97,8 +99,8 @@ namespace Match3.Math
         public static Fixed operator +(Fixed number)
         {
             return number;
-        }
-        
+        } 
+
         public static Fixed operator -(Fixed number)
         {
             return new Fixed(-number._value);
@@ -108,12 +110,12 @@ namespace Match3.Math
         {
             return new Fixed(left._value + right._value);
         }
-        
+
         public static Fixed operator -(Fixed left, Fixed right)
         {
             return new Fixed(left._value - right._value);
         }
-        
+
         public static Fixed operator *(Fixed left, Fixed right)
         {
             return new Fixed(left._value * right._value / Base);

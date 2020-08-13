@@ -25,33 +25,33 @@ public class GameInit : MonoBehaviour
         //         throw new Exception();
         //     }
         // }
-        
-        
+
+
         Debug.OnLog += UnityEngine.Debug.Log;
         Debug.OnWarning += UnityEngine.Debug.LogWarning;
-        
+
         IGameRules rules = new GameRules(_viewFactory);
-        
+
         rules.RegisterObjectFeature(ChipObjectFeature.Instance);
         rules.RegisterObjectFeature(ChainObjectFeature.Instance);
-        
+
         rules.RegisterGameFeature(new Emitters());
         rules.RegisterGameFeature(new Gravity());
         rules.RegisterGameFeature(new Match());
-        
+
         rules.RegisterActionFeature(new KillActionFeature());
         rules.RegisterActionFeature(new SwapActionFeature());
 
         rules.BakeAllFeatures();
-        
+
         IGridData[] data = new IGridData[]
         {
-            ConstructGridData(), 
+            ConstructGridData(),
         };
         var game = new Game(rules, data);
-        
+
         game.Start();
-        
+
         var gameView = Instantiate(_gameView).GetComponent<GameView>();
         gameView.name = "Match3";
         gameView.transform.position = Vector3.zero;
@@ -69,7 +69,7 @@ public class GameInit : MonoBehaviour
             ObjectsToEmit = objectsToEmit;
         }
     }
-    
+
     private TrivialGridData ConstructGridData()
     {
         var data = new TrivialGridData(10, 10);
@@ -79,15 +79,15 @@ public class GameInit : MonoBehaviour
                 {
                     data.ActivateCell(x, y);
                 }
-        
+
         data.AddCellContent(7, 4, new ChipData(3));
         data.AddCellContent(7, 4, new ChainData());
 
         ChipData[] chips = new ChipData[5];
         for (int i = 0; i < chips.Length; ++i)
             chips[i] = new ChipData(i);
-        
-        for (int x = 0; x < 1; ++x)
+
+        for (int x = 0; x < 10; ++x)
         {
             data.AddCellContent(x, 9, new EmitterData(chips));
         }
@@ -123,7 +123,7 @@ public class GameInit : MonoBehaviour
         public MoveComponentFeature.IMoveData Movement { get; }
 
         public MassComponentFeature.IMassData Mass { get; }
-        
+
         public int BodyType => 0;
 
         public int ColorId => Color.ColorId;
