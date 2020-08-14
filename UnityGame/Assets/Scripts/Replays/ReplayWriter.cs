@@ -8,6 +8,8 @@ namespace Replays
 
         private readonly ReplayData _replay = new ReplayData();
 
+        public int TickId => _replay.Size;
+
         public ReplayWriter(IGameController controller)
         {
             _controller = controller;

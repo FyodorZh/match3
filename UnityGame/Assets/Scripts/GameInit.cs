@@ -28,23 +28,71 @@ public class GameInit : MonoBehaviour
         StartGame(gamePresenter, gameController, "Match3");
     }
 
+    private ReplayData _replayData;
+    private ReplayPlayer _replayPlayer;
+
+    private string _strPos = "0";
+
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(100, 100, 100, 50), "Replay"))
+        GUI.Label(new Rect(10, 10, 200, 40), "Current tick: " + _replayWriter.TickId);
+
+        if (GUI.Button(new Rect(10, 50, 100, 40), "Start Replay"))
         {
+            _replayData = _replayWriter.GetReplay();
+
             ConstructGame(new IGridData[] { ConstructGridData() }, out var gamePresenter, out var gameController);
 
-            gameController = new ReplayPlayer(_replayWriter.GetReplay(), gameController);
+            _replayPlayer = new ReplayPlayer(_replayData, gameController);
+            gameController = _replayPlayer;
 
             var go = StartGame(gamePresenter, gameController, "Replay");
 
             go.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-            go.transform.localPosition = new Vector3(-6, 0, 1);
+            go.transform.localPosition = new Vector3(-6, 0, 0);
+        }
 
+        if (_replayData != null)
+        {
+            GUI.Label(new Rect(10, 100, 200, 40), "Replay tick: " + _replayPlayer.TickId);
+
+            if (GUI.Button(new Rect(10, 150, 100, 40), "Restart Replay"))
+            {
+                ConstructGame(new IGridData[] { ConstructGridData() }, out var gamePresenter, out var gameController);
+
+                _replayPlayer = new ReplayPlayer(_replayData, gameController);
+                gameController = _replayPlayer;
+
+                var go = StartGame(gamePresenter, gameController, "Replay");
+
+                go.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                go.transform.localPosition = new Vector3(-6, 0, 0);
+            }
+
+            _strPos = GUI.TextField(new Rect(220, 200, 50, 30), _strPos);
+
+            if (GUI.Button(new Rect(10, 200, 200, 40), "Restart Replay From"))
+            {
+                ConstructGame(new IGridData[] { ConstructGridData() }, out var gamePresenter, out var gameController);
+
+                _replayPlayer = new ReplayPlayer(_replayData, gameController);
+                gameController = _replayPlayer;
+
+                var go = StartGame(gamePresenter, gameController, "Replay");
+
+                go.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                go.transform.localPosition = new Vector3(-6, 0, 1);
+
+                _replayPlayer.ApplyNSteps(int.Parse(_strPos));
+            }
+
+            if (GUI.Button(new Rect(10, 250, 100, 40), "Stop Match3"))
+            {
+                var obj = GameObject.Find("Match3");
+                obj.SetActive(!obj.activeInHierarchy);
+            }
         }
     }
-
-
 
     public GameObject StartGame(IGame gamePresenter, IGameController gameController, string name)
     {

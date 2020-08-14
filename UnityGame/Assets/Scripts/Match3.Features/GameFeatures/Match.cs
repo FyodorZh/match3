@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Match3.Core;
+using Match3.Features.CellComponentFeatures;
 
 namespace Match3.Features
 {
@@ -8,7 +9,7 @@ namespace Match3.Features
         public override IEnumerable<ICellComponentFeature> DependsOnCellComponentFeatures { get; } = new ICellComponentFeature[]
         {
         };
-        
+
         public override IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; } = new IObjectFeature[]
         {
         };
@@ -78,7 +79,9 @@ namespace Match3.Features
                                         var cell = grid.GetCell(new CellPosition(x + pattern.OffsetsX[i], y + pattern.OffsetsY[i]));
                                         var colorComponent = cell.FindObjectComponent<ColorObjectComponentFeature.IColor>();
                                         var colorObject = colorComponent.Owner;
-                                        game.InternalInvoke(() => colorObject.Release());
+                                        var health = colorObject.Owner.FindComponent<HealthCellComponentFeature.IHealth>();
+                                        health.ApplyDamage(new Damage(DamageType.Match, 1));
+                                        //game.InternalInvoke(() => colorObject.Release());
                                     }
 
                                     break;

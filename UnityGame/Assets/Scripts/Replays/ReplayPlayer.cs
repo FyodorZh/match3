@@ -1,4 +1,5 @@
-﻿using Match3;
+﻿using System;
+using Match3;
 
 namespace Replays
 {
@@ -7,7 +8,11 @@ namespace Replays
         private ReplayData _data;
         private IGameController _controller;
 
-        private int count = 0;
+        private int _pos = 0;
+
+        public ReplayData Data => _data;
+
+        public int TickId => Math.Min(_pos, _data.Size);
 
         public ReplayPlayer(ReplayData data, IGameController controller)
         {
@@ -17,16 +22,29 @@ namespace Replays
 
         public void Start()
         {
-            _data.Run(count++, _controller);
+            _data.Run(_pos++, _controller);
         }
 
         public void Tick(int dTimeMs)
         {
-            _data.Run(count++, _controller);
+            _data.Run(_pos++, _controller);
         }
 
         public void Action(string actionFeatureName, params CellId[] cells)
         {
+        }
+
+        public void Restart()
+        {
+            _pos = 0;
+        }
+
+        public void ApplyNSteps(int n)
+        {
+            for (int i = 0; i < n; ++i)
+            {
+                _data.Run(_pos++, _controller);
+            }
         }
     }
 }

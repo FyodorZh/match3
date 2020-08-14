@@ -53,6 +53,8 @@ namespace Replays
     {
         private readonly List<ReplayStep> _steps = new List<ReplayStep>();
 
+        public int Size => _steps.Count;
+
         public ReplayData()
         {
         }
