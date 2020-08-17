@@ -75,7 +75,7 @@ namespace Match3.Features
 
                 _lock = new ReleasableLock();
                 FallingObjectMover.Owner.Owner.AddLock(_lock);
-                FallingObjectMover.SetTrajectory(this);
+                FallingObjectMover.SetTrajectory(new MoveObjectComponentFeature.MoveCause("gravity"), this);
             }
 
             public void Finish()

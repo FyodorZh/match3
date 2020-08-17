@@ -29,6 +29,8 @@ namespace Match3
 
         private readonly Random _random = new Random(777);
 
+        private int _currentTimeMs;
+
         internal Board Board => _board;
 
         public IGameRules Rules { get; }
@@ -60,6 +62,8 @@ namespace Match3
 
         public void Tick(int dTimeMs)
         {
+            _currentTimeMs += dTimeMs;
+
             Fixed fixedTimeSeconds = new Fixed(dTimeMs, 1000);
 
             foreach (var action in _externalActions)
@@ -110,6 +114,8 @@ namespace Match3
                 Cells = cells;
             }
         }
+
+        public int CurrentTime => _currentTimeMs;
 
         public int GetRandom()
         {

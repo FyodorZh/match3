@@ -26,6 +26,8 @@ namespace Match3.Features
 
         protected override void Process(IGame game, int dTimeMs)
         {
+            int curTime = game.CurrentTime;
+
             foreach (var grid in game.Board.Grids)
             {
                 int[,] colors = new int[grid.Width, grid.Height];
@@ -37,8 +39,12 @@ namespace Match3.Features
                         var color = cell.FindObjectComponent<ColorObjectComponentFeature.IColor>();
                         if (color != null)
                         {
-                            colors[cell.Position.X, cell.Position.Y] = color.ColorId;
-                            continue;
+                            MoveObjectComponentFeature.IMove move = cell.FindObjectComponent<MoveObjectComponentFeature.IMove>();
+                            if (move == null || move.MoveCause.Value == "user" || curTime - move.LastMoveTime > 150)
+                            {
+                                colors[cell.Position.X, cell.Position.Y] = color.ColorId;
+                                continue;
+                            }
                         }
                     }
 

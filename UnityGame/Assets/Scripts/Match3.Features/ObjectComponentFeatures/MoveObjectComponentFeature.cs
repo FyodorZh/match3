@@ -24,14 +24,27 @@ namespace Match3.Features
             return new Move(data);
         }
 
+        public struct MoveCause
+        {
+            public readonly string Value;
+
+            public MoveCause(string value)
+            {
+                Value = value;
+            }
+        }
+
         public interface IMove : ICellObjectComponent
         {
             bool IsMoving { get; }
 
+            int LastMoveTime { get; }
+            MoveCause MoveCause { get; }
+
             FixedVector2 Offset { get; set; }
             FixedVector2 Velocity { get; set; }
 
-            void SetTrajectory(ITrajectory trajectory, Action onUpdate = null, Action onFinish = null);
+            void SetTrajectory(MoveCause intention, ITrajectory trajectory, Action onUpdate = null, Action onFinish = null);
         }
 
         public interface IMoveData : ICellObjectComponentData
@@ -44,6 +57,8 @@ namespace Match3.Features
             private Action _onUpdate;
             private Action _onFinish;
 
+            private int _lastMoveTime = 0;
+
             public override string TypeId => Name;
 
             public Move(IMoveData data)
@@ -52,10 +67,14 @@ namespace Match3.Features
 
             public bool IsMoving => _trajectory != null;
 
+            public int LastMoveTime => _lastMoveTime;
+
+            public MoveCause MoveCause { get; private set; }
+
             public FixedVector2 Offset { get; set; }
             public FixedVector2 Velocity { get; set; }
 
-            public void SetTrajectory(ITrajectory trajectory, Action onUpdate, Action onFinish)
+            public void SetTrajectory(MoveCause intention, ITrajectory trajectory, Action onUpdate, Action onFinish)
             {
                 Debug.Assert(_trajectory == null);
                 Offset = trajectory.Position;
@@ -63,6 +82,7 @@ namespace Match3.Features
                 _trajectory = trajectory;
                 _onUpdate = onUpdate;
                 _onFinish = onFinish;
+                MoveCause = intention;
             }
 
             protected override void OnRelease()
@@ -86,6 +106,8 @@ namespace Match3.Features
                     bool inProgress = _trajectory.Update(dTimeSeconds);
                     Offset = _trajectory.Position;
                     Velocity = _trajectory.Velocity;
+
+                    _lastMoveTime = Owner.Owner.Game.CurrentTime;
 
                     if (_onUpdate != null)
                     {
