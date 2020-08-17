@@ -34,6 +34,7 @@ namespace Match3.Features
             int Priority { get; }
             int HealthValue { get; }
             DamageType Vulnerability { get; }
+            bool Fragile { get; }
         }
 
         private class Health : CellObjectComponent, IHealth
@@ -45,11 +46,14 @@ namespace Match3.Features
 
             public DamageType Vulnerability { get; }
 
+            public bool Fragile { get; }
+
             public Health(IHealthData data)
             {
                 HealthValue = data.HealthValue;
                 Vulnerability = data.Vulnerability;
                 Priority = data.Priority;
+                Fragile = data.Fragile;
             }
 
             public Damage ApplyDamage(Damage damage)
@@ -60,6 +64,8 @@ namespace Match3.Features
                     if (d > 0)
                     {
                         HealthValue -= d;
+                        if (Fragile)
+                            return damage;
                         return new Damage(damage.Type, damage.Value - d);
                     }
                 }

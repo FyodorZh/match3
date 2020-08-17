@@ -116,6 +116,7 @@ public class GameInit : MonoBehaviour
 
         rules.RegisterObjectFeature(ChipObjectFeature.Instance);
         rules.RegisterObjectFeature(ChainObjectFeature.Instance);
+        rules.RegisterObjectFeature(TileObjectFeature.Instance);
 
         rules.RegisterCellComponentFeature(HealthCellComponentFeature.Instance);
 
@@ -158,6 +159,11 @@ public class GameInit : MonoBehaviour
 
         data.AddCellContent(7, 4, new ChipData(3));
         data.AddCellContent(7, 4, new ChainData());
+
+        data.AddCellContent(1, 5, new TileObjectData(2));
+        data.AddCellContent(2, 5, new TileObjectData(1));
+        data.AddCellContent(1, 4, new TileObjectData(1));
+
 
         ChipData[] chips = new ChipData[5];
         for (int i = 0; i < chips.Length; ++i)
@@ -210,7 +216,7 @@ public class GameInit : MonoBehaviour
             Color = new ColorData(colorId);
             Mass = new MassData();
             Movement = new MoveData();
-            Health = new HealthData(1, 1, DamageType.Match);
+            Health = new HealthData(1, 1, DamageType.Match, false);
         }
     }
 
@@ -218,7 +224,7 @@ public class GameInit : MonoBehaviour
     {
         public string TypeId => ChainObjectFeature.Name;
 
-        public HealthObjectComponentFeature.IHealthData Health { get; } = new HealthData(10, 3, DamageType.Match);
+        public HealthObjectComponentFeature.IHealthData Health { get; } = new HealthData(10, 3, DamageType.Match, false);
     }
 
     private class HealthData : HealthObjectComponentFeature.IHealthData
@@ -228,11 +234,26 @@ public class GameInit : MonoBehaviour
         public int HealthValue { get; }
         public DamageType Vulnerability { get; }
 
-        public HealthData(int priority, int value, DamageType vulnerability)
+        public bool Fragile { get; }
+
+        public HealthData(int priority, int value, DamageType vulnerability, bool fragile)
         {
             Priority = priority;
             HealthValue = value;
             Vulnerability = vulnerability;
+            Fragile = fragile;
+        }
+    }
+
+    public class TileObjectData : TileObjectFeature.ITileData
+    {
+        public string TypeId => TileObjectFeature.Name;
+
+        public int Health { get; }
+
+        public TileObjectData(int health)
+        {
+            Health = health;
         }
     }
 

@@ -15,6 +15,7 @@ namespace Match3.Features
         public IEnumerable<IObjectComponentFeature> DependsOn { get; } = new IObjectComponentFeature[]
         {
             MassObjectComponentFeature.Instance,
+            HealthObjectComponentFeature.Instance,
         };
 
         public IObject Construct(IObjectData data)

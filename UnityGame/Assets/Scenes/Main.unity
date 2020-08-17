@@ -156,6 +156,8 @@ MonoBehaviour:
     type: 3}
   _chainPrefab: {fileID: -4673528745723480632, guid: 0b8cf67a72a0db04186c2426777d28c2,
     type: 3}
+  _tilePrefab: {fileID: 5480393956367544415, guid: 56f9ba67823a20f4bbae7d6386fcbfef,
+    type: 3}
 --- !u!4 &126628244
 Transform:
   m_ObjectHideFlags: 0

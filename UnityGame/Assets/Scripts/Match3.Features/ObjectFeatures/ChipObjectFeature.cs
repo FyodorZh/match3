@@ -15,6 +15,8 @@ namespace Match3.Features
         {
             ColorObjectComponentFeature.Instance,
             MassObjectComponentFeature.Instance,
+            MoveObjectComponentFeature.Instance,
+            HealthObjectComponentFeature.Instance,
         };
 
         public IObject Construct(IObjectData data)
