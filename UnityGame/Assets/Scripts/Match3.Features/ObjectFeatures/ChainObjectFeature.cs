@@ -27,6 +27,7 @@ namespace Match3.Features
 
         public interface IChain : ICellObject
         {
+            HealthObjectComponentFeature.IHealth Health { get; }
         }
 
         public interface IChainData : ICellObjectData
@@ -36,21 +37,31 @@ namespace Match3.Features
 
         private class Chain : CellObject, IChain
         {
-            private ReleasableBoolAgent _lockOfMass;
+            private ReleasableBoolAgent _lockForMass;
+
+            private readonly HealthObjectComponentFeature.IHealth _healthComponent;
+
+            public HealthObjectComponentFeature.IHealth Health { get; }
 
             public Chain(IChainData data)
-                : base(new ObjectTypeId(data.TypeId), HealthObjectComponentFeature.Instance.Construct(data.Health))
+                : this(data, HealthObjectComponentFeature.Instance.Construct(data.Health))
             {
+            }
+
+            private Chain(IChainData data, HealthObjectComponentFeature.IHealth healthComponent)
+                : base(new ObjectTypeId(data.TypeId), healthComponent)
+            {
+                Health = healthComponent;
             }
 
             protected override void OnChangeOwner(ICell newOwner)
             {
-                _lockOfMass?.Release();
+                _lockForMass?.Release();
                 if (newOwner != null)
                 {
                     var mass = newOwner.FindObjectComponent<MassObjectComponentFeature.IMass>();
                     Debug.Assert(mass != null);
-                    mass?.IsLocked.AddAgent(_lockOfMass = new ReleasableLock());
+                    mass?.IsLocked.AddAgent(_lockForMass = new ReleasableLock());
                 }
 
                 base.OnChangeOwner(newOwner);

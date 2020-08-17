@@ -74,6 +74,8 @@ namespace Match3.Features.CellComponentFeatures
                         {
                             Cell.Game.InternalInvoke(c.Owner.Release);
                         }
+
+                        ++i;
                     }
 
                     _components.Clear();

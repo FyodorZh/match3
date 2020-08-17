@@ -1,6 +1,4 @@
-﻿using System;
-using Match3.Core;
-using Match3.Math;
+﻿using Match3.Math;
 
 namespace Match3
 {

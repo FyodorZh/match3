@@ -218,7 +218,7 @@ public class GameInit : MonoBehaviour
     {
         public string TypeId => ChainObjectFeature.Name;
 
-        public HealthObjectComponentFeature.IHealthData Health { get; } = new HealthData(10, 1, DamageType.Match);
+        public HealthObjectComponentFeature.IHealthData Health { get; } = new HealthData(10, 3, DamageType.Match);
     }
 
     private class HealthData : HealthObjectComponentFeature.IHealthData
