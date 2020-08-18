@@ -50,7 +50,7 @@ namespace Match3.Features
             }
 
             private Chain(IChainData data, HealthObjectComponentFeature.IHealth healthComponent)
-                : base(new ObjectTypeId(data.TypeId), healthComponent)
+                : base(new ObjectTypeId(data.ObjectTypeId), healthComponent)
             {
                 Health = healthComponent;
             }

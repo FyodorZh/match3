@@ -56,7 +56,7 @@ namespace Match3.Features
 
             public HealthObjectComponentFeature.IHealth Health { get; }
             public Tile(ITileData data)
-                : this(new ObjectTypeId(data.TypeId),
+                : this(new ObjectTypeId(data.ObjectTypeId),
                     HealthObjectComponentFeature.Instance.Construct(new HealthData(data.Health)))
             {
             }

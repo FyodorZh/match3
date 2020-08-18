@@ -9,14 +9,6 @@ namespace Match3.Features
 
         public string FeatureId => Name;
 
-        public IObjectComponent Construct(IObjectComponentData data)
-        {
-            if (!(data is IHealthData healthData))
-                throw new InvalidOperationException();
-
-            return Construct(healthData);
-        }
-
         public IHealth Construct(IHealthData data)
         {
             return new Health(data);

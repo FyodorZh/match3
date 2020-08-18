@@ -137,7 +137,7 @@ public class GameInit : MonoBehaviour
 
     class EmitterData : EmitterObjectFeature.IEmitterObjectData, EmitterObjectComponentFeature.IEmitterData
     {
-        public string TypeId => EmitterObjectFeature.Name;
+        public string ObjectTypeId => EmitterObjectFeature.Name;
         public EmitterObjectComponentFeature.IEmitterData Data => this;
         public ICellObjectData[] ObjectsToEmit { get; }
 
@@ -181,7 +181,6 @@ public class GameInit : MonoBehaviour
     {
         private class ColorData : ColorObjectComponentFeature.IColorData
         {
-            public string TypeId => ColorObjectComponentFeature.Name;
             public int ColorId { get; }
 
             public ColorData(int colorId)
@@ -189,22 +188,8 @@ public class GameInit : MonoBehaviour
                 ColorId = colorId;
             }
         }
-
-        private class MassData : MassObjectComponentFeature.IMassData
-        {
-            public string TypeId => MassObjectComponentFeature.Name;
-        }
-
-        private class MoveData : MoveObjectComponentFeature.IMoveData
-        {
-            public string TypeId => MoveObjectComponentFeature.Name;
-        }
-
-        public string TypeId => ChipObjectFeature.Name;
+        public string ObjectTypeId => ChipObjectFeature.Name;
         public ColorObjectComponentFeature.IColorData Color { get; }
-        public MoveObjectComponentFeature.IMoveData Movement { get; }
-
-        public MassObjectComponentFeature.IMassData Mass { get; }
         public HealthObjectComponentFeature.IHealthData Health { get; }
 
         public int BodyType => 0;
@@ -214,22 +199,19 @@ public class GameInit : MonoBehaviour
         public ChipData(int colorId)
         {
             Color = new ColorData(colorId);
-            Mass = new MassData();
-            Movement = new MoveData();
             Health = new HealthData(1, 1, DamageType.Match, false);
         }
     }
 
     private class ChainData : ChainObjectFeature.IChainData
     {
-        public string TypeId => ChainObjectFeature.Name;
+        public string ObjectTypeId => ChainObjectFeature.Name;
 
         public HealthObjectComponentFeature.IHealthData Health { get; } = new HealthData(10, 3, DamageType.Match, false);
     }
 
     private class HealthData : HealthObjectComponentFeature.IHealthData
     {
-        public string TypeId => HealthObjectComponentFeature.Name;
         public int Priority { get; }
         public int HealthValue { get; }
         public DamageType Vulnerability { get; }
@@ -247,7 +229,7 @@ public class GameInit : MonoBehaviour
 
     public class TileObjectData : TileObjectFeature.ITileData
     {
-        public string TypeId => TileObjectFeature.Name;
+        public string ObjectTypeId => TileObjectFeature.Name;
 
         public int Health { get; }
 

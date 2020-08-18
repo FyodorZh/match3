@@ -2,6 +2,5 @@
 {
     public interface IData
     {
-        string TypeId { get; }
     }
 }

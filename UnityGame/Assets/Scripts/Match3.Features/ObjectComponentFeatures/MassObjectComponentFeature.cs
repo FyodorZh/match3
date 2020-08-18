@@ -5,38 +5,26 @@ namespace Match3.Features
 {
     public class MassObjectComponentFeature : ICellObjectObjectComponentFeature
     {
-        public const string Name = "Mass"; 
+        public const string Name = "Mass";
         public static readonly MassObjectComponentFeature Instance = new MassObjectComponentFeature();
 
         public string FeatureId => Name;
-        
-        public IObjectComponent Construct(IObjectComponentData data)
+
+        public IMass Construct()
         {
-            if (!(data is IMassData massData))
-                throw new InvalidOperationException();
-            
-            return Construct(massData);
+            return new Mass();
         }
 
-        public IMass Construct(IMassData data)
-        {
-            return new Mass(data);
-        }
-        
         public interface IMass : ICellObjectComponent
         {
             BoolStack IsLocked { get; }
         }
 
-        public interface IMassData : ICellObjectComponentData
-        {
-        }
-        
         private class Mass : CellObjectComponent, IMass
         {
             public override string TypeId => Name;
 
-            public Mass(IMassData data)
+            public Mass()
             {
                 IsLocked = new BoolStack();
             }

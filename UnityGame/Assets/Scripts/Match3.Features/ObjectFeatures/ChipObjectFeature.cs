@@ -36,8 +36,6 @@ namespace Match3.Features
         public interface IChipData : ICellObjectData
         {
             ColorObjectComponentFeature.IColorData Color { get; }
-            MoveObjectComponentFeature.IMoveData Movement { get; }
-            MassObjectComponentFeature.IMassData Mass { get; }
             HealthObjectComponentFeature.IHealthData Health { get; }
 
             int BodyType { get; }
@@ -50,10 +48,10 @@ namespace Match3.Features
             public int BodyType { get; }
 
             public Chip(IChipData data)
-                : this(new ObjectTypeId(data.TypeId),
+                : this(new ObjectTypeId(data.ObjectTypeId),
                     ColorObjectComponentFeature.Instance.Construct(data.Color),
-                    MassObjectComponentFeature.Instance.Construct(data.Mass),
-                    MoveObjectComponentFeature.Instance.Construct(data.Movement),
+                    MassObjectComponentFeature.Instance.Construct(),
+                    MoveObjectComponentFeature.Instance.Construct(),
                     HealthObjectComponentFeature.Instance.Construct(data.Health))
             {
                 BodyType = data.BodyType;

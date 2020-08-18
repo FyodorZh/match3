@@ -2,5 +2,6 @@
 {
     public interface IObjectData : IData
     {
+        string ObjectTypeId { get; }
     }
 }

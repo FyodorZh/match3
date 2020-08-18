@@ -2,6 +2,5 @@
 {
     public interface IObjectComponentFeature : IFeature
     {
-        IObjectComponent Construct(IObjectComponentData data);
     }
 }

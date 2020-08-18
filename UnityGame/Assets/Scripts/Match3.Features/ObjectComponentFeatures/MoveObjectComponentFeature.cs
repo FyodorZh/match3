@@ -11,17 +11,9 @@ namespace Match3.Features
 
         public string FeatureId => Name;
 
-        public IObjectComponent Construct(IObjectComponentData data)
+        public IMove Construct()
         {
-            if (!(data is IMoveData MoveData))
-                throw new InvalidOperationException();
-
-            return Construct(MoveData);
-        }
-
-        public IMove Construct(IMoveData data)
-        {
-            return new Move(data);
+            return new Move();
         }
 
         public struct MoveCause
@@ -47,10 +39,6 @@ namespace Match3.Features
             void SetTrajectory(MoveCause intention, ITrajectory trajectory, Action onUpdate = null, Action onFinish = null);
         }
 
-        public interface IMoveData : ICellObjectComponentData
-        {
-        }
-
         private class Move : CellObjectComponent, IMove
         {
             private ITrajectory _trajectory;
@@ -61,7 +49,7 @@ namespace Match3.Features
 
             public override string TypeId => Name;
 
-            public Move(IMoveData data)
+            public Move()
             {
             }
 

@@ -11,14 +11,6 @@ namespace Match3.Features
 
         public string FeatureId => Name;
 
-        public IObjectComponent Construct(IObjectComponentData data)
-        {
-            if (!(data is IEmitterData typedData))
-                throw new InvalidOperationException();
-
-            return Construct(typedData);
-        }
-
         public IEmitter Construct(IEmitterData data)
         {
             return new Emitter(data);
