@@ -65,7 +65,7 @@ namespace Match3.Features
 
                         foreach (var pattern in _patterns)
                         {
-                            if (x + pattern.Width <= W && y + pattern.Height <= H)
+                            if (x + pattern.MaxX < W && y + pattern.MaxY < H)
                             {
                                 bool isOK = true;
                                 for (int i = 1; i < pattern.OffsetsX.Length; ++i)
@@ -100,42 +100,17 @@ namespace Match3.Features
         }
 
 
-        private readonly Pattern[] _patterns = new Pattern[]
+        private readonly Pattern2D[] _patterns = new Pattern2D[]
         {
-            new Pattern(new int[][]{new[]{0,0}, new[]{0,1}, new[]{0, 2}, new[]{0,3}, new[]{0,4}}),
-            new Pattern(new int[][]{new[]{0,0}, new[]{1,0}, new[]{2, 0}, new[]{3,0}, new[]{4,0}}),
-            new Pattern(new int[][]{new[]{0,0}, new[]{0,1}, new[]{0, 2}, new[]{0,3}}),
-            new Pattern(new int[][]{new[]{0,0}, new[]{1,0}, new[]{2, 0}, new[]{3,0}}),
-            new Pattern(new int[][]{new[]{0,0}, new[]{0,1}, new[]{0, 2}}),
-            new Pattern(new int[][]{new[]{0,0}, new[]{1,0}, new[]{2, 0}}),
+            new Pattern2D(new int[][]{new[]{0,0}, new[]{0,1}, new[]{0, 2}, new[]{0,3}, new[]{0,4}}),
+            new Pattern2D(new int[][]{new[]{0,0}, new[]{1,0}, new[]{2, 0}, new[]{3,0}, new[]{4,0}}),
+            new Pattern2D(new int[][]{new[]{0,0}, new[]{0,1}, new[]{0, 2}, new[]{0,3}}),
+            new Pattern2D(new int[][]{new[]{0,0}, new[]{1,0}, new[]{2, 0}, new[]{3,0}}),
+            new Pattern2D(new int[][]{new[]{0,0}, new[]{0,1}, new[]{0, 2}}),
+            new Pattern2D(new int[][]{new[]{0,0}, new[]{1,0}, new[]{2, 0}}),
 
-            new Pattern(new int[][]{new[]{0,0}, new[]{1,0}, new[]{0, 1}, new[]{1, 1}}),
+            new Pattern2D(new int[][]{new[]{0,0}, new[]{1,0}, new[]{0, 1}, new[]{1, 1}}),
         };
 
-        private class Pattern
-        {
-            public readonly int Length;
-            public readonly int Width;
-            public readonly int Height;
-            public readonly int[] OffsetsX;
-            public readonly int[] OffsetsY;
-
-            public Pattern(int[][] list)
-            {
-                Length = list.Length;
-                OffsetsX = new int[Length];
-                OffsetsY = new int[Length];
-                for (int i = 0; i < Length; ++i)
-                {
-                    if (Width <= list[i][0])
-                        Width = list[i][0] + 1;
-                    if (Height <= list[i][1])
-                        Height = list[i][1] + 1;
-
-                    OffsetsX[i] = list[i][0];
-                    OffsetsY[i] = list[i][1];
-                }
-            }
-        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Match3.Math
+namespace Match3
 {
     public class LineTrajectory : Trajectory
     {

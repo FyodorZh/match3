@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Match3.Math;
+using Match3;
 
 namespace Match3.Core
 {

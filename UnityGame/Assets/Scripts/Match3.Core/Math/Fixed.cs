@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Match3.Math
+namespace Match3
 {
     public readonly struct Fixed : IEquatable<Fixed>
     {
@@ -99,7 +99,7 @@ namespace Match3.Math
         public static Fixed operator +(Fixed number)
         {
             return number;
-        } 
+        }
 
         public static Fixed operator -(Fixed number)
         {

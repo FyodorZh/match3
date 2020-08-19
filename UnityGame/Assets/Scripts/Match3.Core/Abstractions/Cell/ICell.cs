@@ -71,5 +71,38 @@ namespace Match3
             pos = new CellPosition(pos.X, pos.Y - 1);
             return cell.Owner.GetCell(pos);
         }
+
+
+        private static readonly CellNeighbours _cross = new CellNeighbours(new Pattern2D(new []
+        {
+            new[] {-1, 0},
+            new[] {0, -1},
+            new[] {0, 0},
+            new[] {1, 0},
+            new[] {0, 1}
+        }));
+
+        private static readonly CellNeighbours _box = new CellNeighbours(new Pattern2D(new []
+        {
+            new[] {-1, -1},
+            new[] {-1, 0},
+            new[] {-1, 1},
+            new[] {0, -1},
+            new[] {0, 0},
+            new[] {0, 1},
+            new[] {1, -1},
+            new[] {1, 0},
+            new[] {1, 1},
+        }));
+
+        public static IEnumerable<ICell> ActiveNeighboursInCross(this ICell cell)
+        {
+            return _cross.Enumerate(cell, true);
+        }
+
+        public static IEnumerable<ICell> ActiveNeighboursInBox(this ICell cell)
+        {
+            return _cross.Enumerate(cell, true);
+        }
     }
 }

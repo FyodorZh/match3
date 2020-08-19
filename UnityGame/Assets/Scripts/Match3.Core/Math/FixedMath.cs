@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Match3.Math
+namespace Match3
 {
     public static class FixedMath
     {
@@ -15,7 +15,7 @@ namespace Match3.Math
         {
             return a > b ? a : b;
         }
-        
+
         public static Fixed Min(Fixed a, Fixed b)
         {
             return a < b ? a : b;
@@ -26,7 +26,7 @@ namespace Match3.Math
             const long SqrtBase = 1000;
             if (Fixed.Base != SqrtBase * SqrtBase)
                 throw new InvalidOperationException();
-            
+
             long raw = Sqrt(x.GetRaw()) * SqrtBase;
             return Fixed.FromRaw(raw);
         }
@@ -40,16 +40,16 @@ namespace Match3.Math
 
             long a = 1;
             long b = 1;
-            
+
             checked
             {
                 while (b * b < x)
                 {
                     a = b;
                     b *= 2;
-                }    
+                }
             }
-            
+
             while (b - a > 1)
             {
                 long m = (a + b) / 2;
