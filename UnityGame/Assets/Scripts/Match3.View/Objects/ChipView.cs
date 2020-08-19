@@ -9,6 +9,7 @@ namespace Match3.View.Objects
         public List<Texture2D> _colors;
 
         public GameObject _moveStateView;
+
         protected override void OnInit()
         {
             base.OnInit();

@@ -11,6 +11,7 @@ namespace Match3.View
         public ChipView _chipPrefab;
         public ChainView _chainPrefab;
         public TileView _tilePrefab;
+        public BombView _bombPrefab;
 
         public IObjectView Construct(IObject logicObject)
         {
@@ -28,6 +29,9 @@ namespace Match3.View
                     break;
                 case TileObjectFeature.Name:
                     view = Instantiate(_tilePrefab);
+                    break;
+                case BombObjectFeature.Name:
+                    view = Instantiate(_bombPrefab);
                     break;
                 default:
                     throw new Exception();

@@ -158,6 +158,8 @@ MonoBehaviour:
     type: 3}
   _tilePrefab: {fileID: 5480393956367544415, guid: 56f9ba67823a20f4bbae7d6386fcbfef,
     type: 3}
+  _bombPrefab: {fileID: -6056258266585336553, guid: 1d5b0e9ad0c0f8e4f956542360744135,
+    type: 3}
 --- !u!4 &126628244
 Transform:
   m_ObjectHideFlags: 0

@@ -117,6 +117,7 @@ public class GameInit : MonoBehaviour
         rules.RegisterObjectFeature(ChipObjectFeature.Instance);
         rules.RegisterObjectFeature(ChainObjectFeature.Instance);
         rules.RegisterObjectFeature(TileObjectFeature.Instance);
+        rules.RegisterObjectFeature(BombObjectFeature.Instance);
 
         rules.RegisterCellComponentFeature(HealthCellComponentFeature.Instance);
 
@@ -164,6 +165,8 @@ public class GameInit : MonoBehaviour
         data.AddCellContent(2, 5, new TileObjectData(1));
         data.AddCellContent(1, 4, new TileObjectData(1));
 
+        data.AddCellContent(1, 1, new BombObjectData(2));
+
 
         ChipData[] chips = new ChipData[5];
         for (int i = 0; i < chips.Length; ++i)
@@ -177,17 +180,18 @@ public class GameInit : MonoBehaviour
         return data;
     }
 
+    private class ColorData : ColorObjectComponentFeature.IColorData
+    {
+        public int ColorId { get; }
+
+        public ColorData(int colorId)
+        {
+            ColorId = colorId;
+        }
+    }
+
     private class ChipData : ChipObjectFeature.IChipData
     {
-        private class ColorData : ColorObjectComponentFeature.IColorData
-        {
-            public int ColorId { get; }
-
-            public ColorData(int colorId)
-            {
-                ColorId = colorId;
-            }
-        }
         public string ObjectTypeId => ChipObjectFeature.Name;
         public ColorObjectComponentFeature.IColorData Color { get; }
         public HealthObjectComponentFeature.IHealthData Health { get; }
@@ -237,6 +241,18 @@ public class GameInit : MonoBehaviour
         {
             Health = health;
         }
+    }
+
+    public class BombObjectData : BombObjectFeature.IBombData
+    {
+        public string ObjectTypeId => BombObjectFeature.Name;
+        public ColorObjectComponentFeature.IColorData Color { get; }
+
+        public BombObjectData(int colorId)
+        {
+            Color = new ColorData(colorId);
+        }
+
     }
 
 }

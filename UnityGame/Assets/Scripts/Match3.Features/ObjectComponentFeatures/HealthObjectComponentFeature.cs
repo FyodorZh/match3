@@ -16,6 +16,7 @@ namespace Match3.Features
 
         public interface IHealth : ICellObjectComponent
         {
+            event Action<IHealth, Damage> DamageApplied;
             int Priority { get; }
             int HealthValue { get; }
             Damage ApplyDamage(Damage damage);
@@ -31,6 +32,8 @@ namespace Match3.Features
 
         private class Health : CellObjectComponent, IHealth
         {
+            public event Action<IHealth, Damage> DamageApplied;
+
             public override string TypeId => Name;
 
             public int Priority { get; }
@@ -56,9 +59,14 @@ namespace Match3.Features
                     if (d > 0)
                     {
                         HealthValue -= d;
-                        if (Fragile)
-                            return damage;
-                        return new Damage(damage.Type, damage.Value - d);
+                        DamageApplied?.Invoke(this, damage);
+                        if (!Fragile)
+                            damage = new Damage(damage.Type, damage.Value - d);
+
+                        if (HealthValue == 0)
+                        {
+                            Owner.Owner.Game.InternalInvoke(Owner.Release);
+                        }
                     }
                 }
 

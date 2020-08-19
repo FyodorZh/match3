@@ -70,11 +70,6 @@ namespace Match3.Features.CellComponentFeatures
                     {
                         var c = _components[i];
                         damage = c.ApplyDamage(damage);
-                        if (c.HealthValue == 0)
-                        {
-                            Cell.Game.InternalInvoke(c.Owner.Release);
-                        }
-
                         ++i;
                     }
 

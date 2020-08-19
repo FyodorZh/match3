@@ -27,6 +27,10 @@ namespace Match3.Core
         {
         }
 
+        protected virtual void OnTick(Fixed dTimeSeconds)
+        {
+        }
+
         protected override void OnRelease()
         {
             Owner?.Destroy(this);
@@ -71,6 +75,7 @@ namespace Match3.Core
             {
                 component.Tick(dTimeSeconds);
             }
+            OnTick(dTimeSeconds);
         }
     }
 }
