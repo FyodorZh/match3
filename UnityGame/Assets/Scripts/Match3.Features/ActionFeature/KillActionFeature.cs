@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Match3.Features.CellComponentFeatures;
 
 namespace Match3.Features
 {

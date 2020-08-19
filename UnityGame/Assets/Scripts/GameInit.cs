@@ -2,7 +2,6 @@
 using Match3;
 using Match3.Core;
 using Match3.Features;
-using Match3.Features.CellComponentFeatures;
 using Match3.View;
 using Replays;
 using UnityEngine;
@@ -203,7 +202,7 @@ public class GameInit : MonoBehaviour
         public ChipData(int colorId)
         {
             Color = new ColorData(colorId);
-            Health = new HealthData(1, 1, DamageType.Match, false);
+            Health = new HealthData(1, 1, DamageType.Match | DamageType.Explosion, false);
         }
     }
 
@@ -211,7 +210,7 @@ public class GameInit : MonoBehaviour
     {
         public string ObjectTypeId => ChainObjectFeature.Name;
 
-        public HealthObjectComponentFeature.IHealthData Health { get; } = new HealthData(10, 3, DamageType.Match, false);
+        public HealthObjectComponentFeature.IHealthData Health { get; } = new HealthData(10, 3, DamageType.Match | DamageType.Explosion, false);
     }
 
     private class HealthData : HealthObjectComponentFeature.IHealthData

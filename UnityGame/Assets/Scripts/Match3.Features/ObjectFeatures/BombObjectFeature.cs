@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Match3.Core;
-using Match3;
 
 namespace Match3.Features
 {
@@ -45,7 +44,7 @@ namespace Match3.Features
             {
                 public int Priority => 1;
                 public int HealthValue => 2;
-                public DamageType Vulnerability => DamageType.Match;
+                public DamageType Vulnerability => DamageType.Match | DamageType.Explosion;
                 public bool Fragile => false;
             }
 
@@ -86,6 +85,8 @@ namespace Match3.Features
                     {
                         _countDownMode = true;
                         _timeTillDestroy = 2; // sec
+
+                        Explode();
                     }
                 }
                 else
@@ -93,8 +94,18 @@ namespace Match3.Features
                     _timeTillDestroy -= dTimeSeconds;
                     if (_timeTillDestroy <= 0)
                     {
+                        Explode();
                         Health.ApplyDamage(new Damage(DamageType.Match, 1));
                     }
+                }
+            }
+
+            private void Explode()
+            {
+                foreach (var neighbour in Owner.ActiveNeighboursInBox())
+                {
+                    var health = neighbour.FindComponent<HealthCellComponentFeature.IHealth>();
+                    health.ApplyDamage(new Damage(DamageType.Explosion, 1));
                 }
             }
         }

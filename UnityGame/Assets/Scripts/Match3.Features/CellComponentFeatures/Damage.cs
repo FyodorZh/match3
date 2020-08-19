@@ -5,7 +5,7 @@
         Invalid = 0,
         Match = 1,
         MatchSibling = 2,
-
+        Explosion = 4,
     }
 
     public struct Damage

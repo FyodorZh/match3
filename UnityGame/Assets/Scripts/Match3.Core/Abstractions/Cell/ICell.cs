@@ -77,7 +77,6 @@ namespace Match3
         {
             new[] {-1, 0},
             new[] {0, -1},
-            new[] {0, 0},
             new[] {1, 0},
             new[] {0, 1}
         }));
@@ -88,7 +87,6 @@ namespace Match3
             new[] {-1, 0},
             new[] {-1, 1},
             new[] {0, -1},
-            new[] {0, 0},
             new[] {0, 1},
             new[] {1, -1},
             new[] {1, 0},
@@ -102,7 +100,7 @@ namespace Match3
 
         public static IEnumerable<ICell> ActiveNeighboursInBox(this ICell cell)
         {
-            return _cross.Enumerate(cell, true);
+            return _box.Enumerate(cell, true);
         }
     }
 }

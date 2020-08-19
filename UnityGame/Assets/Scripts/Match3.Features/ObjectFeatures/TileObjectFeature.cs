@@ -49,7 +49,7 @@ namespace Match3.Features
                     TypeId = HealthObjectComponentFeature.Name;
                     Priority = 5;
                     HealthValue = healthValue;
-                    Vulnerability = DamageType.Match;
+                    Vulnerability = DamageType.Match | DamageType.Explosion;
                     Fragile = true;
                 }
             }

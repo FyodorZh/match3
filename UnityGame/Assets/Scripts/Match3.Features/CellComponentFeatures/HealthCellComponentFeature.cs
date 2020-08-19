@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Match3.Core;
 
-namespace Match3.Features.CellComponentFeatures
+namespace Match3.Features
 {
     public class HealthCellComponentFeature : ICellComponentFeature
     {
