@@ -73,7 +73,7 @@ namespace Match3
         }
 
 
-        private static readonly CellNeighbours _cross = new CellNeighbours(new Pattern2D(new []
+        private static readonly CellNeighbours _cross = new CellNeighbours(new Offsets2D(new []
         {
             new[] {-1, 0},
             new[] {0, -1},
@@ -81,7 +81,7 @@ namespace Match3
             new[] {0, 1}
         }));
 
-        private static readonly CellNeighbours _box = new CellNeighbours(new Pattern2D(new []
+        private static readonly CellNeighbours _box = new CellNeighbours(new Offsets2D(new []
         {
             new[] {-1, -1},
             new[] {-1, 0},

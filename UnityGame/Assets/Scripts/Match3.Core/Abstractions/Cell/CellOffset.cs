@@ -2,15 +2,12 @@
 
 namespace Match3
 {
-    /// <summary>
-    /// Позиция ячейки в рамках грида
-    /// </summary>
-    public readonly struct CellPosition : IEquatable<CellPosition>
+    public readonly struct CellOffset : IEquatable<CellPosition>
     {
         public readonly int X;
         public readonly int Y;
 
-        public CellPosition(int x, int y)
+        public CellOffset(int x, int y)
         {
             X = x;
             Y = y;
@@ -39,19 +36,14 @@ namespace Match3
             }
         }
 
-        public static bool operator ==(CellPosition left, CellPosition right)
+        public static bool operator ==(CellOffset left, CellOffset right)
         {
             return left.Equals(right);
         }
 
-        public static bool operator !=(CellPosition left, CellPosition right)
+        public static bool operator !=(CellOffset left, CellOffset right)
         {
             return !left.Equals(right);
-        }
-
-        public static CellPosition operator +(CellPosition pos, CellOffset offset)
-        {
-            return new CellPosition(pos.X + offset.X, pos.Y + offset.Y);
         }
     }
 }

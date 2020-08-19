@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Match3.Core;
 
 namespace Match3.Features
@@ -62,14 +63,18 @@ namespace Match3.Features
                             continue;
                         }
 
-                        foreach (var pattern in _patterns)
+                        foreach (var patternMatch in _patterns)
                         {
+                            var pattern = patternMatch.Match;
+                            var bonus = patternMatch.Bonus;
+
                             if (x + pattern.MaxX < W && y + pattern.MaxY < H)
                             {
                                 bool isOK = true;
-                                for (int i = 1; i < pattern.OffsetsX.Length; ++i)
+                                for (int i = 0; i < pattern.Length; ++i)
                                 {
-                                    if (colors[x + pattern.OffsetsX[i], y + pattern.OffsetsY[i]] != color)
+                                    var offset = pattern.OffsetAt(i);
+                                    if (colors[x + offset.X, y + offset.Y] != color)
                                     {
                                         isOK = false;
                                         break;
@@ -78,10 +83,12 @@ namespace Match3.Features
 
                                 if (isOK)
                                 {
-                                    for (int i = 0; i < pattern.OffsetsX.Length; ++i)
+                                    for (int i = 0; i < pattern.Length; ++i)
                                     {
-                                        colors[x + pattern.OffsetsX[i], y + pattern.OffsetsY[i]] = -1;
-                                        var cell = grid.GetCell(new CellPosition(x + pattern.OffsetsX[i], y + pattern.OffsetsY[i]));
+                                        var offset = pattern.OffsetAt(i);
+
+                                        colors[x + offset.X, y + offset.Y] = -1;
+                                        var cell = grid.GetCell(new CellPosition(x + offset.X, y + offset.Y));
                                         var colorComponent = cell.FindObjectComponent<ColorObjectComponentFeature.IColor>();
                                         var colorObject = colorComponent.Owner;
                                         var health = colorObject.Owner.FindComponent<HealthCellComponentFeature.IHealth>();
@@ -98,18 +105,42 @@ namespace Match3.Features
             }
         }
 
+        private readonly List<MatchPattern> _patterns = new List<MatchPattern>();
+        private readonly HashSet<Offsets2D> _patternSet = new HashSet<Offsets2D>();
 
-        private readonly Pattern2D[] _patterns = new Pattern2D[]
+        public void RegisterPatterns(IObjectData bonus, params Offsets2D[] patterns)
         {
-            new Pattern2D(new int[][]{new[]{0,0}, new[]{0,1}, new[]{0, 2}, new[]{0,3}, new[]{0,4}}),
-            new Pattern2D(new int[][]{new[]{0,0}, new[]{1,0}, new[]{2, 0}, new[]{3,0}, new[]{4,0}}),
-            new Pattern2D(new int[][]{new[]{0,0}, new[]{0,1}, new[]{0, 2}, new[]{0,3}}),
-            new Pattern2D(new int[][]{new[]{0,0}, new[]{1,0}, new[]{2, 0}, new[]{3,0}}),
-            new Pattern2D(new int[][]{new[]{0,0}, new[]{0,1}, new[]{0, 2}}),
-            new Pattern2D(new int[][]{new[]{0,0}, new[]{1,0}, new[]{2, 0}}),
+            foreach (var pattern in patterns)
+            {
+                if (_patternSet.Contains(pattern))
+                {
+                    throw new InvalidOperationException();
+                }
 
-            new Pattern2D(new int[][]{new[]{0,0}, new[]{1,0}, new[]{0, 1}, new[]{1, 1}}),
-        };
+                var p = pattern;
+                for (int i = 0; i < 4; ++i)
+                {
+                    if (_patternSet.Add(p))
+                    {
+                        _patterns.Add(new MatchPattern(p, bonus));
+                    }
 
+                    p = p.RotateRight();
+                    p.OffsetPivot(p.MinX, p.MinY);
+                }
+            }
+        }
+
+        private class MatchPattern
+        {
+            public readonly Offsets2D Match;
+            public readonly IObjectData Bonus;
+
+            public MatchPattern(Offsets2D matchPattern, IObjectData bonus = null)
+            {
+                Match = matchPattern;
+                Bonus = bonus;
+            }
+        }
     }
 }

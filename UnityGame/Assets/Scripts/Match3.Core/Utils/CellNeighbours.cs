@@ -9,26 +9,24 @@ namespace Match3.Core
 
     public class CellNeighbours : ICellNeighbours
     {
-        private readonly Pattern2D _pattern2D;
+        private readonly Offsets2D _pattern2D;
 
-        public CellNeighbours(Pattern2D pattern)
+        public CellNeighbours(Offsets2D pattern)
         {
             _pattern2D = pattern;
         }
 
         public IEnumerable<ICell> Enumerate(ICell cell, bool active)
         {
-            var pos = cell.Position;
-            int x0 = pos.X;
-            int y0 = pos.Y;
+            var pos0 = cell.Position;
 
             var grid = cell.Owner;
             for (int i = 0; i < _pattern2D.Length; ++i)
             {
-                int x = x0 + _pattern2D.OffsetsX[i];
-                int y = y0 + _pattern2D.OffsetsY[i];
+                var offset = _pattern2D.OffsetAt(i);
+                var pos = pos0 + _pattern2D.OffsetAt(i);
 
-                var neighbour = grid.GetCell(new CellPosition(x, y));
+                var neighbour = grid.GetCell(pos);
                 if (neighbour != null)
                 {
                     if (!active || neighbour.IsActive)

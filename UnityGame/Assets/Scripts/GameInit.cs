@@ -122,7 +122,7 @@ public class GameInit : MonoBehaviour
 
         rules.RegisterGameFeature(new Emitters());
         rules.RegisterGameFeature(new Gravity());
-        rules.RegisterGameFeature(new Match());
+        rules.RegisterGameFeature(ConstructMathFeature());
 
 
         rules.RegisterActionFeature(new KillActionFeature());
@@ -133,6 +133,70 @@ public class GameInit : MonoBehaviour
         var gameInstance = new Game(rules, gridData);
         game = gameInstance;
         gameController = gameInstance;
+    }
+
+    private Match ConstructMathFeature()
+    {
+        var match = new Match();
+
+        match.RegisterPatterns(null, new Offsets2D("***"));   // ничего
+
+        match.RegisterPatterns(null, new Offsets2D("****"));  // шутиха
+        match.RegisterPatterns(null, new Offsets2D("*****")); // куб
+
+        match.RegisterPatterns(null, // ракета
+            new Offsets2D(
+                "**",
+                "**"
+                ),
+            new Offsets2D(
+                "***",
+                "**."
+                ));
+
+        // bomb
+        match.RegisterPatterns(null,
+            new Offsets2D(
+                "***",
+                ".*.",
+                ".*."
+            ),
+            new Offsets2D(
+                "***",
+                "*..",
+                "*.."
+            ),
+            new Offsets2D(
+                ".*.",
+                "***",
+                ".*."
+            ),
+            new Offsets2D(
+                ".*.",
+                "***",
+                ".*.",
+                ".*."
+            ),
+            new Offsets2D(
+                "****",
+                ".*..",
+                ".*.."
+            ),
+            new Offsets2D(
+                "*..",
+                "***",
+                "*..",
+                "*.."
+            ),
+            new Offsets2D(
+                ".*..",
+                "****",
+                ".*..",
+                ".*.."
+            ));
+
+
+        return match;
     }
 
     class EmitterData : EmitterObjectFeature.IEmitterObjectData, EmitterObjectComponentFeature.IEmitterData
