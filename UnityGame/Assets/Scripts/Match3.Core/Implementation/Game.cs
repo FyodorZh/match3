@@ -119,5 +119,18 @@ namespace Match3
         {
             return _random.Next();
         }
+
+        public void RandomShuffle<T>(IList<T> inOutList)
+        {
+            int count = inOutList.Count;
+            for (int i = 0; i < count; ++i)
+            {
+                int rnd = _random.Next() % count;
+
+                T tmp = inOutList[i];
+                inOutList[i] = inOutList[rnd];
+                inOutList[rnd] = tmp;
+            }
+        }
     }
 }

@@ -4,11 +4,19 @@ namespace Match3
 {
     public readonly struct Time : IEquatable<Time>
     {
+        public static readonly Time Zero = new Time();
+        public static readonly Time Infinity = new Time(1000_000_000);
+
         public readonly int Milliseconds;
 
         public Time(int milliseconds)
         {
             Milliseconds = milliseconds;
+        }
+
+        public override string ToString()
+        {
+            return Milliseconds.ToString();
         }
 
         public bool Equals(Time other)

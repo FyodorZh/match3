@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Match3;
 using Match3.Core;
 using Match3.Features;
@@ -139,61 +140,100 @@ public class GameInit : MonoBehaviour
     {
         var match = new Match();
 
-        match.RegisterPatterns(null, new Offsets2D("***"));   // ничего
+        // куб
+        {
+            BonusFactory bonusFactory = new BonusFactory((color) => new BombObjectData(color));
+            match.RegisterPatterns(new Offsets2D("*****"), bonusFactory, new Offsets2D("..*.."));
+        }
 
-        match.RegisterPatterns(null, new Offsets2D("****"));  // шутиха
-        match.RegisterPatterns(null, new Offsets2D("*****")); // куб
+        // бомба
+        {
+            BonusFactory bonusFactory = new BonusFactory((color) => new BombObjectData(color));
+            match.RegisterPatterns(new Offsets2D(
+                "***",
+                ".*.",
+                ".*."
+            ), bonusFactory, new Offsets2D(
+                ".*",
+                ".."
+            ));
+            match.RegisterPatterns(new Offsets2D(
+                "***",
+                "*..",
+                "*.."
+            ), bonusFactory, new Offsets2D(
+                "*.",
+                ".."
+            ));
+            match.RegisterPatterns(new Offsets2D(
+                ".*.",
+                "***",
+                ".*."
+            ), bonusFactory, new Offsets2D(
+                "..",
+                ".*"
+            ));
+            match.RegisterPatterns(new Offsets2D(
+                ".*.",
+                "***",
+                ".*.",
+                ".*."
+            ), bonusFactory, new Offsets2D(
+                "..",
+                ".*"
+            ));
+            match.RegisterPatterns(new Offsets2D(
+                "****",
+                ".*..",
+                ".*.."
+            ), bonusFactory, new Offsets2D(
+                ".*",
+                ".."
+            ));
+            match.RegisterPatterns(new Offsets2D(
+                "*..",
+                "***",
+                "*..",
+                "*.."
+            ), bonusFactory, new Offsets2D(
+                "..",
+                "*."
+            ));
+            match.RegisterPatterns(new Offsets2D(
+                ".*..",
+                "****",
+                ".*..",
+                ".*.."
+            ), bonusFactory, new Offsets2D(
+                "..",
+                ".*"
+            ));
+        }
 
-        match.RegisterPatterns(null, // ракета
-            new Offsets2D(
+        // шутиха
+        {
+            BonusFactory bonusFactory = new BonusFactory((color) => new BombObjectData(color));
+            match.RegisterPatterns(new Offsets2D("****"), bonusFactory, new Offsets2D(".**."));
+        }
+
+        // ракета
+        {
+            BonusFactory bonusFactory = new BonusFactory((color) => new BombObjectData(color));
+            match.RegisterPatterns(new Offsets2D(
                 "**",
                 "**"
-                ),
-            new Offsets2D(
+            ), bonusFactory);
+            match.RegisterPatterns(new Offsets2D(
                 "***",
                 "**."
-                ));
-
-        // bomb
-        match.RegisterPatterns(null,
-            new Offsets2D(
-                "***",
-                ".*.",
-                ".*."
-            ),
-            new Offsets2D(
-                "***",
-                "*..",
-                "*.."
-            ),
-            new Offsets2D(
-                ".*.",
-                "***",
-                ".*."
-            ),
-            new Offsets2D(
-                ".*.",
-                "***",
-                ".*.",
-                ".*."
-            ),
-            new Offsets2D(
-                "****",
-                ".*..",
-                ".*.."
-            ),
-            new Offsets2D(
-                "*..",
-                "***",
-                "*..",
-                "*.."
-            ),
-            new Offsets2D(
-                ".*..",
-                "****",
-                ".*..",
-                ".*.."
+            ), bonusFactory, new Offsets2D(
+                "**.",
+                "**."
             ));
+        }
+
+        // ничего
+        match.RegisterPatterns(new Offsets2D("***"), null);
 
 
         return match;
@@ -303,6 +343,14 @@ public class GameInit : MonoBehaviour
         public TileObjectData(int health)
         {
             Health = health;
+        }
+    }
+
+    public class BonusFactory : Factory<ICellObjectData, int>, Match.IBonusFactory
+    {
+        public BonusFactory(Func<int, ICellObjectData> factory)
+            : base(factory)
+        {
         }
     }
 

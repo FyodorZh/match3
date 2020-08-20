@@ -13,6 +13,11 @@ namespace Match3
             Milliseconds = milliseconds;
         }
 
+        public override string ToString()
+        {
+            return Milliseconds.ToString();
+        }
+
         public bool Equals(DeltaTime other)
         {
             return Milliseconds == other.Milliseconds;
