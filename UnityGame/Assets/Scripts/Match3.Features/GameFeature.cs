@@ -11,7 +11,7 @@ namespace Match3.Features
 
         protected abstract TData ConstructState(IGame game);
 
-        protected abstract void Process(IGame game, TData state, int dTimeMs);
+        protected abstract void Process(IGame game, TData state, DeltaTime dTime);
 
         protected GameFeature(string featureName)
         {
@@ -32,9 +32,9 @@ namespace Match3.Features
             return ConstructState(game);
         }
 
-        public void Tick(IGame game, object state, int dTimeMs)
+        public void Tick(IGame game, object state, DeltaTime dTime)
         {
-            Process(game, (TData)state, dTimeMs);
+            Process(game, (TData)state, dTime);
         }
     }
 }

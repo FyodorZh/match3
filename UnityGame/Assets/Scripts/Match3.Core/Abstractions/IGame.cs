@@ -6,7 +6,7 @@ namespace Match3
     {
         void Start();
 
-        void Tick(int dTimeMs);
+        void Tick(DeltaTime dTime);
 
         void Action(string actionFeatureName, params CellId[] cells);
     }

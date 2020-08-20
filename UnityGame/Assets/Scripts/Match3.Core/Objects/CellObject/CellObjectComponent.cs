@@ -8,12 +8,12 @@ namespace Match3
         public bool IsReleased { get; private set; }
 
         public ICellObject Owner { get; private set; }
-        
+
         public void SetOwner(ICellObject owner)
         {
             Owner = owner;
         }
-        
+
         public void Release()
         {
             if (!IsReleased)
@@ -29,7 +29,7 @@ namespace Match3
             // DO NOTHING
         }
 
-        public virtual void Tick(Fixed dTimeSeconds)
+        public virtual void Tick(DeltaTime dTime)
         {
             // DO NOTHING
         }

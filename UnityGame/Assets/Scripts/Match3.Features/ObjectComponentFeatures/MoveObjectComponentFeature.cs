@@ -16,7 +16,7 @@ namespace Match3.Features
             return new Move();
         }
 
-        public struct MoveCause
+        public readonly struct MoveCause
         {
             public readonly string Value;
 
@@ -30,13 +30,13 @@ namespace Match3.Features
         {
             bool IsMoving { get; }
 
-            int LastMoveTime { get; }
+            Time LastMoveTime { get; }
             MoveCause MoveCause { get; }
 
             FixedVector2 Offset { get; set; }
             FixedVector2 Velocity { get; set; }
 
-            void SetTrajectory(MoveCause intention, ITrajectory trajectory, Action onUpdate = null, Action onFinish = null);
+            void StartMove(MoveCause intention, ITrajectory trajectory, Action onUpdate = null, Action onFinish = null);
         }
 
         private class Move : CellObjectComponent, IMove
@@ -45,7 +45,7 @@ namespace Match3.Features
             private Action _onUpdate;
             private Action _onFinish;
 
-            private int _lastMoveTime = 0;
+            private Time _lastMoveTime;
 
             public override string TypeId => Name;
 
@@ -55,14 +55,14 @@ namespace Match3.Features
 
             public bool IsMoving => _trajectory != null;
 
-            public int LastMoveTime => _lastMoveTime;
+            public Time LastMoveTime => _lastMoveTime;
 
             public MoveCause MoveCause { get; private set; }
 
             public FixedVector2 Offset { get; set; }
             public FixedVector2 Velocity { get; set; }
 
-            public void SetTrajectory(MoveCause intention, ITrajectory trajectory, Action onUpdate, Action onFinish)
+            public void StartMove(MoveCause intention, ITrajectory trajectory, Action onUpdate, Action onFinish)
             {
                 Debug.Assert(_trajectory == null);
                 Offset = trajectory.Position;
@@ -87,11 +87,11 @@ namespace Match3.Features
                 base.OnRelease();
             }
 
-            public override void Tick(Fixed dTimeSeconds)
+            public override void Tick(DeltaTime dTime)
             {
                 if (_trajectory != null)
                 {
-                    bool inProgress = _trajectory.Update(dTimeSeconds);
+                    bool inProgress = _trajectory.Update(dTime);
                     Offset = _trajectory.Position;
                     Velocity = _trajectory.Velocity;
 

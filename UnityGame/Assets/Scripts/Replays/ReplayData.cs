@@ -19,9 +19,9 @@ namespace Replays
 
     public class TickStep : ReplayStep
     {
-        private readonly int _dTime;
+        private readonly DeltaTime _dTime;
 
-        public TickStep(int dTime)
+        public TickStep(DeltaTime dTime)
         {
             _dTime = dTime;
         }

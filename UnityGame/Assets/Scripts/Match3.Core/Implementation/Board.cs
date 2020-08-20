@@ -11,7 +11,7 @@ namespace Match3.Core
 
         public event Action<ICellObject, ICell> CellObjectOwnerChange;
         public event Action<ICellObject> CellObjectDestroy;
-        
+
         public Board(Game game, IEnumerable<IGridData> gridData)
         {
             _game = game;
@@ -21,16 +21,16 @@ namespace Match3.Core
             }
         }
 
-        public void Tick(Fixed dTimeSeconds)
+        public void Tick(DeltaTime dTime)
         {
             foreach (var grid in _grids)
             {
-                grid.Tick(dTimeSeconds);
+                grid.Tick(dTime);
             }
         }
 
         public IEnumerable<IGrid> Grids => _grids;
-        
+
         public IGrid GetGrid(GridId id)
         {
             int pos = id.Id - 1;
@@ -43,7 +43,7 @@ namespace Match3.Core
         {
             CellObjectOwnerChange?.Invoke(cellObject, oldOwner);
         }
-        
+
         public void OnCellObjectDestroy(ICellObject cellObject)
         {
             CellObjectDestroy?.Invoke(cellObject);

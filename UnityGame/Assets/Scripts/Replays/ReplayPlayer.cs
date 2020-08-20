@@ -25,7 +25,7 @@ namespace Replays
             _data.Run(_pos++, _controller);
         }
 
-        public void Tick(int dTimeMs)
+        public void Tick(DeltaTime dTime)
         {
             _data.Run(_pos++, _controller);
         }

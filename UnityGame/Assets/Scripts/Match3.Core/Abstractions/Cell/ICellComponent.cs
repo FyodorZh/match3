@@ -8,7 +8,7 @@ namespace Match3.Core
 
         ICell Cell { get; }
 
-        void Tick(Fixed dTimeSeconds);
+        void Tick(DeltaTime dTime);
     }
 
     public interface ICellComponentInitializer

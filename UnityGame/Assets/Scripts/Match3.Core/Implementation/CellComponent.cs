@@ -20,7 +20,7 @@ namespace Match3.Core
             OnInit();
         }
 
-        public virtual void Tick(Fixed dTimeSeconds)
+        public virtual void Tick(DeltaTime dTime)
         {
         }
     }

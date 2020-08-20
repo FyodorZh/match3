@@ -25,11 +25,13 @@ namespace Match3
             Position = _from + _delta * t;
             Velocity = new FixedVector2(0, 0);
         }
-        
-        protected override bool OnUpdate(Fixed timeSeconds)
+
+        protected override bool OnUpdate(DeltaTime dTime)
         {
             bool inProgress = true;
-            
+
+            var timeSeconds = new Fixed(dTime.Milliseconds, 1000);
+
             _time += timeSeconds;
             if (_time >= _timeBudget)
             {
@@ -38,7 +40,7 @@ namespace Match3
             }
 
             var t = _timeFunction(_time / _timeBudget);
-            
+
             var oldPos = Position;
             Position = _from + _delta * t;
             Velocity = (Position - oldPos) / timeSeconds;

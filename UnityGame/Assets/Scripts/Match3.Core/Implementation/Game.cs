@@ -29,7 +29,7 @@ namespace Match3
 
         private readonly Random _random = new Random(777);
 
-        private int _currentTimeMs;
+        private Time _currentTime;
 
         internal Board Board => _board;
 
@@ -60,11 +60,9 @@ namespace Match3
             }
         }
 
-        public void Tick(int dTimeMs)
+        public void Tick(DeltaTime dTime)
         {
-            _currentTimeMs += dTimeMs;
-
-            Fixed fixedTimeSeconds = new Fixed(dTimeMs, 1000);
+            _currentTime += dTime;
 
             foreach (var action in _externalActions)
             {
@@ -73,12 +71,12 @@ namespace Match3
             _externalActions.Clear();
             _internalActions.Process();
 
-            _board.Tick(fixedTimeSeconds);
+            _board.Tick(dTime);
             _internalActions.Process();
 
             foreach (var featureInfo in _features)
             {
-                featureInfo.Feature.Tick(this, featureInfo.State, dTimeMs);
+                featureInfo.Feature.Tick(this, featureInfo.State, dTime);
             }
             _internalActions.Process();
         }
@@ -115,7 +113,7 @@ namespace Match3
             }
         }
 
-        public int CurrentTime => _currentTimeMs;
+        public Time CurrentTime => _currentTime;
 
         public int GetRandom()
         {

@@ -26,10 +26,10 @@ namespace Replays
             _controller.Start();
         }
 
-        public void Tick(int dTimeMs)
+        public void Tick(DeltaTime dTime)
         {
-            _replay.Append(new TickStep(dTimeMs));
-            _controller.Tick(dTimeMs);
+            _replay.Append(new TickStep(dTime));
+            _controller.Tick(dTime);
         }
 
         public void Action(string actionFeatureName, params CellId[] cells)

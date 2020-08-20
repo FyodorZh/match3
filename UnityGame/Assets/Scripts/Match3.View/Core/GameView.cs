@@ -23,10 +23,10 @@ namespace Match3.View
 
         void Update()
         {
-            int dt = (int)(Time.deltaTime * 1000);
+            int dt = (int)(UnityEngine.Time.deltaTime * 1000);
             if (dt <= 0)
                 dt = 1;
-            _controller.Tick(dt);
+            _controller.Tick(new DeltaTime(dt));
         }
     }
 }

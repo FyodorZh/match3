@@ -2,7 +2,7 @@
 {
     public interface IGameContext
     {
-        int CurrentTime { get; }
+        Time CurrentTime { get; }
         int GetRandom();
     }
 }

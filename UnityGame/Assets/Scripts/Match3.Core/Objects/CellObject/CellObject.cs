@@ -27,7 +27,7 @@ namespace Match3.Core
         {
         }
 
-        protected virtual void OnTick(Fixed dTimeSeconds)
+        protected virtual void OnTick(DeltaTime dTime)
         {
         }
 
@@ -69,13 +69,13 @@ namespace Match3.Core
             return default;
         }
 
-        public void Tick(Fixed dTimeSeconds)
+        public void Tick(DeltaTime dTime)
         {
             foreach (var component in _components)
             {
-                component.Tick(dTimeSeconds);
+                component.Tick(dTime);
             }
-            OnTick(dTimeSeconds);
+            OnTick(dTime);
         }
     }
 }

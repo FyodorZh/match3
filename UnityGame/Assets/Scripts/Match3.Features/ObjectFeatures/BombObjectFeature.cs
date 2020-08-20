@@ -53,7 +53,7 @@ namespace Match3.Features
             public HealthObjectComponentFeature.IHealth Health { get; }
 
             private bool _countDownMode;
-            private Fixed _timeTillDestroy;
+            private DeltaTime _timeTillDestroy;
 
             public Bomb(IBombData data)
                 : this(new ObjectTypeId(data.ObjectTypeId),
@@ -76,23 +76,23 @@ namespace Match3.Features
                 Health = health;
             }
 
-            protected override void OnTick(Fixed dTimeSeconds)
+            protected override void OnTick(DeltaTime dTime)
             {
-                base.OnTick(dTimeSeconds);
+                base.OnTick(dTime);
                 if (!_countDownMode)
                 {
                     if (Health.HealthValue == 1)
                     {
                         _countDownMode = true;
-                        _timeTillDestroy = 2; // sec
+                        _timeTillDestroy = new DeltaTime(2000);
 
                         Explode();
                     }
                 }
                 else
                 {
-                    _timeTillDestroy -= dTimeSeconds;
-                    if (_timeTillDestroy <= 0)
+                    _timeTillDestroy -= dTime;
+                    if (_timeTillDestroy <= DeltaTime.Zero)
                     {
                         Explode();
                         Health.ApplyDamage(new Damage(DamageType.Match, 1));

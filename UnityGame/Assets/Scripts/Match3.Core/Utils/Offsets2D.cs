@@ -68,11 +68,6 @@ namespace Match3.Core
             Normalize(false);
         }
 
-        public CellOffset OffsetAt(int id)
-        {
-            return _offsets[id];
-        }
-
         public void OffsetPivot(int dx, int dy)
         {
             MinX -= dx;
@@ -95,6 +90,11 @@ namespace Match3.Core
                 offsets[i] = new CellOffset(_offsets[i].Y, -_offsets[i].X);
             }
             return new Offsets2D(offsets);
+        }
+
+        public CellOffset OffsetAt(int id)
+        {
+            return _offsets[id];
         }
 
         private void Init(CellOffset[] offsets)

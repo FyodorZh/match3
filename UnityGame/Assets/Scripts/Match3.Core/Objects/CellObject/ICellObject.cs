@@ -13,6 +13,6 @@ namespace Match3
         TCellObjectComponent TryGetComponent<TCellObjectComponent>()
             where TCellObjectComponent : class, ICellObjectComponent;
 
-        void Tick(Fixed dTimeSeconds);
+        void Tick(DeltaTime dTime);
     }
 }

@@ -24,7 +24,7 @@ namespace Match3.Features
         {
         }
 
-        protected override void Process(IGame game, int dTimeMs)
+        protected override void Process(IGame game, DeltaTime dTime)
         {
             foreach (var grid in game.Board.Grids)
             {

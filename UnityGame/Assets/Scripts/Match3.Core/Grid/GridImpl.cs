@@ -12,7 +12,7 @@ namespace Match3.Core
         private readonly Cell[] _cellList;
 
         public Board Board { get; }
-        
+
         public GridId Id { get; }
         public int Width { get; }
         public int Height { get; }
@@ -25,12 +25,12 @@ namespace Match3.Core
 
             _game = game;
             Board = board;
-            Id = id;    
+            Id = id;
             _cells = new Cell[width, height];
             _borders = new Border[width + 1, height + 1];
             Width = width;
             Height = height;
-            
+
             var rules = game.Rules;
             var objectFactory = rules.ObjectFactory;
 
@@ -44,7 +44,7 @@ namespace Match3.Core
 
                     _cells[x, y] = cell;
                     _cellList[pos++] = cell;
-                    
+
                     var list = data.GetCellDataAt(x, y);
                     if (list != null)
                     {
@@ -61,7 +61,7 @@ namespace Match3.Core
                     }
                 }
             }
-            
+
             for (int x = 0; x <= width; ++x)
             {
                 for (int y = 0; y <= height; ++y)
@@ -75,17 +75,17 @@ namespace Match3.Core
                 }
             }
         }
-        
-        public void Tick(Fixed dTimeSeconds)
+
+        public void Tick(DeltaTime dTime)
         {
             foreach (var cell in _cellList)
             {
-                cell.Tick(dTimeSeconds);
+                cell.Tick(dTime);
             }
         }
 
         public IEnumerable<ICell> AllCells => _cellList;
-        
+
         public ICell GetCell(CellPosition position)
         {
             return CellAt(position.X, position.Y);
@@ -102,7 +102,7 @@ namespace Match3.Core
                 return _cells[x, y];
             return null; // TODO
         }
-        
+
         private Border BorderAt(int x, int y)
         {
             if (x >= 0 && x <= Width && y >= 0 && y <= Height)

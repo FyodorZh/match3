@@ -56,16 +56,16 @@ namespace Match3.Core
             Position = position;
         }
 
-        public void Tick(Fixed dTimeSeconds)
+        public void Tick(DeltaTime dTime)
         {
             foreach (var obj in _objects)
             {
-                obj.Tick(dTimeSeconds);
+                obj.Tick(dTime);
             }
 
             foreach (var component in _components)
             {
-                component.Tick(dTimeSeconds);
+                component.Tick(dTime);
             }
         }
 

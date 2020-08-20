@@ -75,7 +75,7 @@ namespace Match3.Features
 
                 _lock = new ReleasableLock();
                 FallingObjectMover.Owner.Owner.AddLock(_lock);
-                FallingObjectMover.SetTrajectory(new MoveObjectComponentFeature.MoveCause("gravity"), this);
+                FallingObjectMover.StartMove(new MoveObjectComponentFeature.MoveCause("gravity"), this);
             }
 
             public void Finish()
@@ -84,7 +84,7 @@ namespace Match3.Features
                 _lock.Release();
             }
 
-            public bool Update(Fixed timeSeconds)
+            public bool Update(DeltaTime dTime)
             {
                 return !_isFinished;
             }
@@ -340,9 +340,11 @@ namespace Match3.Features
                 AgentsToRegister.Clear();
             }
 
-            public void ProcessAgents(Fixed dTimeSeconds)
+            public void ProcessAgents(DeltaTime dTime)
             {
                 Fixed gravity = new Fixed(900, 100);
+
+                Fixed dTimeSeconds = new Fixed(dTime.Milliseconds, 1000);
 
                 Fixed speedUp = gravity * dTimeSeconds;
 
@@ -408,12 +410,12 @@ namespace Match3.Features
             }
         }
 
-        protected override void Process(IGame game, State state, int dTimeMs)
+        protected override void Process(IGame game, State state, DeltaTime dTime)
         {
             state.FindNewObjectsToFall(game);
             state.FindNewObjectsToSideFall(game);
             state.RegisterNewAgents();
-            state.ProcessAgents(new Fixed(dTimeMs, 1000));
+            state.ProcessAgents(dTime);
         }
     }
 }

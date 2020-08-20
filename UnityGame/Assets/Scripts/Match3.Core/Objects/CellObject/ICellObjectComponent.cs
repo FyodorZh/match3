@@ -7,6 +7,6 @@ namespace Match3
         ICellObject Owner { get; }
         void SetOwner(ICellObject owner);
 
-        void Tick(Fixed dTimeSeconds);
+        void Tick(DeltaTime dTime);
     }
 }
