@@ -30,9 +30,22 @@ namespace Match3.Features
             {
                 foreach (var cell in grid.AllCells)
                 {
-                    if (cell.Objects.Count == 1)
+                    ICellObject obj = null;
+                    foreach (var _obj in cell.Objects)
                     {
-                        var obj = cell.Objects[0];
+                        if (obj == null)
+                        {
+                            obj = _obj;
+                        }
+                        else
+                        {
+                            obj = null;
+                            break;
+                        }
+                    }
+
+                    if (obj != null)
+                    {
                         var emitter = obj.TryGetComponent<EmitterObjectComponentFeature.IEmitter>();
                         if (emitter != null)
                         {
@@ -45,10 +58,7 @@ namespace Match3.Features
                                     var newObject = emitter.Emit(game);
                                     if (newObject != null)
                                     {
-                                        if (!cell.Attach(newObject))
-                                        {
-                                            Debug.Assert(false);
-                                        }
+                                        cell.Attach(newObject);
                                     }
                                 }
                             }

@@ -67,12 +67,11 @@ namespace Match3.Features
                     move1.StartMove(new MoveObjectComponentFeature.MoveCause("user"),  t1, null, () =>
                     {
                         move1.Offset = new FixedVector2(0, 0);
-                        cell2.Attach(o1);
+                        cell2.Swap(o1, o2);
                     });
                     move2.StartMove(new MoveObjectComponentFeature.MoveCause("user"),  t2, null, () =>
                     {
                         move2.Offset = new FixedVector2(0, 0);
-                        cell1.Attach(o2);
                     });
                 }
             }

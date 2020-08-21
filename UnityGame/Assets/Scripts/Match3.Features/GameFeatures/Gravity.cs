@@ -165,16 +165,11 @@ namespace Match3.Features
                                     if (freeCell != null)
                                     {
                                         var currentPosition = moveComponent.VisualPosition();
-                                        if (freeCell.Attach(objectToFall))
-                                        {
-                                            FixedVector2 finalPosition = new FixedVector2(freeCell.Position.X, freeCell.Position.Y);
-                                            var agent = new MoveAgent(grid.Id, moveComponent, cell.Position, currentPosition - finalPosition);
-                                            AgentsToRegister.Add(agent);
-                                        }
-                                        else
-                                        {
-                                            Debug.Assert(false);
-                                        }
+                                        freeCell.Attach(objectToFall);
+
+                                        FixedVector2 finalPosition = new FixedVector2(freeCell.Position.X, freeCell.Position.Y);
+                                        var agent = new MoveAgent(grid.Id, moveComponent, cell.Position, currentPosition - finalPosition);
+                                        AgentsToRegister.Add(agent);
                                     }
                                 }
                             }
@@ -290,16 +285,11 @@ namespace Match3.Features
                                         {
                                             var sourceCell = sourceCellMove.Owner.Owner;
                                             var currentPosition = sourceCellMove.VisualPosition();
-                                            if (emptyCell.Attach(sourceCellMove.Owner))
-                                            {
-                                                FixedVector2 finalPosition = new FixedVector2(emptyCell.Position.X, emptyCell.Position.Y);
-                                                var agent = new MoveAgent(grid.Id, sourceCellMove, sourceCell.Position, currentPosition - finalPosition);
-                                                AgentsToRegister.Add(agent);
-                                            }
-                                            else
-                                            {
-                                                Debug.Assert(false);
-                                            }
+
+                                            emptyCell.Attach(sourceCellMove.Owner);
+                                            FixedVector2 finalPosition = new FixedVector2(emptyCell.Position.X, emptyCell.Position.Y);
+                                            var agent = new MoveAgent(grid.Id, sourceCellMove, sourceCell.Position, currentPosition - finalPosition);
+                                            AgentsToRegister.Add(agent);
 
                                             break;
                                         }

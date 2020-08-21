@@ -222,7 +222,10 @@ public class GameInit : MonoBehaviour
             match.RegisterPatterns(new Offsets2D(
                 "**",
                 "**"
-            ), bonusFactory);
+            ), bonusFactory, new Offsets2D(
+                "**",
+                "**"
+            ));
             match.RegisterPatterns(new Offsets2D(
                 "***",
                 "**."

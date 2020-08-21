@@ -10,32 +10,36 @@ namespace Match3.Features
         private class ColorTable
         {
             private readonly IGrid _grid;
+            private readonly Time _curTime;
             private readonly int _width;
             private readonly int _height;
 
-            private readonly int[][] _colors;
+            private Dictionary<CellPosition, int> _colors = new Dictionary<CellPosition, int>();
 
-            public ColorTable(IGrid grid)
+            public ColorTable(IGrid grid, Time curTime)
             {
                 _grid = grid;
+                _curTime = curTime;
                 _width = grid.Width;
                 _height = grid.Height;
-
-                _colors = new int[_height][];
-                for (int i = 0; i < _height; ++i)
-                {
-                    _colors[i] = new int[_width];
-                }
             }
 
-            public void RefreshAllColors(Time curTime)
+            public void Invalidate()
             {
-                foreach (var cell in _grid.AllCells)
+                _colors.Clear();
+            }
+
+            private int GetCellColor(CellPosition pos)
+            {
+                if (!_colors.TryGetValue(pos, out int colorId))
                 {
-                    IsCellEligibleForMatch(cell, curTime, out var colorId);
-                    var pos = cell.Position;
-                    _colors[pos.Y][pos.X] = colorId;
+                    var cell = _grid.GetCell(pos);
+                    IsCellEligibleForMatch(cell, _curTime, out colorId);
+                    _colors.Add(pos, colorId);
                 }
+
+                return colorId;
+
             }
 
             public bool CheckPattern(Offsets2D pattern, int posX, int posY, out int colorId)
@@ -46,8 +50,9 @@ namespace Match3.Features
                     return false;
                 }
 
-                var pos0 = pattern.OffsetAt(0);
-                int color0 = _colors[posY + pos0.Y][posX + pos0.X];
+                var pos = new CellPosition(posX, posY);
+
+                int color0 = GetCellColor(pos + pattern.OffsetAt(0));
 
                 if (color0 == -1)
                 {
@@ -57,8 +62,8 @@ namespace Match3.Features
 
                 for (int i = 1; i < pattern.Length; ++i)
                 {
-                    var pos = pattern.OffsetAt(i);
-                    int color = _colors[posY + pos.Y][posX + pos.X];
+                    var offset = pattern.OffsetAt(i);
+                    int color = GetCellColor(pos + offset);
                     if (color0 != color)
                     {
                         colorId = -1;
@@ -68,21 +73,6 @@ namespace Match3.Features
 
                 colorId = color0;
                 return true;
-            }
-
-            public void RefreshColorsOfPattern(Time curTime, Offsets2D pattern, int posX, int posY)
-            {
-                CellPosition pos = new CellPosition(posX, posY);
-                for (int i = 0; i < pattern.Length; ++i)
-                {
-                    var offset = pattern.OffsetAt(i);
-                    pos += offset;
-
-                    var cell = _grid.GetCell(pos);
-
-                    IsCellEligibleForMatch(cell, curTime, out var colorId);
-                    _colors[pos.Y][pos.X] = colorId;
-                }
             }
 
             private bool IsCellEligibleForMatch(ICell cell, Time curTime, out int colorId)
@@ -116,53 +106,33 @@ namespace Match3.Features
 
             foreach (var grid in game.Board.Grids)
             {
-                ColorTable colors = new ColorTable(grid);
-
-                colors.RefreshAllColors(curTime);
-
+                ColorTable colors = new ColorTable(grid, curTime);
 
                 int W = grid.Width;
                 int H = grid.Height;
-                for (int y = H - 1; y >= 0; --y)
-                {
-                    for (int x = 0; x < W; ++x)
-                    {
-                        foreach (var patternInfo in _patterns)
-                        {
-                            var matchPattern = patternInfo.MatchPattern;
 
-                            int colorId;
+                List<ICell> cellList = new List<ICell>();
+
+                foreach (var patternInfo in _patterns)
+                {
+                    var matchPattern = patternInfo.MatchPattern;
+                    var bonusPlacement = patternInfo.BonusPlacement;
+
+                    for (int y = H - 1; y >= 0; --y)
+                    {
+                        for (int x = 0; x < W; ++x)
+                        {
+                            var pos0 = new CellPosition(x, y);
+
+                            int colorId = -1;
 
                             int matchCount = 0;
-                            while (colors.CheckPattern(matchPattern, x, y, out colorId) && matchCount < 10)
+                            while (colors.CheckPattern(matchPattern, x, y, out var color) && matchCount < 10)
                             {
-                                for (int i = 0; i < matchPattern.Length; ++i)
+                                colorId = color;
+                                if (matchCount == 0)
                                 {
-                                    var offset = matchPattern.OffsetAt(i);
-
-                                    var cell = grid.GetCell(new CellPosition(x + offset.X, y + offset.Y));
-                                    var colorComponent = cell.FindObjectComponent<ColorObjectComponentFeature.IColor>();
-                                    var colorObject = colorComponent.Owner;
-                                    var health = colorObject.Owner.FindComponent<HealthCellComponentFeature.IHealth>();
-                                    health.ApplyDamage(new Damage(DamageType.Match, 1));
-                                }
-
-                                colors.RefreshColorsOfPattern(curTime, matchPattern, x, y);
-
-                                ++matchCount;
-                            }
-
-                            Debug.Assert(matchCount < 10);
-
-                            if (matchCount > 0)
-                            {
-                                var bonusData = patternInfo.BonusFactory?.Construct(colorId);
-                                if (bonusData != null)
-                                {
-                                    List<ICell> cellList = new List<ICell>();
                                     Time lastChangeTime = new Time(-1);
-
-                                    var pos0 = new CellPosition(x, y);
                                     for (int i = 0; i < matchPattern.Length; ++i)
                                     {
                                         var offset = matchPattern.OffsetAt(i);
@@ -185,17 +155,44 @@ namespace Match3.Features
                                     }
 
                                     Debug.Assert(cellList.Count > 0);
+                                }
 
+                                for (int i = 0; i < matchPattern.Length; ++i)
+                                {
+                                    var offset = matchPattern.OffsetAt(i);
+                                    var cell = grid.GetCell(pos0 + offset);
+
+                                    var colorComponent = cell.FindObjectComponent<ColorObjectComponentFeature.IColor>();
+                                    if (colorComponent != null) // только что взорвался
+                                    {
+                                        var colorObject = colorComponent.Owner;
+                                        var health = colorObject.Owner.FindComponent<HealthCellComponentFeature.IHealth>();
+                                        health.ApplyDamage(new Damage(DamageType.Match, 1));
+                                    }
+                                }
+                                colors.Invalidate();
+
+                                ++matchCount;
+                            }
+
+                            Debug.Assert(matchCount < 10);
+
+                            if (matchCount > 0)
+                            {
+                                var bonusData = patternInfo.BonusFactory?.Construct(colorId);
+                                if (bonusData != null)
+                                {
                                     var bonus = game.Rules.ObjectFactory.Construct<ICellObject>(bonusData, game);
                                     Debug.Assert(bonus != null);
                                     if (bonus == null)
-                                        break;
+                                    {
+                                        continue;
+                                    }
 
                                     if (cellList.Count > 2)
                                     {
                                         cellList.Clear();
 
-                                        var bonusPlacement = patternInfo.BonusPlacement;
                                         for (int i = 0; i < bonusPlacement.Length; ++i)
                                         {
                                             var pos = pos0 + bonusPlacement.OffsetAt(i);
@@ -233,12 +230,16 @@ namespace Match3.Features
                                             if (cell.CanAttach(bonus))
                                             {
                                                 cell.Attach(bonus);
+                                                bPlaced = true;
                                                 break;
                                             }
                                         }
                                     }
 
-                                    bonus.Release();
+                                    if (!bPlaced)
+                                    {
+                                        bonus.Release();
+                                    }
                                 }
                             }
                         }

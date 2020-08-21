@@ -36,7 +36,6 @@ namespace Match3.Features
                     }
                 }
             }
-
         }
 
         public interface IHealth : ICellComponent

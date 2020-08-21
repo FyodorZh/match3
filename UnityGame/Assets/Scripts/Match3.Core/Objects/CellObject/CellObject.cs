@@ -52,7 +52,7 @@ namespace Match3.Core
 
         public virtual bool CanAttachSibling(ICellObject sibling)
         {
-            return true;
+            return GetType() != sibling.GetType();
         }
 
         public TCellObjectComponent TryGetComponent<TCellObjectComponent>()

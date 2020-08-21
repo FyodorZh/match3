@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Match3.Core;
+using Match3.Utils;
 
 namespace Match3
 {
@@ -17,7 +18,7 @@ namespace Match3
         void AddLock(ILock lockObject);
         void RemoveLock(ILock lockObject);
 
-        IReadOnlyList<ICellObject> Objects { get; }
+        IStaticSetView<ICellObject> Objects { get; }
 
         IReadOnlyList<ICellComponent> Components { get; }
 
@@ -25,7 +26,10 @@ namespace Match3
             where TComponent : class, ICellComponent, ICellComponentInitializer;
 
         bool CanAttach(ICellObject cellObject);
-        bool Attach(ICellObject cellObject);
+        void Attach(ICellObject cellObject);
+
+        bool CanSwap(ICellObject cellObjectA, ICellObject cellObjectB);
+        void Swap(ICellObject cellObjectA, ICellObject cellObjectB);
 
         bool Destroy(ICellObject cellObject);
     }
@@ -51,11 +55,9 @@ namespace Match3
         public static TCellObjectComponent FindObjectComponent<TCellObjectComponent>(this ICell cell)
             where TCellObjectComponent : class, ICellObjectComponent
         {
-            var content = cell.Objects;
-            int count = content.Count;
-            for (int i = 0; i < count; ++i)
+            foreach (var obj in cell.Objects)
             {
-                var component = content[i].TryGetComponent<TCellObjectComponent>();
+                var component = obj.TryGetComponent<TCellObjectComponent>();
                 if (component != null)
                 {
                     return component;

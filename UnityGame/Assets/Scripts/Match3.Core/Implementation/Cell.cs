@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Match3;
+using Match3.Utils;
 
 namespace Match3.Core
 {
@@ -8,7 +8,7 @@ namespace Match3.Core
     {
         private readonly Grid _owner;
 
-        private readonly List<ICellObject> _objects = new List<ICellObject>();
+        private readonly StaticSet<ICellObject> _objects = new StaticSet<ICellObject>();
 
         private readonly List<ICellComponent> _components = new List<ICellComponent>();
 
@@ -69,7 +69,7 @@ namespace Match3.Core
             }
         }
 
-        public IReadOnlyList<ICellObject> Objects => _objects;
+        public IStaticSetView<ICellObject> Objects => _objects;
 
         public IReadOnlyList<ICellComponent> Components => _components;
 
@@ -83,10 +83,14 @@ namespace Match3.Core
 
         public bool CanAttach(ICellObject cellObject)
         {
+            if (ReferenceEquals(this, cellObject.Owner))
+                return true;
+
             if (!IsActive)
                 return false;
             if (IsLocked)
                 return false;
+
             foreach (var obj in _objects)
             {
                 if (!obj.CanAttachSibling(cellObject))
@@ -96,36 +100,94 @@ namespace Match3.Core
             return true;
         }
 
-        public bool Attach(ICellObject cellObject)
+        public void Attach(ICellObject cellObject)
         {
             if (cellObject == null)
                 throw new ArgumentNullException();
 
             if (ReferenceEquals(cellObject.Owner, this))
-                return true;
+                return;
 
             if (cellObject.Owner != null)
             {
                 var owner = (Cell)cellObject.Owner;
-
-                int count = owner._objects.Count;
-                for (int i = 0; i < count; ++i)
-                {
-                    if (ReferenceEquals(cellObject, owner._objects[i]))
-                    {
-                        owner._objects.RemoveAt(i);
-                        break;
-                    }
-                }
+                owner._objects.Remove(cellObject.GetType());
             }
 
             var prevOwner = cellObject.Owner;
 
-            _objects.Add(cellObject);
+            var oldObject = _objects.Replace(cellObject);
+            Debug.Assert(oldObject == null);
             cellObject.SetOwner(this);
 
             _owner.Board.OnCellObjectOwnerChange(cellObject, prevOwner);
-            return true;
+        }
+
+        public bool CanSwap(ICellObject cellObjectA, ICellObject cellObjectB)
+        {
+            if (ReferenceEquals(cellObjectA.Owner, cellObjectB.Owner))
+                return true;
+
+            var ownerA = (Cell)cellObjectA.Owner;
+            var ownerB = (Cell)cellObjectB.Owner;
+
+            if (ownerA == null || ownerB == null)
+                return false;
+
+            if (cellObjectA.GetType() != cellObjectB.GetType())
+            {
+                return ownerA.CanAttach(cellObjectB) && ownerB.CanAttach(cellObjectA);
+            }
+
+            var objA = ownerA._objects.Remove(cellObjectA.GetType());
+            var objB = ownerB._objects.Remove(cellObjectB.GetType());
+
+            Debug.Assert(ReferenceEquals(objA, cellObjectA));
+            Debug.Assert(ReferenceEquals(objB, cellObjectB));
+
+            bool okA = ownerA.CanAttach(cellObjectB);
+            bool okB = ownerB.CanAttach(cellObjectA);
+
+            bool ok = okA && okB;
+
+            ownerA._objects.Replace(objA);
+            ownerB._objects.Replace(objB);
+
+            return ok;
+        }
+
+        public void Swap(ICellObject cellObjectA, ICellObject cellObjectB)
+        {
+            if (ReferenceEquals(cellObjectA.Owner, cellObjectB.Owner))
+                return;
+
+            var ownerA = (Cell)cellObjectA.Owner;
+            var ownerB = (Cell)cellObjectB.Owner;
+
+            if (ownerA == null || ownerB == null)
+                return;
+
+            if (cellObjectA.GetType() != cellObjectB.GetType())
+            {
+                ownerA.Attach(cellObjectB);
+                ownerB.Attach(cellObjectA);
+                return;
+            }
+
+            var objA = ownerA._objects.Remove(cellObjectA.GetType());
+            var objB = ownerB._objects.Remove(cellObjectB.GetType());
+
+            Debug.Assert(ReferenceEquals(objA, cellObjectA));
+            Debug.Assert(ReferenceEquals(objB, cellObjectB));
+
+            ownerA._objects.Replace(objB);
+            ownerB._objects.Replace(objA);
+
+            objA.SetOwner(ownerB);
+            objB.SetOwner(ownerA);
+
+            _owner.Board.OnCellObjectOwnerChange(objA, ownerA);
+            _owner.Board.OnCellObjectOwnerChange(objB, ownerB);
         }
 
         public bool Destroy(ICellObject cellObject)
@@ -136,21 +198,13 @@ namespace Match3.Core
             if (!ReferenceEquals(cellObject.Owner, this))
                 throw new InvalidOperationException();
 
-            int count = _objects.Count;
-            for (int i = 0; i < count; ++i)
-            {
-                if (ReferenceEquals(cellObject, _objects[i]))
-                {
-                    _owner.Board.OnCellObjectDestroy(cellObject);
+            var removed = _objects.Remove(cellObject.GetType());
+            Debug.Assert(ReferenceEquals(removed, cellObject));
 
-                    _objects.RemoveAt(i);
-                    cellObject.SetOwner(null);
-                    cellObject.Release();
-                    return true;
-                }
-            }
-
-            return false;
+            _owner.Board.OnCellObjectDestroy(cellObject);
+            cellObject.SetOwner(null);
+            cellObject.Release();
+            return true;
         }
     }
 }

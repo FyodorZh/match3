@@ -25,6 +25,11 @@ namespace Match3.Features
                 Value = value;
             }
 
+            public override string ToString()
+            {
+                return Value;
+            }
+
             public bool Equals(MoveCause other)
             {
                 return Value == other.Value;

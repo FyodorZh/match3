@@ -53,7 +53,11 @@ namespace Match3.Core
                         {
                             var obj = objectFactory.Construct<ICellObject>(objectData, _game);
                             Debug.Assert(obj != null);
-                            if (!cell.CanAttach(obj) || !cell.Attach(obj))
+                            if (cell.CanAttach(obj))
+                            {
+                                cell.Attach(obj);
+                            }
+                            else
                             {
                                 Debug.Assert(false);
                             }

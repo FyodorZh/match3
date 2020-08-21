@@ -65,7 +65,7 @@ namespace Match3.Features
 
                         if (HealthValue == 0)
                         {
-                            Owner.Owner.Game.InternalInvoke(Owner.Release);
+                            Owner.Release();
                         }
                     }
                 }

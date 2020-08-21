@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Match3.Features;
 using UnityEngine;
+using Debug = Match3.Core.Debug;
 
 namespace Match3.View.Objects
 {
@@ -17,6 +18,7 @@ namespace Match3.View.Objects
             base.OnInit();
 
             _bomb = (BombObjectFeature.IBomb)Owner;
+            Debug.Log("Bomb color " + _bomb.Color.ColorId);
             gameObject.GetComponent<Renderer>().material.mainTexture = _colors[_bomb.Color.ColorId];
         }
 

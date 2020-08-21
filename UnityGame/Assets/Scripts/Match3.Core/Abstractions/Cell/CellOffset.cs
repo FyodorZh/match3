@@ -2,7 +2,7 @@
 
 namespace Match3
 {
-    public readonly struct CellOffset : IEquatable<CellPosition>
+    public readonly struct CellOffset : IEquatable<CellOffset>
     {
         public readonly int X;
         public readonly int Y;
@@ -18,7 +18,7 @@ namespace Match3
             return $"[{X}, {Y}]";
         }
 
-        public bool Equals(CellPosition other)
+        public bool Equals(CellOffset other)
         {
             return X == other.X && Y == other.Y;
         }
