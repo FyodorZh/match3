@@ -1,0 +1,26 @@
+﻿<Project>
+
+    <PropertyGroup>
+        <BaseIntermediateOutputPath>..\..\..\..\Match3\obj\Match3.Features.Low</BaseIntermediateOutputPath>
+        <BaseOutputPath>..\..\..\..\Match3\bin\Match3.Features.Low</BaseOutputPath>
+        <OutDir>..\..\..\..\Match3\bin\Match3.Features.Low</OutDir>
+    </PropertyGroup>
+    
+    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+    
+    <PropertyGroup>
+        <LangVersion>7.3</LangVersion>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <DefaultItemExcludes>$(DefaultItemExcludes);**\*.meta;*.asmdef</DefaultItemExcludes>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+      <OutputPath>bin\Debug\</OutputPath>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+      <OutputPath>bin\Release\</OutputPath>
+    </PropertyGroup>
+
+    <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+</Project>

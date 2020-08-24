@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Match3;
 using Match3.Core;
 using Match3.Features;
+using Match3.Utils;
 using Match3.View;
 using Replays;
 using UnityEngine;
-using Debug = Match3.Core.Debug;
+using Debug = Match3.Debug;
 
 public class GameInit : MonoBehaviour
 {
@@ -94,7 +95,7 @@ public class GameInit : MonoBehaviour
         }
     }
 
-    public GameObject StartGame(IGame gamePresenter, IGameController gameController, string name)
+    public GameObject StartGame(IGameObserver gamePresenter, IGameController gameController, string name)
     {
         gameController.Start();
 
@@ -105,35 +106,40 @@ public class GameInit : MonoBehaviour
         var gameView = Instantiate(_gameView).GetComponent<GameView>();
         gameView.name = name;
         gameView.transform.position = Vector3.zero;
-        gameView.Setup(gamePresenter, gameController);
+        gameView.Setup(gamePresenter, gameController, _viewFactory);
 
         return gameView.gameObject;
     }
 
-    public void ConstructGame(IEnumerable<IGridData> gridData, out IGame game, out IGameController gameController)
+    public void ConstructGame(IEnumerable<IGridData> gridData, out IGameObserver game, out IGameController gameController)
     {
-        IGameRules rules = new GameRules(_viewFactory);
+        IGameRules rules = GameFactory.ConstructRules(new IGameFeature[]
+            {
+                new Emitters(),
+                new Gravity(),
+                ConstructMathFeature()
+            },
+            new IActionFeature[]
+            {
+                new KillActionFeature(),
+                new SwapActionFeature()
+            },
+            new ICellComponentFeature[]
+            {
+                HealthCellComponentFeature.Instance
+            },
+            new IObjectFeature[]
+            {
+                ChipObjectFeature.Instance,
+                ChainObjectFeature.Instance,
+                TileObjectFeature.Instance,
+                BombObjectFeature.Instance
+            },
+            new IObjectComponentFeature[]
+            {
+            });
 
-        rules.RegisterObjectFeature(ChipObjectFeature.Instance);
-        rules.RegisterObjectFeature(ChainObjectFeature.Instance);
-        rules.RegisterObjectFeature(TileObjectFeature.Instance);
-        rules.RegisterObjectFeature(BombObjectFeature.Instance);
-
-        rules.RegisterCellComponentFeature(HealthCellComponentFeature.Instance);
-
-        rules.RegisterGameFeature(new Emitters());
-        rules.RegisterGameFeature(new Gravity());
-        rules.RegisterGameFeature(ConstructMathFeature());
-
-
-        rules.RegisterActionFeature(new KillActionFeature());
-        rules.RegisterActionFeature(new SwapActionFeature());
-
-        rules.BakeAllFeatures();
-
-        var gameInstance = new Game(rules, gridData);
-        game = gameInstance;
-        gameController = gameInstance;
+        GameFactory.Construct(rules, gridData, out game, out gameController);
     }
 
     private Match ConstructMathFeature()

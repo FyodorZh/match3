@@ -1,0 +1,16 @@
+{
+    "name": "Match3.Features.Low",
+    "references": [       	
+        "Match3.Engine.Utils",
+        "Match3.Engine.Logic"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}
