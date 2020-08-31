@@ -1,3 +1,3 @@
-[submodule "BinarySerializer"]
-	path = BinarySerializer
-	url = https://github.com/FyodorZh/BinarySerializer.git
+[submodule "OrderedSerializer"]
+	path = OrderedSerializer
+	url = ../OrderedSerializer.git
