@@ -1,0 +1,16 @@
+{
+    "name": "Match3.ViewBinding.Default",
+    "references": [
+        "Match3.Engine.Utils",
+        "Match3.Engine.Logic"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

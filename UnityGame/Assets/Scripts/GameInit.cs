@@ -4,7 +4,7 @@ using Match3;
 using Match3.Core;
 using Match3.Features;
 using Match3.Utils;
-using Match3.View;
+using Match3.View.Default;
 using Replays;
 using UnityEngine;
 using Debug = Match3.Debug;
@@ -106,7 +106,7 @@ public class GameInit : MonoBehaviour
         var gameView = Instantiate(_gameView).GetComponent<GameView>();
         gameView.name = name;
         gameView.transform.position = Vector3.zero;
-        gameView.Setup(gamePresenter, gameController, _viewFactory);
+        gameView.Init(gamePresenter, gameController, _viewFactory);
 
         return gameView.gameObject;
     }
