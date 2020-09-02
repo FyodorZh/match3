@@ -25,6 +25,8 @@ namespace Match3.Logic
 
         public IReadOnlyList<IGameFeature> GameFeatures => _gameFeatureList;
         public IEnumerable<ICellComponentFeature> CellComponentFeatures => _cellComponentFeatures.Values;
+        public IEnumerable<IObjectFeature> ObjectFeatures => _objectFeatures.Values;
+        public IEnumerable<IObjectComponentFeature> ObjectComponentFeatures => _objectComponentFeatures.Values;
 
         public IActionFeature FindActionFeature(string featureName)
         {
@@ -117,7 +119,7 @@ namespace Match3.Logic
                     RegisterObjectComponentFeature(componentFeature);
                 }
 
-                _objectFactory.Append(feature.FeatureId, data => feature.Construct(data));
+                _objectFactory.Append(feature.FeatureId, feature.Construct);
             }
         }
 

@@ -4,7 +4,10 @@ using Match3;
 public class TrivialGridData : IGridData
 {
     private readonly List<ICellObjectData>[,] _cells;
-    
+
+    public int PosX => 0;
+    public int PosY => 0;
+
     public int Width { get; }
     public int Height { get; }
 
@@ -28,7 +31,7 @@ public class TrivialGridData : IGridData
         ActivateCell(x, y);
         _cells[x, y].Add(data);
     }
-    
+
     public IEnumerable<ICellObjectData> GetCellDataAt(int x, int y)
     {
         return _cells[x, y];
