@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Match3.View.Default.Objects
 {
-    public class ChipView : CellObjectView
+    public class ChipView : CellObjectView<ChipObjectFeature.IChip>
     {
         public List<Texture2D> _colors;
 
@@ -14,14 +14,13 @@ namespace Match3.View.Default.Objects
         {
             base.OnInit();
 
-            ChipObjectFeature.IChip chip = (ChipObjectFeature.IChip)Owner;
-            gameObject.GetComponent<Renderer>().material.mainTexture = _colors[chip.Color.ColorId];
+            gameObject.GetComponent<Renderer>().material.mainTexture = _colors[Observer.Color.ColorId];
         }
 
         protected override void Update()
         {
             base.Update();
-            var move = CellObject.TryGetComponent<MoveObjectComponentFeature.IMove>();
+            var move = Observer.TryGetComponent<MoveObjectComponentFeature.IMove>();
             _moveStateView.SetActive(move.IsMoving);
         }
     }

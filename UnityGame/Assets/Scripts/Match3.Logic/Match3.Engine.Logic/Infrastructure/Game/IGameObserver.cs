@@ -1,6 +1,6 @@
 namespace Match3
 {
-    public interface IGameObserver
+    public interface IGameObserver : IObserver
     {
         IBoardObserver Board { get; }
     }

@@ -2,55 +2,48 @@
 
 namespace Match3.ViewBinding.Default
 {
-    public abstract class GridViewBinding : MonoBehaviour
+    public abstract class GridViewBinding<TViewContext> : ViewBinding<IGridObserver, TViewContext>
+        where TViewContext : class, IViewContext
     {
-        protected IGridObserver Grid { get; private set; }
+        private CellViewBinding<TViewContext>[,] _cells;
 
-        private CellViewBinding[,] _cells;
+        protected abstract CellViewBinding<TViewContext> ConstructCellView();
 
-        protected abstract CellViewBinding ConstructCellView();
-
-        public void Init(IGridObserver grid, IGameController controller, IViewFactory viewFactory)
+        protected override void OnInit()
         {
-            Grid = grid;
+            base.OnInit();
 
-            _cells = new CellViewBinding[grid.Width, grid.Height];
-            foreach (var cell in grid.AllCells)
+            _cells = new CellViewBinding<TViewContext>[Observer.Width, Observer.Height];
+            foreach (var cell in Observer.AllCells)
             {
-                CellViewBinding view = ConstructCellView();
+                CellViewBinding<TViewContext> view = ConstructCellView();
                 view.transform.position = new Vector3(cell.Position.X, 0, cell.Position.Y);
-                view.Init(cell, controller, viewFactory);
+                view.Init(cell, ViewContext);
                 _cells[cell.Position.X, cell.Position.Y] = view;
             }
-
-            OnInit();
-        }
-
-        protected virtual void OnInit()
-        {
         }
 
         public void Add(ICellObjectObserver cellObject, CellPosition position)
         {
-            CellViewBinding cellView = _cells[position.X, position.Y];
+            var cellView = _cells[position.X, position.Y];
             cellView.Add(cellObject);
         }
 
-        public void Attach(CellObjectViewBinding cellObjectView, CellPosition position)
+        public void Attach(ICellObjectViewBinding cellObjectView, CellPosition position)
         {
-            CellViewBinding cellView = _cells[position.X, position.Y];
+            var cellView = _cells[position.X, position.Y];
             cellView.Attach(cellObjectView, true);
         }
 
-        public CellObjectViewBinding DeAttach(ICellObjectObserver cellObject, CellPosition oldPosition)
+        public ICellObjectViewBinding DeAttach(ICellObjectObserver cellObject, CellPosition oldPosition)
         {
-            CellViewBinding oldCell = _cells[oldPosition.X, oldPosition.Y];
+            var oldCell = _cells[oldPosition.X, oldPosition.Y];
             return oldCell.DeAttach(cellObject);
         }
 
         public void Destroy(ICellObjectObserver cellObject)
         {
-            CellViewBinding cellView = _cells[cellObject.Owner.Position.X, cellObject.Owner.Position.Y];
+            var cellView = _cells[cellObject.Owner.Position.X, cellObject.Owner.Position.Y];
             cellView.Destroy(cellObject);
         }
     }

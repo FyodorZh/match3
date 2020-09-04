@@ -1,6 +1,6 @@
 ﻿namespace Match3
 {
-    public interface IObjectObserver
+    public interface IObjectObserver : IObserver
     {
         ObjectTypeId TypeId { get; }
     }

@@ -1,35 +1,19 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 namespace Match3.ViewBinding.Default
 {
-    public abstract class CellViewBinding : MonoBehaviour
+    public abstract class CellViewBinding<TViewContext> : ViewBinding<ICellObserver, TViewContext>
+        where TViewContext : class, IViewContext
     {
-        protected ICellObserver Cell { get; private set; }
+        private readonly List<ICellObjectViewBinding> _objects = new List<ICellObjectViewBinding>();
 
-        protected IGameController GameController { get; private set; }
-
-        private IViewFactory _viewFactory;
-
-        private readonly List<CellObjectViewBinding> _objects = new List<CellObjectViewBinding>();
-
-        public void Init(ICellObserver cell, IGameController controller, IViewFactory viewFactory)
+        protected override void OnInit()
         {
-            Cell = cell;
-            _viewFactory = viewFactory;
-
-            GameController = controller;
-
-            foreach (var obj in cell.Objects)
+            base.OnInit();
+            foreach (var obj in Observer.Objects)
             {
                 Add(obj);
             }
-
-            OnInit();
-        }
-
-        protected virtual void OnInit()
-        {
         }
 
         protected virtual void Update()
@@ -38,26 +22,31 @@ namespace Match3.ViewBinding.Default
 
         public void Add(ICellObjectObserver obj)
         {
-            var view = _viewFactory.Construct<CellObjectViewBinding>(obj);
-            view.name = obj.TypeId.Id;
+            var view = ViewContext.Factory.Construct<ICellObjectViewBinding>(obj.TypeId);
+            Debug.Assert(view != null);
+            if (view != null)
+            {
+                view.Init(obj, ViewContext);
+                view.RootGO.name = obj.TypeId.Id;
 
-            Attach(view, false);
+                Attach(view, false);
+            }
         }
 
-        public void Attach(CellObjectViewBinding cellObjectView, bool preserveWorldPosition)
+        public void Attach(ICellObjectViewBinding cellObjectView, bool preserveWorldPosition)
         {
             _objects.Add(cellObjectView);
-            cellObjectView.transform.SetParent(transform, preserveWorldPosition);
+            cellObjectView.RootGO.transform.SetParent(transform, preserveWorldPosition);
         }
 
-        public CellObjectViewBinding DeAttach(ICellObjectObserver cellObject)
+        public ICellObjectViewBinding DeAttach(ICellObjectObserver cellObject)
         {
             int count = _objects.Count;
             for (int i = 0; i < count; ++i)
             {
-                if (cellObject == _objects[i].Owner)
+                if (cellObject == _objects[i].Observer)
                 {
-                    CellObjectViewBinding view = _objects[i];
+                    var view = _objects[i];
                     _objects.RemoveAt(i);
                     return view;
                 }
@@ -71,11 +60,11 @@ namespace Match3.ViewBinding.Default
             int count = _objects.Count;
             for (int i = 0; i < count; ++i)
             {
-                if (cellObject == _objects[i].Owner)
+                if (cellObject == _objects[i].Observer)
                 {
-                    CellObjectViewBinding view = _objects[i];
+                    var view = _objects[i];
                     _objects.RemoveAt(i);
-                    Destroy(view.gameObject);
+                    Destroy(view.RootGO);
                     return;
                 }
             }

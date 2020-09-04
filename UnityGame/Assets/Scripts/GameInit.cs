@@ -106,7 +106,7 @@ public class GameInit : MonoBehaviour
         var gameView = Instantiate(_gameView).GetComponent<GameView>();
         gameView.name = name;
         gameView.transform.position = Vector3.zero;
-        gameView.Init(gamePresenter, gameController, _viewFactory);
+        gameView.Init(gamePresenter, new DefaultViewContext(false, gameController, _viewFactory));
 
         return gameView.gameObject;
     }

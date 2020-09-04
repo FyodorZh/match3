@@ -2,19 +2,18 @@
 
 namespace Match3.ViewBinding.Default
 {
-    public class ObjectViewBinding : MonoBehaviour
+    public interface IObjectViewBinding : IViewBinding
     {
-        public IObjectObserver Owner { get; private set; }
+        GameObject RootGO { get; }
 
-        public void Init(IObjectObserver owner)
-        {
-            Owner = owner;
-            OnInit();
-        }
+        void Release();
+    }
 
-        protected virtual void OnInit()
-        {
-        }
+    public abstract class ObjectViewBinding<TObserver, TViewContext> : ViewBinding<TObserver, TViewContext>, IObjectViewBinding
+        where TObserver : class, IObjectObserver
+        where TViewContext : class, IViewContext
+    {
+        public GameObject RootGO => gameObject;
 
         public void Release()
         {

@@ -1,13 +1,12 @@
 ﻿namespace Match3.ViewBinding.Default
 {
-    public class CellObjectViewBinding : ObjectViewBinding
+    public interface ICellObjectViewBinding : IObjectViewBinding
     {
-        protected ICellObjectObserver CellObject { get; private set; }
+    }
 
-        protected override void OnInit()
-        {
-            base.OnInit();
-            CellObject = (ICellObjectObserver)Owner;
-        }
+    public abstract class CellObjectViewBinding<TObserver, TViewContext> : ObjectViewBinding<TObserver, TViewContext>, ICellObjectViewBinding
+        where TObserver : class, ICellObjectObserver
+        where TViewContext : class, IViewContext
+    {
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Match3
 {
-    public interface IBoardObserver
+    public interface IBoardObserver : IObserver
     {
         event Action<ICellObjectObserver, ICellObserver> CellObjectOwnerChange;
         event Action<ICellObjectObserver> CellObjectDestroy;

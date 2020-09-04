@@ -2,11 +2,11 @@
 
 namespace Match3.View.Default
 {
-    public class BoardView : BoardViewBinding
+    public class BoardView : BoardViewBinding<IDefaultViewContext>
     {
         public GridView _gridViewPrefab;
 
-        protected override GridViewBinding ConstructGridView()
+        protected override GridViewBinding<IDefaultViewContext> ConstructGridView()
         {
             return Instantiate(_gridViewPrefab, transform);
         }

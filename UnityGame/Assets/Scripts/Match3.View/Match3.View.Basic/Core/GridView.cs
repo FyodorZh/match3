@@ -2,20 +2,19 @@
 
 namespace Match3.View.Default
 {
-    public class GridView : GridViewBinding
+    public class GridView : GridViewBinding<IDefaultViewContext>
     {
         public CellView _cellViewPrefab;
 
-        protected override CellViewBinding ConstructCellView()
+        protected override CellViewBinding<IDefaultViewContext> ConstructCellView()
         {
-            CellViewBinding view = Instantiate(_cellViewPrefab, transform);
-            return view;
+            return Instantiate(_cellViewPrefab, transform);
         }
 
         protected override void OnInit()
         {
             base.OnInit();
-            name = "grid" + Grid.Id.Id.ToString();
+            name = "grid" + Observer.Id.Id.ToString();
         }
     }
 }

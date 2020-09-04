@@ -3,32 +3,27 @@ using UnityEngine;
 
 namespace Match3.ViewBinding.Default
 {
-    public abstract class BoardViewBinding : MonoBehaviour
+    public abstract class BoardViewBinding<TViewContext> : ViewBinding<IBoardObserver, TViewContext>
+        where TViewContext : class, IViewContext
     {
-        protected IBoardObserver Board { get; private set; }
+        private readonly Dictionary<GridId, GridViewBinding<TViewContext>> _grids =
+            new Dictionary<GridId, GridViewBinding<TViewContext>>();
 
-        private readonly Dictionary<GridId, GridViewBinding> _grids = new Dictionary<GridId, GridViewBinding>();
+        protected abstract GridViewBinding<TViewContext> ConstructGridView();
 
-        protected abstract GridViewBinding ConstructGridView();
-
-        public void Init(IBoardObserver board, IGameController controller, IViewFactory viewFactory)
+        protected override void OnInit()
         {
-            Board = board;
-            foreach (var grid in board.Grids)
+            base.OnInit();
+
+            foreach (var grid in Observer.Grids)
             {
-                GridViewBinding gridView = ConstructGridView();
-                gridView.Init(grid, controller, viewFactory);
+                var gridView = ConstructGridView();
+                gridView.Init(grid, ViewContext);
                 _grids.Add(grid.Id, gridView);
             }
 
-            board.CellObjectOwnerChange += OnCellObjectOwnerChange;
-            board.CellObjectDestroy += OnCellObjectDestroy;
-
-            OnInit();
-        }
-
-        protected virtual void OnInit()
-        {
+            Observer.CellObjectOwnerChange += OnCellObjectOwnerChange;
+            Observer.CellObjectDestroy += OnCellObjectDestroy;
         }
 
         private void OnCellObjectOwnerChange(ICellObjectObserver cellObject, ICellObserver oldOwner)
@@ -42,7 +37,7 @@ namespace Match3.ViewBinding.Default
 
             if (fromGrid != null)
             {
-                CellObjectViewBinding view = fromGrid.DeAttach(cellObject, oldOwner.Position);
+                var view = fromGrid.DeAttach(cellObject, oldOwner.Position);
                 toGrid.Attach(view, cellObject.Owner.Position);
             }
             else

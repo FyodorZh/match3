@@ -2,24 +2,21 @@
 {
     public interface IViewFactory
     {
-        ObjectViewBinding Construct(IObjectObserver logicObject);
+        IObjectViewBinding Construct(ObjectTypeId typeId);
     }
 
     public static class IViewFactory_Ext
     {
-        public static TObject Construct<TObject>(this IViewFactory factory, IObjectObserver logicObject)
-            where TObject : ObjectViewBinding
+        public static TObject Construct<TObject>(this IViewFactory factory, ObjectTypeId typeId)
+            where TObject : class, IObjectViewBinding
         {
-            var obj = factory.Construct(logicObject);
+            var obj = factory.Construct(typeId);
             if (obj is TObject typedObj)
             {
                 return typedObj;
             }
 
-            if (obj != null)
-            {
-                obj.Release();
-            }
+            obj?.Release();
             return null;
         }
     }

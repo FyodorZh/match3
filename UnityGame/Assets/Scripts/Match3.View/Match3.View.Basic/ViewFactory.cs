@@ -8,17 +8,16 @@ namespace Match3.View.Default
 {
     public class ViewFactory : MonoBehaviour, IViewFactory
     {
-        public CellObjectView _emitterPrefab;
+        public EmitterView _emitterPrefab;
         public ChipView _chipPrefab;
         public ChainView _chainPrefab;
         public TileView _tilePrefab;
         public BombView _bombPrefab;
 
-        public ObjectViewBinding Construct(IObjectObserver logicObject)
+        public IObjectViewBinding Construct(ObjectTypeId typeId)
         {
-
-            ObjectViewBinding view;
-            switch (logicObject.TypeId.Id)
+            IObjectViewBinding view;
+            switch (typeId.Id)
             {
                 case EmitterObjectFeature.Name:
                     view = Instantiate(_emitterPrefab);
@@ -38,7 +37,6 @@ namespace Match3.View.Default
                 default:
                     throw new Exception();
             }
-            view.Init(logicObject);
             return view;
         }
     }

@@ -2,28 +2,23 @@
 
 namespace Match3.ViewBinding.Default
 {
-    public abstract class GameViewBinding : MonoBehaviour
+    public abstract class GameViewBinding<TViewContext> : ViewBinding<IGameObserver, TViewContext>
+        where TViewContext : class, IViewContext
     {
-        private IGameObserver _game;
         private IGameController _controller;
 
-        private BoardViewBinding _boardView;
+        private BoardViewBinding<TViewContext> _boardView;
 
-        protected abstract BoardViewBinding ConstructBoardView();
+        protected abstract BoardViewBinding<TViewContext> ConstructBoardView();
 
-        public void Init(IGameObserver game, IGameController controller, IViewFactory viewFactory)
+        protected override void OnInit()
         {
-            _game = game;
-            _controller = controller;
+            base.OnInit();
+
+            _controller = ViewContext.GameController;
 
             _boardView = ConstructBoardView();
-            _boardView.Init(_game.Board, _controller, viewFactory);
-
-            OnInit();
-        }
-
-        protected virtual void OnInit()
-        {
+            _boardView.Init(Observer.Board, ViewContext);
         }
 
         protected virtual void Update()

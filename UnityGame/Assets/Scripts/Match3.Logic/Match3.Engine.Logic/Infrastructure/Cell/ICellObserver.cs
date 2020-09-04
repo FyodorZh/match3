@@ -2,7 +2,7 @@
 
 namespace Match3
 {
-    public interface ICellObserver
+    public interface ICellObserver : IObserver
     {
         CellId Id { get; }
         CellPosition Position { get; }

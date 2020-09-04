@@ -2,7 +2,7 @@
 
 namespace Match3
 {
-    public interface IGridObserver
+    public interface IGridObserver : IObserver
     {
         GridId Id { get; }
         int Width { get; }
