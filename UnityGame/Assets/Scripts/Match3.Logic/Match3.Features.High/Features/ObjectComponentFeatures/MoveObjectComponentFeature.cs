@@ -4,7 +4,7 @@ using Match3;
 
 namespace Match3.Features
 {
-    public class MoveObjectComponentFeature : ICellObjectObjectComponentFeature
+    public class MoveObjectComponentFeature : ICellObjectComponentFeature
     {
         public const string Name = "Move";
         public static readonly MoveObjectComponentFeature Instance = new MoveObjectComponentFeature();

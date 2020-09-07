@@ -1,6 +1,6 @@
 ﻿namespace Match3.Features
 {
-    public interface ICellObjectObjectComponentFeature : IObjectComponentFeature
+    public interface ICellObjectComponentFeature : IObjectComponentFeature
     {
     }
 }

@@ -3,7 +3,7 @@ using Match3.Utils;
 
 namespace Match3.Features
 {
-    public class MassObjectComponentFeature : ICellObjectObjectComponentFeature
+    public class MassObjectComponentFeature : ICellObjectComponentFeature
     {
         public const string Name = "Mass";
         public static readonly MassObjectComponentFeature Instance = new MassObjectComponentFeature();

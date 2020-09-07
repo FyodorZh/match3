@@ -2,7 +2,7 @@
 
 namespace Match3.Features
 {
-    public class HealthObjectComponentFeature : ICellObjectObjectComponentFeature
+    public class HealthObjectComponentFeature : ICellObjectComponentFeature
     {
         public const string Name = "Health";
         public static readonly HealthObjectComponentFeature Instance = new HealthObjectComponentFeature();

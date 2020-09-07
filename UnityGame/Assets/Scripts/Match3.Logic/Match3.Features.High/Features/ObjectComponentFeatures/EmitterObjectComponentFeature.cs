@@ -4,7 +4,7 @@ using Match3;
 
 namespace Match3.Features
 {
-    public class EmitterObjectComponentFeature : ICellObjectObjectComponentFeature
+    public class EmitterObjectComponentFeature : ICellObjectComponentFeature
     {
         public static readonly string Name = "Emitter";
         public static readonly EmitterObjectComponentFeature Instance = new EmitterObjectComponentFeature();
