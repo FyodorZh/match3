@@ -1,32 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using Match3.Core;
+using Match3.Features.Health;
 
 namespace Match3.Features
 {
-    public class TileObjectFeature : IObjectFeature
+    public class TileObjectFeature : CellObjectFeature
     {
         public const string Name = "Tile";
         public static readonly TileObjectFeature Instance = new TileObjectFeature();
 
-        public string FeatureId => Name;
+        public override string FeatureId => Name;
 
-        public IEnumerable<IObjectComponentFeature> DependsOn { get; } = new IObjectComponentFeature[]
+        private HealthCellObjectComponentFeature _healthComponentFeature;
+
+        public override void Init(IGameRules rules)
         {
-            HealthObjectComponentFeature.Instance,
-        };
+            _healthComponentFeature = rules.GetCellObjectComponentFeature<HealthCellObjectComponentFeature>(HealthCellObjectComponentFeature.Name);
+        }
 
-        public IObject Construct(IObjectData data)
+        public override IObject Construct(IObjectData data)
         {
             if (!(data is ITileData chipData))
                 throw  new InvalidOperationException();
 
-            return new Tile(chipData);
+            return new Tile(chipData,
+                _healthComponentFeature.Construct(new HealthCellObjectComponentData(
+                    5,
+                    chipData.Health,
+                    DamageType.Match | DamageType.Explosion,
+                    true)
+                ));
         }
 
         public interface ITile : ICellObject
         {
-            HealthObjectComponentFeature.IHealth Health { get; }
+            IHealthCellObjectComponent Health { get; }
         }
 
         public interface ITileData : ICellObjectData
@@ -36,35 +45,12 @@ namespace Match3.Features
 
         private class Tile : CellObject, ITile
         {
-            private class HealthData : HealthObjectComponentFeature.IHealthData
-            {
-                public string TypeId { get; }
-                public int Priority { get; }
-                public int HealthValue { get; }
-                public DamageType Vulnerability { get; }
-                public bool Fragile { get; }
+            public IHealthCellObjectComponent Health { get; }
 
-                public HealthData(int healthValue)
-                {
-                    TypeId = HealthObjectComponentFeature.Name;
-                    Priority = 5;
-                    HealthValue = healthValue;
-                    Vulnerability = DamageType.Match | DamageType.Explosion;
-                    Fragile = true;
-                }
-            }
-
-            public HealthObjectComponentFeature.IHealth Health { get; }
-            public Tile(ITileData data)
-                : this(new ObjectTypeId(data.ObjectTypeId),
-                    HealthObjectComponentFeature.Instance.Construct(new HealthData(data.Health)))
-            {
-            }
-
-            private Tile(
-                ObjectTypeId typeId,
-                HealthObjectComponentFeature.IHealth health)
-                : base(typeId, health)
+            public Tile(
+                ITileData data,
+                IHealthCellObjectComponent health)
+                : base(new ObjectTypeId(data.ObjectTypeId), health)
             {
                 Health = health;
             }

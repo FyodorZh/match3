@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using Match3.Core;
+using Match3.Features.Color;
+using Match3.Features.Health;
+using Match3.Features.Move;
 
 namespace Match3.Features
 {
@@ -79,13 +82,13 @@ namespace Match3.Features
             {
                 if (cell.IsActive && !cell.IsLocked)
                 {
-                    var color = cell.FindObjectComponent<ColorObjectComponentFeature.IColor>();
+                    var color = cell.FindObjectComponent<IColorCellObjectComponent>();
                     if (color != null)
                     {
-                        var health = color.Owner.TryGetComponent<HealthObjectComponentFeature.IHealth>();
+                        var health = color.Owner.TryGetComponent<IHealthCellObjectComponent>();
                         if (health == null || health.HealthValue > 0)
                         {
-                            MoveObjectComponentFeature.IMove move = cell.FindObjectComponent<MoveObjectComponentFeature.IMove>();
+                            IMoveCellObjectComponent move = cell.FindObjectComponent<IMoveCellObjectComponent>();
                             if (move == null || move.MoveCause.Value == "user" || curTime - move.LastMoveTime > _moveCooldown)
                             {
                                 colorId = color.ColorId;
@@ -140,7 +143,7 @@ namespace Match3.Features
 
                                         var cell = grid.GetCell(pos);
 
-                                        Time time = cell.FindObjectComponent<MoveObjectComponentFeature.IMove>()?.LastMoveTime ?? Time.Zero;
+                                        Time time = cell.FindObjectComponent<IMoveCellObjectComponent>()?.LastMoveTime ?? Time.Zero;
 
                                         if (time > lastChangeTime)
                                         {
@@ -162,7 +165,7 @@ namespace Match3.Features
                                     var offset = matchPattern.OffsetAt(i);
                                     var cell = grid.GetCell(pos0 + offset);
 
-                                    var colorComponent = cell.FindObjectComponent<ColorObjectComponentFeature.IColor>();
+                                    var colorComponent = cell.FindObjectComponent<IColorCellObjectComponent>();
                                     if (colorComponent != null) // только что взорвался
                                     {
                                         var colorObject = colorComponent.Owner;

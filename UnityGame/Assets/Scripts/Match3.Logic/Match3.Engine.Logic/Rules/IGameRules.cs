@@ -15,5 +15,8 @@ namespace Match3
         IEnumerable<IObjectComponentFeature> ObjectComponentFeatures { get; }
 
         IActionFeature FindActionFeature(string featureName);
+
+        TCellObjectComponentFeature GetCellObjectComponentFeature<TCellObjectComponentFeature>(string name)
+            where TCellObjectComponentFeature : ICellObjectComponentFeature;
     }
 }

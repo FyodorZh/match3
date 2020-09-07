@@ -6,5 +6,7 @@
         void SetOwner(ICellObject owner);
 
         void Tick(DeltaTime dTime);
+
+        ICellObjectComponentData SaveAsData();
     }
 }

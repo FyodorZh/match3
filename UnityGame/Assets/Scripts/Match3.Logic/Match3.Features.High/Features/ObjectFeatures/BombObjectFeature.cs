@@ -1,75 +1,79 @@
 ﻿using System;
-using System.Collections.Generic;
 using Match3.Core;
+using Match3.Features.Color;
+using Match3.Features.Health;
+using Match3.Features.Mass;
+using Match3.Features.Move;
 
 namespace Match3.Features
 {
-    public class BombObjectFeature : IObjectFeature
+    public class BombObjectFeature : CellObjectFeature
     {
         public const string Name = "Bomb";
         public static readonly BombObjectFeature Instance = new BombObjectFeature();
 
-        public string FeatureId => Name;
+        public override string FeatureId => Name;
 
-        public IEnumerable<IObjectComponentFeature> DependsOn { get; } = new IObjectComponentFeature[]
+        private ColorCellObjectComponentFeature _colorComponentFeature;
+        private MassCellObjectComponentFeature _massComponentFeature;
+        private MoveCellObjectComponentFeature _moveComponentFeature;
+        private HealthCellObjectComponentFeature _healthComponentFeature;
+
+        public override void Init(IGameRules rules)
         {
-            ColorObjectComponentFeature.Instance,
-            MassObjectComponentFeature.Instance,
-            MoveObjectComponentFeature.Instance,
-            HealthObjectComponentFeature.Instance,
-        };
+            _colorComponentFeature = rules.GetCellObjectComponentFeature<ColorCellObjectComponentFeature>(ColorCellObjectComponentFeature.Name);
+            _massComponentFeature = rules.GetCellObjectComponentFeature<MassCellObjectComponentFeature>(MassCellObjectComponentFeature.Name);
+            _moveComponentFeature = rules.GetCellObjectComponentFeature<MoveCellObjectComponentFeature>(MoveCellObjectComponentFeature.Name);
+            _healthComponentFeature = rules.GetCellObjectComponentFeature<HealthCellObjectComponentFeature>(HealthCellObjectComponentFeature.Name);
+        }
 
-        public IObject Construct(IObjectData data)
+        public override IObject Construct(IObjectData data)
         {
             if (!(data is IBombData bombData))
                 throw new InvalidOperationException();
 
-            return new Bomb(bombData);
+            return new Bomb(
+                new ObjectTypeId(bombData.ObjectTypeId),
+                _colorComponentFeature.Construct(bombData.Color),
+                _massComponentFeature.Construct(),
+                _moveComponentFeature.Construct(),
+                _healthComponentFeature.Construct(
+                    new HealthCellObjectComponentData(
+                        1,
+                        2,
+                        DamageType.Match | DamageType.Explosion,
+                        false
+                        )
+                    )
+                );
         }
 
         public interface IBomb : ICellObject
         {
-            ColorObjectComponentFeature.IColor Color { get; }
-            HealthObjectComponentFeature.IHealth Health { get; }
+            IColorCellObjectComponent Color { get; }
+            IHealthCellObjectComponent Health { get; }
         }
 
         public interface IBombData : ICellObjectData
         {
-            ColorObjectComponentFeature.IColorData Color { get; }
+            IColorCellObjectComponentData Color { get; }
         }
 
         private class Bomb : CellObject, IBomb
         {
-            private class HealthData : HealthObjectComponentFeature.IHealthData
-            {
-                public int Priority => 1;
-                public int HealthValue => 2;
-                public DamageType Vulnerability => DamageType.Match | DamageType.Explosion;
-                public bool Fragile => false;
-            }
+            public IColorCellObjectComponent Color { get; }
 
-            public ColorObjectComponentFeature.IColor Color { get; }
-
-            public HealthObjectComponentFeature.IHealth Health { get; }
+            public IHealthCellObjectComponent Health { get; }
 
             private bool _countDownMode;
             private DeltaTime _timeTillDestroy;
 
-            public Bomb(IBombData data)
-                : this(new ObjectTypeId(data.ObjectTypeId),
-                    ColorObjectComponentFeature.Instance.Construct(data.Color),
-                    MassObjectComponentFeature.Instance.Construct(),
-                    MoveObjectComponentFeature.Instance.Construct(),
-                    HealthObjectComponentFeature.Instance.Construct(new HealthData()))
-            {
-            }
-
-            private Bomb(
+            public Bomb(
                 ObjectTypeId typeId,
-                ColorObjectComponentFeature.IColor color,
-                MassObjectComponentFeature.IMass mass,
-                MoveObjectComponentFeature.IMove move,
-                HealthObjectComponentFeature.IHealth health)
+                IColorCellObjectComponent color,
+                IMassCellObjectComponent mass,
+                IMoveCellObjectComponent move,
+                IHealthCellObjectComponent health)
                 : base(typeId, color, mass, move, health)
             {
                 Color = color;

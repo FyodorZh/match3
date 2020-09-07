@@ -1,55 +1,52 @@
 ﻿using System;
-using System.Collections.Generic;
 using Match3.Core;
+using Match3.Features.Health;
+using Match3.Features.Mass;
 using Match3.Utils;
 
 namespace Match3.Features
 {
-    public class ChainObjectFeature : IObjectFeature
+    public class ChainObjectFeature : CellObjectFeature
     {
         public const string Name = "Chain";
         public static readonly ChainObjectFeature Instance = new ChainObjectFeature();
 
-        public string FeatureId => Name;
+        public override string FeatureId => Name;
 
-        public IEnumerable<IObjectComponentFeature> DependsOn { get; } = new IObjectComponentFeature[]
+        private HealthCellObjectComponentFeature _healthComponentFeature;
+
+        public override void Init(IGameRules rules)
         {
-            MassObjectComponentFeature.Instance,
-            HealthObjectComponentFeature.Instance,
-        };
+            _healthComponentFeature = rules.GetCellObjectComponentFeature<HealthCellObjectComponentFeature>(HealthCellObjectComponentFeature.Name);
+        }
 
-        public IObject Construct(IObjectData data)
+        public override IObject Construct(IObjectData data)
         {
             if (!(data is IChainData chainData))
                 throw new InvalidOperationException();
 
-            return new Chain(chainData);
+            return new Chain(chainData, _healthComponentFeature.Construct(chainData.Health));
         }
 
         public interface IChain : ICellObject
         {
-            HealthObjectComponentFeature.IHealth Health { get; }
+            IHealthCellObjectComponent Health { get; }
         }
 
         public interface IChainData : ICellObjectData
         {
-            HealthObjectComponentFeature.IHealthData Health { get; }
+            IHealthCellObjectComponentData Health { get; }
         }
 
         private class Chain : CellObject, IChain
         {
             private ReleasableBoolAgent _lockForMass;
 
-            private readonly HealthObjectComponentFeature.IHealth _healthComponent;
+            private readonly IHealthCellObjectComponent _healthComponent;
 
-            public HealthObjectComponentFeature.IHealth Health { get; }
+            public IHealthCellObjectComponent Health { get; }
 
-            public Chain(IChainData data)
-                : this(data, HealthObjectComponentFeature.Instance.Construct(data.Health))
-            {
-            }
-
-            private Chain(IChainData data, HealthObjectComponentFeature.IHealth healthComponent)
+            public Chain(IChainData data, IHealthCellObjectComponent healthComponent)
                 : base(new ObjectTypeId(data.ObjectTypeId), healthComponent)
             {
                 Health = healthComponent;
@@ -60,7 +57,7 @@ namespace Match3.Features
                 _lockForMass?.Release();
                 if (newOwner != null)
                 {
-                    var mass = newOwner.FindObjectComponent<MassObjectComponentFeature.IMass>();
+                    var mass = newOwner.FindObjectComponent<IMassCellObjectComponent>();
                     Debug.Assert(mass != null);
                     mass?.IsLocked.AddAgent(_lockForMass = new ReleasableLock());
                 }

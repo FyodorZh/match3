@@ -1,5 +1,6 @@
 ﻿using Match3;
 using Match3.Features;
+using Match3.Features.Mass;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Debug = Match3.Debug;
@@ -19,7 +20,7 @@ public class CellTouch : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
     {
         if (Input.GetMouseButtonDown(1))
         {
-            var mass = _cell.FindObjectComponent<MassObjectComponentFeature.IMass>();
+            var mass = _cell.FindObjectComponent<IMassCellObjectComponent>();
             if (mass != null)
             {
                 mass.Owner.Release();
@@ -34,7 +35,7 @@ public class CellTouch : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
         }
         if (eventData.button == PointerEventData.InputButton.Right)
         {
-            var mass = _cell.FindObjectComponent<MassObjectComponentFeature.IMass>();
+            var mass = _cell.FindObjectComponent<IMassCellObjectComponent>();
             if (mass != null)
             {
                 var cell = mass.Owner.Owner;

@@ -1,5 +1,8 @@
-﻿namespace Match3.Features
+﻿using System;
+
+namespace Match3.Features
 {
+    [Flags]
     public enum DamageType
     {
         Invalid = 0,

@@ -32,5 +32,7 @@
         {
             // DO NOTHING
         }
+
+        public abstract ICellObjectComponentData SaveAsData();
     }
 }

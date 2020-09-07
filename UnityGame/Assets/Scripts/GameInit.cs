@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using Match3;
 using Match3.Core;
 using Match3.Features;
+using Match3.Features.Color;
+using Match3.Features.Color.Default;
+using Match3.Features.Emitter;
+using Match3.Features.Emitter.Default;
+using Match3.Features.Health;
+using Match3.Features.Health.Default;
+using Match3.Features.Mass.Default;
+using Match3.Features.Move.Default;
 using Match3.Utils;
 using Match3.View.Default;
 using Replays;
@@ -137,6 +145,11 @@ public class GameInit : MonoBehaviour
             },
             new IObjectComponentFeature[]
             {
+                new ColorCellObjectComponentFeatureImpl(),
+                new EmitterCellObjectComponentFeatureImpl(),
+                new HealthCellObjectComponentFeatureImpl(),
+                new MassCellObjectComponentFeatureImpl(),
+                new MoveCellObjectComponentFeatureImpl(),
             });
 
         GameFactory.Construct(rules, gridData, out game, out gameController);
@@ -248,10 +261,10 @@ public class GameInit : MonoBehaviour
         return match;
     }
 
-    class EmitterData : EmitterObjectFeature.IEmitterObjectData, EmitterObjectComponentFeature.IEmitterData
+    class EmitterData : EmitterObjectFeature.IEmitterObjectData, IEmitterCellObjectComponentData
     {
         public string ObjectTypeId => EmitterObjectFeature.Name;
-        public EmitterObjectComponentFeature.IEmitterData Data => this;
+        public IEmitterCellObjectComponentData Data => this;
         public ICellObjectData[] ObjectsToEmit { get; }
 
         public EmitterData(ICellObjectData[] objectsToEmit)
@@ -292,21 +305,11 @@ public class GameInit : MonoBehaviour
         return data;
     }
 
-    private class ColorData : ColorObjectComponentFeature.IColorData
-    {
-        public int ColorId { get; }
-
-        public ColorData(int colorId)
-        {
-            ColorId = colorId;
-        }
-    }
-
     private class ChipData : ChipObjectFeature.IChipData
     {
         public string ObjectTypeId => ChipObjectFeature.Name;
-        public ColorObjectComponentFeature.IColorData Color { get; }
-        public HealthObjectComponentFeature.IHealthData Health { get; }
+        public IColorCellObjectComponentData Color { get; }
+        public IHealthCellObjectComponentData Health { get; }
 
         public int BodyType => 0;
 
@@ -314,8 +317,8 @@ public class GameInit : MonoBehaviour
 
         public ChipData(int colorId)
         {
-            Color = new ColorData(colorId);
-            Health = new HealthData(1, 1, DamageType.Match | DamageType.Explosion, false);
+            Color = new ColorCellObjectComponentData(colorId);
+            Health = new HealthCellObjectComponentData(1, 1, DamageType.Match | DamageType.Explosion, false);
         }
     }
 
@@ -323,24 +326,7 @@ public class GameInit : MonoBehaviour
     {
         public string ObjectTypeId => ChainObjectFeature.Name;
 
-        public HealthObjectComponentFeature.IHealthData Health { get; } = new HealthData(10, 3, DamageType.Match | DamageType.Explosion, false);
-    }
-
-    private class HealthData : HealthObjectComponentFeature.IHealthData
-    {
-        public int Priority { get; }
-        public int HealthValue { get; }
-        public DamageType Vulnerability { get; }
-
-        public bool Fragile { get; }
-
-        public HealthData(int priority, int value, DamageType vulnerability, bool fragile)
-        {
-            Priority = priority;
-            HealthValue = value;
-            Vulnerability = vulnerability;
-            Fragile = fragile;
-        }
+        public IHealthCellObjectComponentData Health { get; } = new HealthCellObjectComponentData(10, 3, DamageType.Match | DamageType.Explosion, false);
     }
 
     public class TileObjectData : TileObjectFeature.ITileData
@@ -366,11 +352,11 @@ public class GameInit : MonoBehaviour
     public class BombObjectData : BombObjectFeature.IBombData
     {
         public string ObjectTypeId => BombObjectFeature.Name;
-        public ColorObjectComponentFeature.IColorData Color { get; }
+        public IColorCellObjectComponentData Color { get; }
 
         public BombObjectData(int colorId)
         {
-            Color = new ColorData(colorId);
+            Color = new ColorCellObjectComponentData(colorId);
         }
 
     }

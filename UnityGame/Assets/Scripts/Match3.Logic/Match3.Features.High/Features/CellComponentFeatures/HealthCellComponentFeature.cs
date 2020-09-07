@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Match3.Core;
+using Match3.Features.Health;
 
 namespace Match3.Features
 {
@@ -21,7 +22,6 @@ namespace Match3.Features
 
         public IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; } = new IObjectComponentFeature[]
         {
-            HealthObjectComponentFeature.Instance,
         };
 
         public void InitState(IGame game)
@@ -45,7 +45,7 @@ namespace Match3.Features
 
         private class Health : CellComponent, IHealth
         {
-            private readonly List<HealthObjectComponentFeature.IHealth> _components = new List<HealthObjectComponentFeature.IHealth>();
+            private readonly List<IHealthCellObjectComponent> _components = new List<IHealthCellObjectComponent>();
 
             public override string TypeId => Name;
 
@@ -53,7 +53,7 @@ namespace Match3.Features
             {
                 foreach (var obj in Cell.Objects)
                 {
-                    var component = obj.TryGetComponent<HealthObjectComponentFeature.IHealth>();
+                    var component = obj.TryGetComponent<IHealthCellObjectComponent>();
                     if (component != null)
                     {
                         _components.Add(component);

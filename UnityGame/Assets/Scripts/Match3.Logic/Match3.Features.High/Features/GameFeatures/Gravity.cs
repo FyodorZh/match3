@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using Match3.Features.Emitter;
+using Match3.Features.Mass;
+using Match3.Features.Move;
 using Match3.Utils;
 
 namespace Match3.Features
@@ -15,8 +18,6 @@ namespace Match3.Features
 
         public override IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; } = new IObjectComponentFeature[]
         {
-            MoveObjectComponentFeature.Instance,
-            MassObjectComponentFeature.Instance,
         };
 
         public Gravity()
@@ -36,7 +37,7 @@ namespace Match3.Features
             public readonly CellPosition FallFrom;
             public readonly CellPosition FallTo;
 
-            public readonly MoveObjectComponentFeature.IMove FallingObjectMover;
+            public readonly IMoveCellObjectComponent FallingObjectMover;
 
             private readonly ReleasableLock _lock;
 
@@ -50,7 +51,7 @@ namespace Match3.Features
 
             public bool IsFinished => _isFinished;
 
-            public MoveAgent(GridId gridId, MoveObjectComponentFeature.IMove fallingObjectMover, CellPosition fallFrom, FixedVector2 fallOffset)
+            public MoveAgent(GridId gridId, IMoveCellObjectComponent fallingObjectMover, CellPosition fallFrom, FixedVector2 fallOffset)
             {
                 GridId = gridId;
                 Destination = fallingObjectMover.Owner.Owner;
@@ -74,7 +75,7 @@ namespace Match3.Features
 
                 _lock = new ReleasableLock();
                 FallingObjectMover.Owner.Owner.AddLock(_lock);
-                FallingObjectMover.StartMove(new MoveObjectComponentFeature.MoveCause("gravity"), this);
+                FallingObjectMover.StartMove(new MoveCause("gravity"), this);
             }
 
             public void Finish()
@@ -119,13 +120,13 @@ namespace Match3.Features
                         for (int y = 1; y < grid.Height; ++y)
                         {
                             ICell cell = grid.GetCell(new CellPosition(x, y));
-                            MassObjectComponentFeature.IMass massComponent = cell.FindObjectComponent<MassObjectComponentFeature.IMass>();
+                            IMassCellObjectComponent massComponent = cell.FindObjectComponent<IMassCellObjectComponent>();
 
                             if (massComponent != null && !massComponent.IsLocked)
                             {
                                 ICellObject objectToFall = massComponent.Owner;
 
-                                var moveComponent = objectToFall.TryGetComponent<MoveObjectComponentFeature.IMove>();
+                                var moveComponent = objectToFall.TryGetComponent<IMoveCellObjectComponent>();
                                 if (moveComponent != null && !moveComponent.IsMoving)
                                 {
                                     int k = y - 1;
@@ -140,7 +141,7 @@ namespace Match3.Features
                                                 break;
                                             }
 
-                                            var freeMass = cellToCheck.FindObjectComponent<MassObjectComponentFeature.IMass>();
+                                            var freeMass = cellToCheck.FindObjectComponent<IMassCellObjectComponent>();
                                             if (freeMass != null)
                                             {
                                                 break;
@@ -199,7 +200,7 @@ namespace Match3.Features
                                 }
                                 else
                                 {
-                                    var mass = cellBlock.FindObjectComponent<MassObjectComponentFeature.IMass>();
+                                    var mass = cellBlock.FindObjectComponent<IMassCellObjectComponent>();
                                     if (mass != null && mass.IsLocked)
                                     {
                                         block = true;
@@ -214,31 +215,31 @@ namespace Match3.Features
                                     ICell emptyCell = grid.GetCell(new CellPosition(x, i));
 
                                     {
-                                        MoveObjectComponentFeature.IMove moveComponent = emptyCell.FindObjectComponent<MoveObjectComponentFeature.IMove>();
+                                        IMoveCellObjectComponent moveComponent = emptyCell.FindObjectComponent<IMoveCellObjectComponent>();
                                         if (moveComponent != null && moveComponent.IsMoving)
                                             break;
-                                        EmitterObjectComponentFeature.IEmitter emitterComponent = emptyCell.FindObjectComponent<EmitterObjectComponentFeature.IEmitter>();
+                                        IEmitterCellObjectComponent emitterComponent = emptyCell.FindObjectComponent<IEmitterCellObjectComponent>();
                                         if (emitterComponent != null)
                                             break;
                                     }
 
-                                    if (emptyCell.IsActive && !emptyCell.IsLocked && emptyCell.FindObjectComponent<MassObjectComponentFeature.IMass>() == null)
+                                    if (emptyCell.IsActive && !emptyCell.IsLocked && emptyCell.FindObjectComponent<IMassCellObjectComponent>() == null)
                                     {
-                                        MoveObjectComponentFeature.IMove sourceCellMove = null;
+                                        IMoveCellObjectComponent sourceCellMove = null;
 
                                         bool foundMovement = false;
                                         {
                                             ICell cellToCheck = grid.GetCell(new CellPosition(x - 1, i + 1));
                                             if (cellToCheck != null)
                                             {
-                                                var cellMove = cellToCheck.FindObjectComponent<MoveObjectComponentFeature.IMove>();
+                                                var cellMove = cellToCheck.FindObjectComponent<IMoveCellObjectComponent>();
                                                 if (cellMove != null)
                                                 {
                                                     if (!cellMove.IsMoving)
                                                     {
                                                         if (!cellToCheck.IsLocked)
                                                         {
-                                                            var mass = cellToCheck.FindObjectComponent<MassObjectComponentFeature.IMass>();
+                                                            var mass = cellToCheck.FindObjectComponent<IMassCellObjectComponent>();
                                                             if (mass != null && !mass.IsLocked)
                                                             {
                                                                 sourceCellMove = cellMove;
@@ -258,14 +259,14 @@ namespace Match3.Features
                                             ICell cellToCheck = grid.GetCell(new CellPosition(x + 1, i + 1));
                                             if (cellToCheck != null)
                                             {
-                                                var cellMove = cellToCheck.FindObjectComponent<MoveObjectComponentFeature.IMove>();
+                                                var cellMove = cellToCheck.FindObjectComponent<IMoveCellObjectComponent>();
                                                 if (cellMove != null)
                                                 {
                                                     if (!cellMove.IsMoving)
                                                     {
                                                         if (!cellToCheck.IsLocked)
                                                         {
-                                                            var mass = cellToCheck.FindObjectComponent<MassObjectComponentFeature.IMass>();
+                                                            var mass = cellToCheck.FindObjectComponent<IMassCellObjectComponent>();
                                                             if (mass != null && !mass.IsLocked)
                                                             {
                                                                 sourceCellMove = cellMove;

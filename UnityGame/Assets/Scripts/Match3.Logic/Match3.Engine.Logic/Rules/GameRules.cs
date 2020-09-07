@@ -34,6 +34,17 @@ namespace Match3.Logic
             return result;
         }
 
+        public TCellObjectComponentFeature GetCellObjectComponentFeature<TCellObjectComponentFeature>(string name)
+            where TCellObjectComponentFeature : ICellObjectComponentFeature
+        {
+            if (!_objectComponentFeatures.TryGetValue(name, out var feature))
+            {
+                Debug.Log("ERROR: " + name);
+                Debug.Assert(false);
+            }
+            return (TCellObjectComponentFeature)feature;
+        }
+
         public void RegisterGameFeature(IGameFeature feature)
         {
             if (feature == null)
@@ -114,12 +125,8 @@ namespace Match3.Logic
             if (!_objectFeatures.ContainsKey(feature.FeatureId))
             {
                 _objectFeatures.Add(feature.FeatureId, feature);
-                foreach (var componentFeature in feature.DependsOn)
-                {
-                    RegisterObjectComponentFeature(componentFeature);
-                }
-
                 _objectFactory.Append(feature.FeatureId, feature.Construct);
+                feature.Init(this);
             }
         }
 

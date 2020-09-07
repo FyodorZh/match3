@@ -15,6 +15,12 @@ namespace Match3
         {
             var rules = new GameRules();
 
+            foreach (var feature in objectComponentFeatures)
+            {
+                rules.RegisterObjectComponentFeature(feature);
+            }
+
+
             foreach (var feature in gameFeatures)
             {
                 rules.RegisterGameFeature(feature);
@@ -33,11 +39,6 @@ namespace Match3
             foreach (var feature in cellObjectFeature)
             {
                 rules.RegisterObjectFeature(feature);
-            }
-
-            foreach (var feature in objectComponentFeatures)
-            {
-                rules.RegisterObjectComponentFeature(feature);
             }
 
             rules.BakeAllFeatures();

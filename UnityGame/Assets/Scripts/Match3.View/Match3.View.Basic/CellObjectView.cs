@@ -1,4 +1,4 @@
-﻿using Match3.Features;
+﻿using Match3.Features.Move;
 using Match3.ViewBinding.Default;
 using UnityEngine;
 
@@ -7,12 +7,12 @@ namespace Match3.View.Default
     public class CellObjectView<TObserver> : CellObjectViewBinding<TObserver, IDefaultViewContext>
         where TObserver : class, ICellObjectObserver
     {
-        private MoveObjectComponentFeature.IMove _moveComponent;
+        private IMoveCellObjectComponent _moveComponent;
 
         protected override void OnInit()
         {
             base.OnInit();
-            _moveComponent = Observer.TryGetComponent<MoveObjectComponentFeature.IMove>();
+            _moveComponent = Observer.TryGetComponent<IMoveCellObjectComponent>();
         }
 
         protected override void Update()

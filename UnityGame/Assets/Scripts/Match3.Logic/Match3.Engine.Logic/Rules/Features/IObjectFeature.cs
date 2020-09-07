@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace Match3.Features
+﻿namespace Match3.Features
 {
     public interface IObjectFeature : IFeature
     {
-        IEnumerable<IObjectComponentFeature> DependsOn { get; }
+        void Init(IGameRules rules);
 
         IObject Construct(IObjectData data);
     }

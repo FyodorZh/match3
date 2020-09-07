@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Match3;
+using Match3.Features.Mass;
+using Match3.Features.Move;
 
 namespace Match3.Features
 {
@@ -23,8 +25,6 @@ namespace Match3.Features
 
         public override IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; } = new IObjectComponentFeature[]
         {
-            MassObjectComponentFeature.Instance,
-            MoveObjectComponentFeature.Instance,
         };
 
         public override void Process(IGame game, params CellId[] cells)
@@ -41,14 +41,14 @@ namespace Match3.Features
             if (cell1 == null || cell2 == null)
                 throw new InvalidOperationException();
 
-            var mass1 = cell1.FindObjectComponent<MassObjectComponentFeature.IMass>();
-            var mass2 = cell2.FindObjectComponent<MassObjectComponentFeature.IMass>();
+            var mass1 = cell1.FindObjectComponent<IMassCellObjectComponent>();
+            var mass2 = cell2.FindObjectComponent<IMassCellObjectComponent>();
 
             if (mass1 != null && !mass1.IsLocked &&
                 mass2 != null && !mass2.IsLocked)
             {
-                var move1 = cell1.FindObjectComponent<MoveObjectComponentFeature.IMove>();
-                var move2 = cell2.FindObjectComponent<MoveObjectComponentFeature.IMove>();
+                var move1 = cell1.FindObjectComponent<IMoveCellObjectComponent>();
+                var move2 = cell2.FindObjectComponent<IMoveCellObjectComponent>();
 
                 if (move1 != null && !move1.IsMoving &&
                     move2 != null && !move2.IsMoving)
@@ -64,12 +64,12 @@ namespace Match3.Features
                     var o1 = move1.Owner;
                     var o2 = move2.Owner;
 
-                    move1.StartMove(new MoveObjectComponentFeature.MoveCause("user"),  t1, null, () =>
+                    move1.StartMove(new MoveCause("user"),  t1, null, () =>
                     {
                         move1.Offset = new FixedVector2(0, 0);
                         cell2.Swap(o1, o2);
                     });
-                    move2.StartMove(new MoveObjectComponentFeature.MoveCause("user"),  t2, null, () =>
+                    move2.StartMove(new MoveCause("user"),  t2, null, () =>
                     {
                         move2.Offset = new FixedVector2(0, 0);
                     });

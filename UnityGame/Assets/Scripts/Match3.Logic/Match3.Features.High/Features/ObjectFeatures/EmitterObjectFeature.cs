@@ -1,34 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
 using Match3.Core;
+using Match3.Features.Emitter;
 
 namespace Match3.Features
 {
-    public class EmitterObjectFeature : IObjectFeature
+    public class EmitterObjectFeature : CellObjectFeature
     {
         public const string Name = "Emitter";
 
         public static readonly EmitterObjectFeature Instance = new EmitterObjectFeature();
 
-        public string FeatureId => Name;
+        public override string FeatureId => Name;
 
-        public IEnumerable<IObjectComponentFeature> DependsOn { get; } = new IObjectComponentFeature[]
+        private EmitterCellObjectComponentFeature _emitterComponentFeature;
+
+        public override void Init(IGameRules rules)
         {
-            EmitterObjectComponentFeature.Instance,
-            MoveObjectComponentFeature.Instance,
-        };
+            _emitterComponentFeature = rules.GetCellObjectComponentFeature<EmitterCellObjectComponentFeature>(EmitterCellObjectComponentFeature.Name);
+        }
 
-        public IObject Construct(IObjectData data)
+        public override IObject Construct(IObjectData data)
         {
             if (!(data is IEmitterObjectData emitterObjectData))
                 throw new InvalidOperationException();
 
-            return new Emitter(emitterObjectData);
+            return new Emitter(emitterObjectData, _emitterComponentFeature.Construct(emitterObjectData.Data));
         }
 
         public interface IEmitterObjectData : ICellObjectData
         {
-            EmitterObjectComponentFeature.IEmitterData Data { get; }
+            IEmitterCellObjectComponentData Data { get; }
         }
 
         public interface IEmitter : ICellObject
@@ -37,8 +38,8 @@ namespace Match3.Features
 
         private class Emitter : CellObject, IEmitter
         {
-            public Emitter(IEmitterObjectData data) :
-                base(new ObjectTypeId(Name), EmitterObjectComponentFeature.Instance.Construct(data.Data))
+            public Emitter(IEmitterObjectData data, IEmitterCellObjectComponent emitter) :
+                base(new ObjectTypeId(data.ObjectTypeId), emitter)
             {
             }
 

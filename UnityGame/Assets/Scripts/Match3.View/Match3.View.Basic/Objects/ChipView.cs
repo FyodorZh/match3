@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Match3.Features;
+using Match3.Features.Move;
 using UnityEngine;
 
 namespace Match3.View.Default.Objects
@@ -20,7 +21,7 @@ namespace Match3.View.Default.Objects
         protected override void Update()
         {
             base.Update();
-            var move = Observer.TryGetComponent<MoveObjectComponentFeature.IMove>();
+            var move = Observer.TryGetComponent<IMoveCellObjectComponent>();
             _moveStateView.SetActive(move.IsMoving);
         }
     }

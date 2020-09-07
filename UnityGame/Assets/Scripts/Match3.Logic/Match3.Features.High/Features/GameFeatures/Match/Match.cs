@@ -16,7 +16,6 @@ namespace Match3.Features
 
         public override IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; } = new IObjectComponentFeature[]
         {
-            ColorObjectComponentFeature.Instance,
         };
 
         public Match()

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Match3.Core;
+using Match3.Features.Emitter;
 
 namespace Match3.Features
 {
@@ -16,7 +17,6 @@ namespace Match3.Features
 
         public override IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; } = new IObjectComponentFeature[]
         {
-            EmitterObjectComponentFeature.Instance,
         };
 
         public Emitters()
@@ -46,7 +46,7 @@ namespace Match3.Features
 
                     if (obj != null)
                     {
-                        var emitter = obj.TryGetComponent<EmitterObjectComponentFeature.IEmitter>();
+                        var emitter = obj.TryGetComponent<IEmitterCellObjectComponent>();
                         if (emitter != null)
                         {
                             if (cell.IsActive && !cell.IsLocked)
