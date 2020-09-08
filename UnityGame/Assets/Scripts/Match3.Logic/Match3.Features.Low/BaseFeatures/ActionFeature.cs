@@ -23,6 +23,6 @@ namespace Match3.Features
             Rules = rules;
         }
 
-        public abstract void Process(IGame game,params CellId[] cells);
+        public abstract void Process(IGame game,params CellPosition[] cells);
     }
 }

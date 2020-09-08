@@ -35,9 +35,9 @@ namespace Replays
     public class ActionStep : ReplayStep
     {
         private readonly string _actionFeatureName;
-        private readonly CellId[] _cells;
+        private readonly CellPosition[] _cells;
 
-        public ActionStep(string actionFeatureName, params CellId[] cells)
+        public ActionStep(string actionFeatureName, params CellPosition[] cells)
         {
             _actionFeatureName = actionFeatureName;
             _cells = cells;

@@ -5,6 +5,6 @@ namespace Match3.Editor
     public interface ILevelData
     {
         string Name { get; }
-        IEnumerable<IGridData> Grids { get; }
+        IBoardData Boards { get; }
     }
 }

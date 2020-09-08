@@ -2,7 +2,7 @@
 
 namespace Match3.ViewBinding.Default
 {
-    public abstract class GridViewBinding<TViewContext> : ViewBinding<IGridObserver, TViewContext>
+    public abstract class BoardViewBinding<TViewContext> : ViewBinding<IBoardObserver, TViewContext>
         where TViewContext : class, IViewContext
     {
         private CellViewBinding<TViewContext>[,] _cells;
@@ -12,6 +12,9 @@ namespace Match3.ViewBinding.Default
         protected override void OnInit()
         {
             base.OnInit();
+
+            Observer.CellObjectOwnerChange += OnCellObjectOwnerChange;
+            Observer.CellObjectDestroy += OnCellObjectDestroy;
 
             _cells = new CellViewBinding<TViewContext>[Observer.Width, Observer.Height];
             foreach (var cell in Observer.AllCells)
@@ -45,6 +48,28 @@ namespace Match3.ViewBinding.Default
         {
             var cellView = _cells[cellObject.Owner.Position.X, cellObject.Owner.Position.Y];
             cellView.Destroy(cellObject);
+        }
+
+        private void OnCellObjectOwnerChange(ICellObjectObserver cellObject, ICellObserver oldOwner)
+        {
+            //string to = (cellObject.Owner != null) ? cellObject.Owner.Id.ToString() : "null";
+            //string from = oldOwner != null ? oldOwner.Id.ToString() : "null";
+            //Debug.Log($"Move {from} -> {to}");
+
+            if (oldOwner != null)
+            {
+                var view = DeAttach(cellObject, oldOwner.Position);
+                Attach(view, cellObject.Owner.Position);
+            }
+            else
+            {
+                Add(cellObject, cellObject.Owner.Position);
+            }
+        }
+
+        private void OnCellObjectDestroy(ICellObjectObserver cellObject)
+        {
+            Destroy(cellObject);
         }
     }
 }

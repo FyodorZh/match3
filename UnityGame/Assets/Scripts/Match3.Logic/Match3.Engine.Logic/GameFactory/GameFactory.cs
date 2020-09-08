@@ -46,9 +46,9 @@ namespace Match3
             return rules;
         }
 
-        public static void Construct(IGameRules rules, IEnumerable<IGridData> gridData, out IGameObserver game, out IGameController gameController)
+        public static void Construct(IGameRules rules, IBoardData data, out IGameObserver game, out IGameController gameController)
         {
-            var gameImpl = new Game(rules, gridData);
+            var gameImpl = new Game(rules, data);
             game = gameImpl;
             gameController = gameImpl;
         }

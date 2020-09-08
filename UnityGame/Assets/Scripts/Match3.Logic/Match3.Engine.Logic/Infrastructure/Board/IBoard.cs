@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Match3
 {
     public interface IBoard : IBoardObserver
     {
-        // event Action<ICellObject, ICell> CellObjectOwnerChange;
-        // event Action<ICellObject> CellObjectDestroy;
+        new IGame Game { get; }
 
-        new IEnumerable<IGrid> Grids { get; }
-        new IGrid GetGrid(GridId id);
+        new IEnumerable<ICell> AllCells { get; }
+
+        new ICell GetCell(CellPosition position);
+        new IBorder GetBorder(BorderPosition position);
     }
 }

@@ -40,10 +40,10 @@ namespace Match3.Logic
 
         public IObjectFactory ObjectFactory => Rules.ObjectFactory;
 
-        public Game(IGameRules rules, IEnumerable<IGridData> cellGridData)
+        public Game(IGameRules rules, IBoardData data)
         {
             Rules = rules;
-            _board = new Board(this, cellGridData);
+            _board = new Board(this, data);
             _features = new FeatureInfo[rules.GameFeatures.Count];
         }
 
@@ -85,7 +85,7 @@ namespace Match3.Logic
             _internalActions.Process();
         }
 
-        public void Action(string actionFeatureName, params CellId[] cells)
+        public void Action(string actionFeatureName, params CellPosition[] cells)
         {
             if (actionFeatureName == null)
                 throw new ArgumentException(nameof(actionFeatureName));
@@ -108,9 +108,9 @@ namespace Match3.Logic
         private readonly struct ActionInfo
         {
             public readonly IActionFeature ActionFeature;
-            public readonly CellId[] Cells;
+            public readonly CellPosition[] Cells;
 
-            public ActionInfo(IActionFeature actionFeature, CellId[] cells)
+            public ActionInfo(IActionFeature actionFeature, CellPosition[] cells)
             {
                 ActionFeature = actionFeature;
                 Cells = cells;

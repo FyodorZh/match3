@@ -25,14 +25,11 @@ namespace Match3.Features
         {
             public override void InitState(IGame game)
             {
-                foreach (var grid in game.Board.Grids)
+                foreach (var cell in game.Board.AllCells)
                 {
-                    foreach (var cell in grid.AllCells)
+                    if (cell.IsActive)
                     {
-                        if (cell.IsActive)
-                        {
-                            cell.AddComponent(new HealthCellComponent());
-                        }
+                        cell.AddComponent(new HealthCellComponent());
                     }
                 }
             }

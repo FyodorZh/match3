@@ -35,7 +35,7 @@ public class GameInit : MonoBehaviour
         Debug.OnLog += UnityEngine.Debug.Log;
         Debug.OnWarning += UnityEngine.Debug.LogWarning;
 
-        ConstructGame(new IGridData[] { ConstructGridData() }, out var gamePresenter, out var gameController);
+        ConstructGame(ConstructBoardData(), out var gamePresenter, out var gameController);
 
         _replayWriter = new ReplayWriter(gameController);
         gameController = _replayWriter;
@@ -56,7 +56,7 @@ public class GameInit : MonoBehaviour
         {
             _replayData = _replayWriter.GetReplay();
 
-            ConstructGame(new IGridData[] { ConstructGridData() }, out var gamePresenter, out var gameController);
+            ConstructGame(ConstructBoardData(), out var gamePresenter, out var gameController);
 
             _replayPlayer = new ReplayPlayer(_replayData, gameController);
             gameController = _replayPlayer;
@@ -73,7 +73,7 @@ public class GameInit : MonoBehaviour
 
             if (GUI.Button(new Rect(10, 150, 100, 40), "Restart Replay"))
             {
-                ConstructGame(new IGridData[] { ConstructGridData() }, out var gamePresenter, out var gameController);
+                ConstructGame(ConstructBoardData(), out var gamePresenter, out var gameController);
 
                 _replayPlayer = new ReplayPlayer(_replayData, gameController);
                 gameController = _replayPlayer;
@@ -88,7 +88,7 @@ public class GameInit : MonoBehaviour
 
             if (GUI.Button(new Rect(10, 200, 200, 40), "Restart Replay From"))
             {
-                ConstructGame(new IGridData[] { ConstructGridData() }, out var gamePresenter, out var gameController);
+                ConstructGame(ConstructBoardData(), out var gamePresenter, out var gameController);
 
                 _replayPlayer = new ReplayPlayer(_replayData, gameController);
                 gameController = _replayPlayer;
@@ -125,7 +125,7 @@ public class GameInit : MonoBehaviour
         return gameView.gameObject;
     }
 
-    public void ConstructGame(IEnumerable<IGridData> gridData, out IGameObserver game, out IGameController gameController)
+    public void ConstructGame(IBoardData data, out IGameObserver game, out IGameController gameController)
     {
         IGameRules rules = GameFactory.ConstructRules(new IGameFeature[]
             {
@@ -159,7 +159,7 @@ public class GameInit : MonoBehaviour
                 new MoveCellObjectComponentFeatureImpl(),
             });
 
-        GameFactory.Construct(rules, gridData, out game, out gameController);
+        GameFactory.Construct(rules, data, out game, out gameController);
     }
 
     private Match ConstructMathFeature()
@@ -268,9 +268,9 @@ public class GameInit : MonoBehaviour
         return match;
     }
 
-    private TrivialGridData ConstructGridData()
+    private TrivialBoardData ConstructBoardData()
     {
-        var data = new TrivialGridData(10, 10);
+        var data = new TrivialBoardData(10, 10);
         for (int x = 0; x < 10; ++x)
             for (int y = 0; y < 10; ++y)
                 if (!(x == 3 && y == 3 || x == 4 && y == 4 || x == 5 && y == 5))

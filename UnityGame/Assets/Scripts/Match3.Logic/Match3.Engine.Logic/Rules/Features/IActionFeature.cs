@@ -10,6 +10,6 @@ namespace Match3.Features
 
         void Register(IGameRules rules);
 
-        void Process(IGame game, params CellId[] cells);
+        void Process(IGame game, params CellPosition[] cells);
     }
 }

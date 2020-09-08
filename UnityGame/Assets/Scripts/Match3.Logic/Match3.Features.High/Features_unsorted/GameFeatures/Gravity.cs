@@ -32,7 +32,6 @@ namespace Match3.Features
 
         public class MoveAgent : ITrajectory
         {
-            public readonly GridId GridId;
             public readonly ICell Destination;
             public readonly CellPosition FallFrom;
             public readonly CellPosition FallTo;
@@ -51,9 +50,8 @@ namespace Match3.Features
 
             public bool IsFinished => _isFinished;
 
-            public MoveAgent(GridId gridId, IMoveCellObjectComponent fallingObjectMover, CellPosition fallFrom, FixedVector2 fallOffset)
+            public MoveAgent(IMoveCellObjectComponent fallingObjectMover, CellPosition fallFrom, FixedVector2 fallOffset)
             {
-                GridId = gridId;
                 Destination = fallingObjectMover.Owner.Owner;
                 FallFrom = fallFrom;
                 FallTo = Destination.Position;
@@ -96,30 +94,27 @@ namespace Match3.Features
         {
             public readonly List<MoveAgent> AgentsToRegister = new List<MoveAgent>();
 
-            public readonly Dictionary<GridId, List<MoveAgent>[]> Agents = new Dictionary<GridId, List<MoveAgent>[]>();
+            public readonly List<MoveAgent>[] Agents;
 
             public State(IGame game)
             {
-                foreach (var grid in game.Board.Grids)
+                var list = new List<MoveAgent>[game.Board.Width];
+                for (int i = 0; i < game.Board.Width; ++i)
                 {
-                    var list = new List<MoveAgent>[grid.Width];
-                    for (int i = 0; i < grid.Width; ++i)
-                    {
-                        list[i] = new List<MoveAgent>();
-                    }
-                    Agents.Add(grid.Id, list);
+                    list[i] = new List<MoveAgent>();
                 }
+
+                Agents = list;
             }
 
             public void FindNewObjectsToFall(IGame game)
             {
-                foreach (var grid in game.Board.Grids)
-                {
-                    for (int x = 0; x < grid.Width; ++x)
+                var board = game.Board;
+                for (int x = 0; x < board.Width; ++x)
                     {
-                        for (int y = 1; y < grid.Height; ++y)
+                        for (int y = 1; y < board.Height; ++y)
                         {
-                            ICell cell = grid.GetCell(new CellPosition(x, y));
+                            ICell cell = board.GetCell(new CellPosition(x, y));
                             IMassCellObjectComponent massComponent = cell.FindObjectComponent<IMassCellObjectComponent>();
 
                             if (massComponent != null && !massComponent.IsLocked)
@@ -133,7 +128,7 @@ namespace Match3.Features
                                     ICell freeCell = null;
                                     while (k >= 0)
                                     {
-                                        ICell cellToCheck = grid.GetCell(new CellPosition(x, k));
+                                        ICell cellToCheck = board.GetCell(new CellPosition(x, k));
                                         if (cellToCheck.IsActive)
                                         {
                                             if (cellToCheck.IsLocked)
@@ -168,136 +163,133 @@ namespace Match3.Features
                                         freeCell.Attach(objectToFall);
 
                                         FixedVector2 finalPosition = new FixedVector2(freeCell.Position.X, freeCell.Position.Y);
-                                        var agent = new MoveAgent(grid.Id, moveComponent, cell.Position, currentPosition - finalPosition);
+                                        var agent = new MoveAgent(moveComponent, cell.Position, currentPosition - finalPosition);
                                         AgentsToRegister.Add(agent);
                                     }
                                 }
                             }
                         }
                     }
-                }
             }
 
             public void FindNewObjectsToSideFall(IGame game)
             {
-                foreach (var grid in game.Board.Grids)
+                var board = game.Board;
+                for (int x = 0; x < board.Width; ++x)
                 {
-                    for (int x = 0; x < grid.Width; ++x)
+                    for (int y = board.Height; y >= 0; --y)
                     {
-                        for (int y = grid.Height; y >= 0; --y)
+                        bool block = false;
+                        if (y == board.Height)
                         {
-                            bool block = false;
-                            if (y == grid.Height)
+                            block = true;
+                        }
+                        else
+                        {
+                            ICell cellBlock = board.GetCell(new CellPosition(x, y));
+                            if (!cellBlock.IsActive)
                             {
                                 block = true;
                             }
                             else
                             {
-                                ICell cellBlock = grid.GetCell(new CellPosition(x, y));
-                                if (!cellBlock.IsActive)
+                                var mass = cellBlock.FindObjectComponent<IMassCellObjectComponent>();
+                                if (mass != null && mass.IsLocked)
                                 {
                                     block = true;
                                 }
-                                else
-                                {
-                                    var mass = cellBlock.FindObjectComponent<IMassCellObjectComponent>();
-                                    if (mass != null && mass.IsLocked)
-                                    {
-                                        block = true;
-                                    }
-                                }
                             }
+                        }
 
-                            if (block)
+                        if (block)
+                        {
+                            for (int i = y - 1; i >= 0; --i)
                             {
-                                for (int i = y - 1; i >= 0; --i)
-                                {
-                                    ICell emptyCell = grid.GetCell(new CellPosition(x, i));
+                                ICell emptyCell = board.GetCell(new CellPosition(x, i));
 
+                                {
+                                    IMoveCellObjectComponent moveComponent = emptyCell.FindObjectComponent<IMoveCellObjectComponent>();
+                                    if (moveComponent != null && moveComponent.IsMoving)
+                                        break;
+                                    IEmitterCellObjectComponent emitterComponent = emptyCell.FindObjectComponent<IEmitterCellObjectComponent>();
+                                    if (emitterComponent != null)
+                                        break;
+                                }
+
+                                if (emptyCell.IsActive && !emptyCell.IsLocked && emptyCell.FindObjectComponent<IMassCellObjectComponent>() == null)
+                                {
+                                    IMoveCellObjectComponent sourceCellMove = null;
+
+                                    bool foundMovement = false;
                                     {
-                                        IMoveCellObjectComponent moveComponent = emptyCell.FindObjectComponent<IMoveCellObjectComponent>();
-                                        if (moveComponent != null && moveComponent.IsMoving)
-                                            break;
-                                        IEmitterCellObjectComponent emitterComponent = emptyCell.FindObjectComponent<IEmitterCellObjectComponent>();
-                                        if (emitterComponent != null)
-                                            break;
+                                        ICell cellToCheck = board.GetCell(new CellPosition(x - 1, i + 1));
+                                        if (cellToCheck != null)
+                                        {
+                                            var cellMove = cellToCheck.FindObjectComponent<IMoveCellObjectComponent>();
+                                            if (cellMove != null)
+                                            {
+                                                if (!cellMove.IsMoving)
+                                                {
+                                                    if (!cellToCheck.IsLocked)
+                                                    {
+                                                        var mass = cellToCheck.FindObjectComponent<IMassCellObjectComponent>();
+                                                        if (mass != null && !mass.IsLocked)
+                                                        {
+                                                            sourceCellMove = cellMove;
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    foundMovement = true;
+                                                }
+                                            }
+                                        }
                                     }
 
-                                    if (emptyCell.IsActive && !emptyCell.IsLocked && emptyCell.FindObjectComponent<IMassCellObjectComponent>() == null)
+                                    if (sourceCellMove == null)
                                     {
-                                        IMoveCellObjectComponent sourceCellMove = null;
-
-                                        bool foundMovement = false;
+                                        ICell cellToCheck = board.GetCell(new CellPosition(x + 1, i + 1));
+                                        if (cellToCheck != null)
                                         {
-                                            ICell cellToCheck = grid.GetCell(new CellPosition(x - 1, i + 1));
-                                            if (cellToCheck != null)
+                                            var cellMove = cellToCheck.FindObjectComponent<IMoveCellObjectComponent>();
+                                            if (cellMove != null)
                                             {
-                                                var cellMove = cellToCheck.FindObjectComponent<IMoveCellObjectComponent>();
-                                                if (cellMove != null)
+                                                if (!cellMove.IsMoving)
                                                 {
-                                                    if (!cellMove.IsMoving)
+                                                    if (!cellToCheck.IsLocked)
                                                     {
-                                                        if (!cellToCheck.IsLocked)
+                                                        var mass = cellToCheck.FindObjectComponent<IMassCellObjectComponent>();
+                                                        if (mass != null && !mass.IsLocked)
                                                         {
-                                                            var mass = cellToCheck.FindObjectComponent<IMassCellObjectComponent>();
-                                                            if (mass != null && !mass.IsLocked)
-                                                            {
-                                                                sourceCellMove = cellMove;
-                                                            }
+                                                            sourceCellMove = cellMove;
                                                         }
                                                     }
-                                                    else
-                                                    {
-                                                        foundMovement = true;
-                                                    }
+                                                }
+                                                else
+                                                {
+                                                    foundMovement = true;
                                                 }
                                             }
                                         }
+                                    }
 
-                                        if (sourceCellMove == null)
-                                        {
-                                            ICell cellToCheck = grid.GetCell(new CellPosition(x + 1, i + 1));
-                                            if (cellToCheck != null)
-                                            {
-                                                var cellMove = cellToCheck.FindObjectComponent<IMoveCellObjectComponent>();
-                                                if (cellMove != null)
-                                                {
-                                                    if (!cellMove.IsMoving)
-                                                    {
-                                                        if (!cellToCheck.IsLocked)
-                                                        {
-                                                            var mass = cellToCheck.FindObjectComponent<IMassCellObjectComponent>();
-                                                            if (mass != null && !mass.IsLocked)
-                                                            {
-                                                                sourceCellMove = cellMove;
-                                                            }
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        foundMovement = true;
-                                                    }
-                                                }
-                                            }
-                                        }
+                                    if (sourceCellMove != null)
+                                    {
+                                        var sourceCell = sourceCellMove.Owner.Owner;
+                                        var currentPosition = sourceCellMove.VisualPosition();
 
-                                        if (sourceCellMove != null)
-                                        {
-                                            var sourceCell = sourceCellMove.Owner.Owner;
-                                            var currentPosition = sourceCellMove.VisualPosition();
+                                        emptyCell.Attach(sourceCellMove.Owner);
+                                        FixedVector2 finalPosition = new FixedVector2(emptyCell.Position.X, emptyCell.Position.Y);
+                                        var agent = new MoveAgent(sourceCellMove, sourceCell.Position, currentPosition - finalPosition);
+                                        AgentsToRegister.Add(agent);
 
-                                            emptyCell.Attach(sourceCellMove.Owner);
-                                            FixedVector2 finalPosition = new FixedVector2(emptyCell.Position.X, emptyCell.Position.Y);
-                                            var agent = new MoveAgent(grid.Id, sourceCellMove, sourceCell.Position, currentPosition - finalPosition);
-                                            AgentsToRegister.Add(agent);
-
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        if (foundMovement)
                                             break;
-                                        }
-                                        else
-                                        {
-                                            if (foundMovement)
-                                                break;
-                                        }
                                     }
                                 }
                             }
@@ -310,7 +302,7 @@ namespace Match3.Features
             {
                 foreach (var newAgent in AgentsToRegister)
                 {
-                    var agents = Agents[newAgent.GridId][newAgent.FallTo.X];
+                    var agents = Agents[newAgent.FallTo.X];
 
                     bool inserted = false;
                     for (int i = 0; i < agents.Count; ++i)
@@ -338,63 +330,60 @@ namespace Match3.Features
 
                 Fixed speedUp = gravity * dTimeSeconds;
 
-                foreach (var gridList in Agents.Values)
+                foreach (var column in Agents)
                 {
-                    foreach (var column in gridList)
+                    bool finished = false;
+
+                    MoveAgent prevAgent = null;
+                    foreach (var agent in column)
                     {
-                        bool finished = false;
-
-                        MoveAgent prevAgent = null;
-                        foreach (var agent in column)
+                        Fixed maxSpeedY;
+                        if (prevAgent == null)
                         {
-                            Fixed maxSpeedY;
-                            if (prevAgent == null)
+                            maxSpeedY = 1000; // just big
+                        }
+                        else
+                        {
+                            var selfPosY = agent.VisualPos.Y;
+                            var obstaclePosY = prevAgent.VisualPos.Y;
+                            var possibleDistanceY = selfPosY - obstaclePosY - 1;
+                            if (possibleDistanceY < 0)
                             {
-                                maxSpeedY = 1000; // just big
-                            }
-                            else
-                            {
-                                var selfPosY = agent.VisualPos.Y;
-                                var obstaclePosY = prevAgent.VisualPos.Y;
-                                var possibleDistanceY = selfPosY - obstaclePosY - 1;
-                                if (possibleDistanceY < 0)
-                                {
-                                    possibleDistanceY = 0;
-                                }
-
-                                maxSpeedY = possibleDistanceY / dTimeSeconds;
+                                possibleDistanceY = 0;
                             }
 
-                            if (agent.Direction.X == 0)
-                            {
-                                agent.Speed = FixedMath.Min(agent.Speed + speedUp, maxSpeedY);
-                            }
-                            else
-                            {
-                                var maxSpeed = maxSpeedY * FixedMath.Abs(agent.Direction.Y / agent.Direction.X);
-                                var desiredSpeed = agent.Speed + (speedUp * 2); // wrong speedUp sqrt(2) ?
-                                if (maxSpeed < desiredSpeed)
-                                    agent.Speed = maxSpeed;
-                                else
-                                    agent.Speed = desiredSpeed;
-                            }
-
-                            agent.Position += agent.Velocity * dTimeSeconds;
-
-                            if (agent.Position.Y <= Fixed.Eps)
-                            {
-                                agent.Position = new FixedVector2(0, 0);
-                                agent.Finish();
-                                finished = true;
-                            }
-
-                            prevAgent = agent;
+                            maxSpeedY = possibleDistanceY / dTimeSeconds;
                         }
 
-                        if (finished)
+                        if (agent.Direction.X == 0)
                         {
-                            column.RemoveAll(a => a.IsFinished);
+                            agent.Speed = FixedMath.Min(agent.Speed + speedUp, maxSpeedY);
                         }
+                        else
+                        {
+                            var maxSpeed = maxSpeedY * FixedMath.Abs(agent.Direction.Y / agent.Direction.X);
+                            var desiredSpeed = agent.Speed + (speedUp * 2); // wrong speedUp sqrt(2) ?
+                            if (maxSpeed < desiredSpeed)
+                                agent.Speed = maxSpeed;
+                            else
+                                agent.Speed = desiredSpeed;
+                        }
+
+                        agent.Position += agent.Velocity * dTimeSeconds;
+
+                        if (agent.Position.Y <= Fixed.Eps)
+                        {
+                            agent.Position = new FixedVector2(0, 0);
+                            agent.Finish();
+                            finished = true;
+                        }
+
+                        prevAgent = agent;
+                    }
+
+                    if (finished)
+                    {
+                        column.RemoveAll(a => a.IsFinished);
                     }
                 }
             }

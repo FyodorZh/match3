@@ -4,11 +4,17 @@ namespace Match3.View.Default
 {
     public class BoardView : BoardViewBinding<IDefaultViewContext>
     {
-        public GridView _gridViewPrefab;
+        public CellView _cellViewPrefab;
 
-        protected override GridViewBinding<IDefaultViewContext> ConstructGridView()
+        protected override CellViewBinding<IDefaultViewContext> ConstructCellView()
         {
-            return Instantiate(_gridViewPrefab, transform);
+            return Instantiate(_cellViewPrefab, transform);
+        }
+
+        protected override void OnInit()
+        {
+            base.OnInit();
+            name = "board";
         }
     }
 }

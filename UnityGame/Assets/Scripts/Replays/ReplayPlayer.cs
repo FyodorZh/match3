@@ -30,7 +30,7 @@ namespace Replays
             _data.Run(_pos++, _controller);
         }
 
-        public void Action(string actionFeatureName, params CellId[] cells)
+        public void Action(string actionFeatureName, params CellPosition[] cells)
         {
         }
 

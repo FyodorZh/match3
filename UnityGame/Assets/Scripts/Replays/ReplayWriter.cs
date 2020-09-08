@@ -32,7 +32,7 @@ namespace Replays
             _controller.Tick(dTime);
         }
 
-        public void Action(string actionFeatureName, params CellId[] cells)
+        public void Action(string actionFeatureName, params CellPosition[] cells)
         {
             _replay.Append(new ActionStep(actionFeatureName, cells));
             _controller.Action(actionFeatureName, cells);

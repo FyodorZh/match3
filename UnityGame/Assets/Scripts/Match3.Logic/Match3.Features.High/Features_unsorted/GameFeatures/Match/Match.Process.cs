@@ -12,14 +12,14 @@ namespace Match3.Features
 
         private class ColorTable
         {
-            private readonly IGrid _grid;
+            private readonly IBoard _grid;
             private readonly Time _curTime;
             private readonly int _width;
             private readonly int _height;
 
             private Dictionary<CellPosition, int> _colors = new Dictionary<CellPosition, int>();
 
-            public ColorTable(IGrid grid, Time curTime)
+            public ColorTable(IBoard grid, Time curTime)
             {
                 _grid = grid;
                 _curTime = curTime;
@@ -107,12 +107,12 @@ namespace Match3.Features
         {
             var curTime = game.CurrentTime;
 
-            foreach (var grid in game.Board.Grids)
+            var board = game.Board;
             {
-                ColorTable colors = new ColorTable(grid, curTime);
+                ColorTable colors = new ColorTable(board, curTime);
 
-                int W = grid.Width;
-                int H = grid.Height;
+                int W = board.Width;
+                int H = board.Height;
 
                 List<ICell> cellList = new List<ICell>();
 
@@ -141,7 +141,7 @@ namespace Match3.Features
                                         var offset = matchPattern.OffsetAt(i);
                                         var pos = pos0 + offset;
 
-                                        var cell = grid.GetCell(pos);
+                                        var cell = board.GetCell(pos);
 
                                         Time time = cell.FindObjectComponent<IMoveCellObjectComponent>()?.LastMoveTime ?? Time.Zero;
 
@@ -163,7 +163,7 @@ namespace Match3.Features
                                 for (int i = 0; i < matchPattern.Length; ++i)
                                 {
                                     var offset = matchPattern.OffsetAt(i);
-                                    var cell = grid.GetCell(pos0 + offset);
+                                    var cell = board.GetCell(pos0 + offset);
 
                                     var colorComponent = cell.FindObjectComponent<IColorCellObjectComponent>();
                                     if (colorComponent != null) // только что взорвался
@@ -199,7 +199,7 @@ namespace Match3.Features
                                         for (int i = 0; i < bonusPlacement.Length; ++i)
                                         {
                                             var pos = pos0 + bonusPlacement.OffsetAt(i);
-                                            cellList.Add(grid.GetCell(pos));
+                                            cellList.Add(board.GetCell(pos));
                                         }
                                     }
 
@@ -223,7 +223,7 @@ namespace Match3.Features
                                         for (int i = 0; i < matchPattern.Length; ++i)
                                         {
                                             var pos = pos0 + matchPattern.OffsetAt(i);
-                                            cellList.Add(grid.GetCell(pos));
+                                            cellList.Add(board.GetCell(pos));
                                         }
 
                                         game.RandomShuffle(cellList);

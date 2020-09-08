@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Match3;
 
-public class TrivialGridData : IGridData
+public class TrivialBoardData : IBoardData
 {
     private readonly List<ICellObjectData>[,] _cells;
 
@@ -11,7 +11,7 @@ public class TrivialGridData : IGridData
     public int Width { get; }
     public int Height { get; }
 
-    public TrivialGridData(int with, int height)
+    public TrivialBoardData(int with, int height)
     {
         Width = with;
         Height = height;

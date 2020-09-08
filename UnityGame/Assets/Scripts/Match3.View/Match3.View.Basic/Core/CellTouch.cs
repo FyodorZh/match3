@@ -40,7 +40,7 @@ public class CellTouch : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
             {
                 var cell = mass.Owner.Owner;
 
-                _controller.Action(KillActionFeature.Name, cell.Id);
+                _controller.Action(KillActionFeature.Name, cell.Position);
             }
         }
     }
@@ -88,7 +88,7 @@ public class CellTouch : MonoBehaviour, IPointerClickHandler, IBeginDragHandler,
 
             if (cell2 != null)
             {
-                _controller.Action(SwapActionFeature.Name, _cell.Id, cell2.Id);
+                _controller.Action(SwapActionFeature.Name, _cell.Position, cell2.Position);
             }
 
             Debug.Log("End " + delta + "   " + dx + ";" + dy);

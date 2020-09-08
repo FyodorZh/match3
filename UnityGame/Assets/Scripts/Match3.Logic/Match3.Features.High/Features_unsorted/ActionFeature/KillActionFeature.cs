@@ -24,14 +24,14 @@ namespace Match3.Features
         {
         };
 
-        public override void Process(IGame game, params CellId[] cells)
+        public override void Process(IGame game, params CellPosition[] cells)
         {
             if (cells.Length != 1)
                 throw new InvalidOperationException();
 
-            CellId id = cells[0];
+            CellPosition pos = cells[0];
 
-            var cell = game.Board.GetCell(id);
+            var cell = game.Board.GetCell(pos);
 
             var healthComponent = cell.FindComponent<IHealthCellComponent>();
             healthComponent?.ApplyDamage(new Damage(DamageType.Match, 1));

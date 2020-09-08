@@ -4,11 +4,10 @@ namespace Match3
 {
     public interface ICellObserver : IObserver
     {
-        CellId Id { get; }
         CellPosition Position { get; }
 
         IGameObserver Game { get; }
-        IGridObserver Owner { get; }
+        IBoardObserver Owner { get; }
 
         bool IsActive { get; }
 

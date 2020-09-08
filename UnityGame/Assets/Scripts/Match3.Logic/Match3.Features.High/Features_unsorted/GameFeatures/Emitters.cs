@@ -25,40 +25,38 @@ namespace Match3.Features
 
         protected override void Process(IGame game, DeltaTime dTime)
         {
-            foreach (var grid in game.Board.Grids)
+            var board = game.Board;
+            foreach (var cell in board.AllCells)
             {
-                foreach (var cell in grid.AllCells)
+                ICellObject obj = null;
+                foreach (var _obj in cell.Objects)
                 {
-                    ICellObject obj = null;
-                    foreach (var _obj in cell.Objects)
+                    if (obj == null)
                     {
-                        if (obj == null)
-                        {
-                            obj = _obj;
-                        }
-                        else
-                        {
-                            obj = null;
-                            break;
-                        }
+                        obj = _obj;
                     }
-
-                    if (obj != null)
+                    else
                     {
-                        var emitter = obj.TryGetComponent<IEmitterCellObjectComponent>();
-                        if (emitter != null)
+                        obj = null;
+                        break;
+                    }
+                }
+
+                if (obj != null)
+                {
+                    var emitter = obj.TryGetComponent<IEmitterCellObjectComponent>();
+                    if (emitter != null)
+                    {
+                        if (cell.IsActive && !cell.IsLocked)
                         {
-                            if (cell.IsActive && !cell.IsLocked)
+                            var cellUnder = cell.Under();
+                            Debug.Assert(cellUnder != null && cellUnder.IsActive);
+                            if (!cellUnder.IsLocked)
                             {
-                                var cellUnder = cell.Under();
-                                Debug.Assert(cellUnder != null && cellUnder.IsActive);
-                                if (!cellUnder.IsLocked)
+                                var newObject = emitter.Emit(game);
+                                if (newObject != null)
                                 {
-                                    var newObject = emitter.Emit(game);
-                                    if (newObject != null)
-                                    {
-                                        cell.Attach(newObject);
-                                    }
+                                    cell.Attach(newObject);
                                 }
                             }
                         }

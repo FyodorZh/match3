@@ -6,7 +6,7 @@ namespace Match3.Logic
 {
     class Cell : ICell
     {
-        private readonly Grid _owner;
+        private readonly Board _owner;
 
         private readonly StaticSet<ICellObject> _objects = new StaticSet<ICellObject>();
 
@@ -17,15 +17,13 @@ namespace Match3.Logic
 
         private readonly LockStack _lockStack = new LockStack();
 
-        public CellId Id { get; }
-
         public CellPosition Position { get; }
 
         public IGame Game => _owner.Game;
         IGameObserver ICellObserver.Game => _owner.Game;
 
-        public IGrid Owner => _owner;
-        IGridObserver ICellObserver.Owner => _owner;
+        public IBoard Owner => _owner;
+        IBoardObserver ICellObserver.Owner => _owner;
 
         public bool IsActive
         {
@@ -51,10 +49,9 @@ namespace Match3.Logic
             _lockStack.RemoveLock(lockObject);
         }
 
-        public Cell(Grid owner, CellPosition position)
+        public Cell(Board owner, CellPosition position)
         {
             _owner = owner;
-            Id = new CellId(owner.Id, position);
             Position = position;
         }
 
@@ -123,7 +120,7 @@ namespace Match3.Logic
             Debug.Assert(oldObject == null);
             cellObject.SetOwner(this);
 
-            _owner.Board.OnCellObjectOwnerChange(cellObject, prevOwner);
+            _owner.OnCellObjectOwnerChange(cellObject, prevOwner);
         }
 
         public bool CanSwap(ICellObject cellObjectA, ICellObject cellObjectB)
@@ -189,8 +186,8 @@ namespace Match3.Logic
             objA.SetOwner(ownerB);
             objB.SetOwner(ownerA);
 
-            _owner.Board.OnCellObjectOwnerChange(objA, ownerA);
-            _owner.Board.OnCellObjectOwnerChange(objB, ownerB);
+            _owner.OnCellObjectOwnerChange(objA, ownerA);
+            _owner.OnCellObjectOwnerChange(objB, ownerB);
         }
 
         public bool Destroy(ICellObject cellObject)
@@ -204,7 +201,7 @@ namespace Match3.Logic
             var removed = _objects.Remove(cellObject.GetType());
             Debug.Assert(ReferenceEquals(removed, cellObject));
 
-            _owner.Board.OnCellObjectDestroy(cellObject);
+            _owner.OnCellObjectDestroy(cellObject);
             cellObject.SetOwner(null);
             cellObject.Release();
             return true;

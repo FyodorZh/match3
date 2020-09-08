@@ -6,7 +6,7 @@ namespace Match3
     public interface ICell : ICellObserver
     {
         new IGame Game { get; }
-        new IGrid Owner { get; }
+        new IBoard Owner { get; }
 
 
         void AddLock(ILock lockObject);

@@ -2,7 +2,7 @@
 
 namespace Match3
 {
-    public interface IGridData
+    public interface IBoardData
     {
         int PosX { get; }
         int PosY { get; }

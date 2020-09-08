@@ -27,13 +27,13 @@ namespace Match3.Features
         {
         };
 
-        public override void Process(IGame game, params CellId[] cells)
+        public override void Process(IGame game, params CellPosition[] cells)
         {
             if (cells.Length != 2)
                 throw new InvalidOperationException();
 
-            CellId id1 = cells[0];
-            CellId id2 = cells[1];
+            CellPosition id1 = cells[0];
+            CellPosition id2 = cells[1];
 
             ICell cell1 = game.Board.GetCell(id1);
             ICell cell2 = game.Board.GetCell(id2);

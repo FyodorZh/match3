@@ -2,17 +2,15 @@
 {
     class Border : IBorder
     {
-        private readonly Grid _owner;
+        private readonly Board _owner;
 
-        public BorderId Id { get; }
         public BorderPosition Position { get; }
-        
+
         public IBorderObject Content { get; private set; }
-        
-        public Border(Grid owner, BorderPosition position)
+
+        public Border(Board owner, BorderPosition position)
         {
             _owner = owner;
-            Id = new BorderId(owner.Id, position);
             Position = position;
         }
 

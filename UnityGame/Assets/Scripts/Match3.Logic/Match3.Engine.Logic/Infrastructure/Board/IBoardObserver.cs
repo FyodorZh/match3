@@ -8,7 +8,14 @@ namespace Match3
         event Action<ICellObjectObserver, ICellObserver> CellObjectOwnerChange;
         event Action<ICellObjectObserver> CellObjectDestroy;
 
-        IEnumerable<IGridObserver> Grids { get; }
-        IGridObserver GetGrid(GridId id);
+        int Width { get; }
+        int Height { get; }
+
+        IGameObserver Game { get; }
+
+        IEnumerable<ICellObserver> AllCells { get; }
+
+        ICellObserver GetCell(CellPosition position);
+        IBorderObserver GetBorder(BorderPosition position);
     }
 }

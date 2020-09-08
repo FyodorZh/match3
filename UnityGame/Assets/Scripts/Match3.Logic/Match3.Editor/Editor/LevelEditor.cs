@@ -32,7 +32,7 @@ namespace Match3
         {
             try
             {
-                GameFactory.Construct(_rules, levelData.Grids, out _gameObserver, out _gameController);
+                GameFactory.Construct(_rules, levelData.Boards, out _gameObserver, out _gameController);
                 LevelReloaded?.Invoke();
                 return true;
             }

@@ -6,6 +6,6 @@
 
         void Tick(DeltaTime dTime);
 
-        void Action(string actionFeatureName, params CellId[] cells);
+        void Action(string actionFeatureName, params CellPosition[] cells);
     }
 }
