@@ -1,5 +1,9 @@
 ﻿using System;
-using Match3.Features;
+using Match3.Features.Bomb;
+using Match3.Features.Chain;
+using Match3.Features.Chip;
+using Match3.Features.Emitter;
+using Match3.Features.Tile;
 using Match3.View.Default.Objects;
 using Match3.ViewBinding.Default;
 using UnityEngine;
@@ -19,19 +23,19 @@ namespace Match3.View.Default
             IObjectViewBinding view;
             switch (typeId.Id)
             {
-                case EmitterObjectFeature.Name:
+                case EmitterCellObjectFeature.Name:
                     view = Instantiate(_emitterPrefab);
                     break;
-                case ChipObjectFeature.Name:
+                case ChipCellObjectFeature.Name:
                     view = Instantiate(_chipPrefab);
                     break;
-                case ChainObjectFeature.Name:
+                case ChainCellObjectFeature.Name:
                     view = Instantiate(_chainPrefab);
                     break;
-                case TileObjectFeature.Name:
+                case TileCellObjectFeature.Name:
                     view = Instantiate(_tilePrefab);
                     break;
-                case BombObjectFeature.Name:
+                case BombCellObjectFeature.Name:
                     view = Instantiate(_bombPrefab);
                     break;
                 default:

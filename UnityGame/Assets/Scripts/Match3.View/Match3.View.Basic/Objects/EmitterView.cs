@@ -1,8 +1,8 @@
-﻿using Match3.Features;
+﻿using Match3.Features.Emitter;
 
 namespace Match3.View.Default.Objects
 {
-    public class EmitterView : CellObjectView<EmitterObjectFeature.IEmitter>
+    public class EmitterView : CellObjectView<IEmitterCellObjectObserver>
     {
     }
 }

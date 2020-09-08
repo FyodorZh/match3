@@ -20,6 +20,11 @@ namespace Match3
                 rules.RegisterObjectComponentFeature(feature);
             }
 
+            foreach (var feature in cellObjectFeature)
+            {
+                rules.RegisterObjectFeature(feature);
+            }
+
 
             foreach (var feature in gameFeatures)
             {
@@ -34,11 +39,6 @@ namespace Match3
             foreach (var feature in cellComponentFeatures)
             {
                 rules.RegisterCellComponentFeature(feature);
-            }
-
-            foreach (var feature in cellObjectFeature)
-            {
-                rules.RegisterObjectFeature(feature);
             }
 
             rules.BakeAllFeatures();

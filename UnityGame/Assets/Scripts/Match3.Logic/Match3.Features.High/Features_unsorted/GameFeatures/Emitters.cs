@@ -12,7 +12,6 @@ namespace Match3.Features
 
         public override IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; } = new IObjectFeature[]
         {
-            EmitterObjectFeature.Instance,
         };
 
         public override IEnumerable<IObjectComponentFeature> DependsOnObjectComponentFeatures { get; } = new IObjectComponentFeature[]

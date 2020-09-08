@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Match3.Features;
+using Match3.Features.Chain;
 using UnityEngine;
 
 namespace Match3.View.Default.Objects
 {
-    public class ChainView : CellObjectView<ChainObjectFeature.IChain>
+    public class ChainView : CellObjectView<IChainCellObjectObserver>
     {
         public List<Texture2D> _textures;
 
@@ -14,14 +14,14 @@ namespace Match3.View.Default.Objects
         {
             base.OnInit();
 
-            _health = Observer.Health.HealthValue;
+            _health = Observer.Health;
             gameObject.GetComponent<Renderer>().material.mainTexture = _textures[_health - 1];
         }
 
         protected override void Update()
         {
             base.Update();
-            var newHealth = Observer.Health.HealthValue;
+            var newHealth = Observer.Health;
             if (newHealth != _health)
             {
                 _health = newHealth;

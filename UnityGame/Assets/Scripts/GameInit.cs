@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using Match3;
 using Match3.Core;
 using Match3.Features;
+using Match3.Features.Bomb;
+using Match3.Features.Bomb.Default;
+using Match3.Features.Chain;
+using Match3.Features.Chain.Default;
+using Match3.Features.Chip;
+using Match3.Features.Chip.Default;
 using Match3.Features.Color;
 using Match3.Features.Color.Default;
 using Match3.Features.Emitter;
@@ -11,6 +17,8 @@ using Match3.Features.Health;
 using Match3.Features.Health.Default;
 using Match3.Features.Mass.Default;
 using Match3.Features.Move.Default;
+using Match3.Features.Tile;
+using Match3.Features.Tile.Default;
 using Match3.Utils;
 using Match3.View.Default;
 using Replays;
@@ -138,10 +146,11 @@ public class GameInit : MonoBehaviour
             },
             new IObjectFeature[]
             {
-                ChipObjectFeature.Instance,
-                ChainObjectFeature.Instance,
-                TileObjectFeature.Instance,
-                BombObjectFeature.Instance
+                new ChipCellObjectFeatureImpl(),
+                new ChainCellObjectFeatureImpl(),
+                new TileCellObjectFeatureImpl(),
+                new EmitterCellObjectFeatureImpl(),
+                new BombCellObjectFeatureImpl()
             },
             new IObjectComponentFeature[]
             {
@@ -161,13 +170,13 @@ public class GameInit : MonoBehaviour
 
         // куб
         {
-            BonusFactory bonusFactory = new BonusFactory((color) => new BombObjectData(color));
+            BonusFactory bonusFactory = new BonusFactory((color) => new BombCellObjectData(color));
             match.RegisterPatterns(new Offsets2D("*****"), bonusFactory, new Offsets2D("..*.."));
         }
 
         // бомба
         {
-            BonusFactory bonusFactory = new BonusFactory((color) => new BombObjectData(color));
+            BonusFactory bonusFactory = new BonusFactory((color) => new BombCellObjectData(color));
             match.RegisterPatterns(new Offsets2D(
                 "***",
                 ".*.",
@@ -231,13 +240,13 @@ public class GameInit : MonoBehaviour
 
         // шутиха
         {
-            BonusFactory bonusFactory = new BonusFactory((color) => new BombObjectData(color));
+            BonusFactory bonusFactory = new BonusFactory((color) => new BombCellObjectData(color));
             match.RegisterPatterns(new Offsets2D("****"), bonusFactory, new Offsets2D(".**."));
         }
 
         // ракета
         {
-            BonusFactory bonusFactory = new BonusFactory((color) => new BombObjectData(color));
+            BonusFactory bonusFactory = new BonusFactory((color) => new BombCellObjectData(color));
             match.RegisterPatterns(new Offsets2D(
                 "**",
                 "**"
@@ -261,18 +270,6 @@ public class GameInit : MonoBehaviour
         return match;
     }
 
-    class EmitterData : EmitterObjectFeature.IEmitterObjectData, IEmitterCellObjectComponentData
-    {
-        public string ObjectTypeId => EmitterObjectFeature.Name;
-        public IEmitterCellObjectComponentData Data => this;
-        public ICellObjectData[] ObjectsToEmit { get; }
-
-        public EmitterData(ICellObjectData[] objectsToEmit)
-        {
-            ObjectsToEmit = objectsToEmit;
-        }
-    }
-
     private TrivialGridData ConstructGridData()
     {
         var data = new TrivialGridData(10, 10);
@@ -283,62 +280,26 @@ public class GameInit : MonoBehaviour
                     data.ActivateCell(x, y);
                 }
 
-        data.AddCellContent(7, 4, new ChipData(3));
-        data.AddCellContent(7, 4, new ChainData());
+        data.AddCellContent(7, 4, new ChipCellObjectData(3));
+        data.AddCellContent(7, 4, new ChainCellObjectData(3));
 
-        data.AddCellContent(1, 5, new TileObjectData(2));
-        data.AddCellContent(2, 5, new TileObjectData(1));
-        data.AddCellContent(1, 4, new TileObjectData(1));
+        data.AddCellContent(1, 5, new TileCellObjectData(2));
+        data.AddCellContent(2, 5, new TileCellObjectData(1));
+        data.AddCellContent(1, 4, new TileCellObjectData(1));
 
-        data.AddCellContent(1, 1, new BombObjectData(2));
+        data.AddCellContent(1, 1, new BombCellObjectData(2));
 
 
-        ChipData[] chips = new ChipData[5];
+        ChipCellObjectData[] chips = new ChipCellObjectData[5];
         for (int i = 0; i < chips.Length; ++i)
-            chips[i] = new ChipData(i);
+            chips[i] = new ChipCellObjectData(i);
 
         for (int x = 0; x < 10; ++x)
         {
-            data.AddCellContent(x, 9, new EmitterData(chips));
+            data.AddCellContent(x, 9, new EmitterCellObjectData(chips));
         }
 
         return data;
-    }
-
-    private class ChipData : ChipObjectFeature.IChipData
-    {
-        public string ObjectTypeId => ChipObjectFeature.Name;
-        public IColorCellObjectComponentData Color { get; }
-        public IHealthCellObjectComponentData Health { get; }
-
-        public int BodyType => 0;
-
-        public int ColorId => Color.ColorId;
-
-        public ChipData(int colorId)
-        {
-            Color = new ColorCellObjectComponentData(colorId);
-            Health = new HealthCellObjectComponentData(1, 1, DamageType.Match | DamageType.Explosion, false);
-        }
-    }
-
-    private class ChainData : ChainObjectFeature.IChainData
-    {
-        public string ObjectTypeId => ChainObjectFeature.Name;
-
-        public IHealthCellObjectComponentData Health { get; } = new HealthCellObjectComponentData(10, 3, DamageType.Match | DamageType.Explosion, false);
-    }
-
-    public class TileObjectData : TileObjectFeature.ITileData
-    {
-        public string ObjectTypeId => TileObjectFeature.Name;
-
-        public int Health { get; }
-
-        public TileObjectData(int health)
-        {
-            Health = health;
-        }
     }
 
     public class BonusFactory : Factory<ICellObjectData, int>, Match.IBonusFactory
@@ -348,17 +309,4 @@ public class GameInit : MonoBehaviour
         {
         }
     }
-
-    public class BombObjectData : BombObjectFeature.IBombData
-    {
-        public string ObjectTypeId => BombObjectFeature.Name;
-        public IColorCellObjectComponentData Color { get; }
-
-        public BombObjectData(int colorId)
-        {
-            Color = new ColorCellObjectComponentData(colorId);
-        }
-
-    }
-
 }

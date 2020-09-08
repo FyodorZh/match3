@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using Match3.Features;
+using Match3.Features.Chip;
 using Match3.Features.Move;
 using UnityEngine;
 
 namespace Match3.View.Default.Objects
 {
-    public class ChipView : CellObjectView<ChipObjectFeature.IChip>
+    public class ChipView : CellObjectView<IChipCellObjectObserver>
     {
         public List<Texture2D> _colors;
 
@@ -15,7 +15,7 @@ namespace Match3.View.Default.Objects
         {
             base.OnInit();
 
-            gameObject.GetComponent<Renderer>().material.mainTexture = _colors[Observer.Color.ColorId];
+            gameObject.GetComponent<Renderer>().material.mainTexture = _colors[Observer.ColorId];
         }
 
         protected override void Update()
