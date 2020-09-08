@@ -133,7 +133,7 @@ namespace Match3.Features.Bomb
                 {
                     foreach (var neighbour in Owner.ActiveNeighboursInBox())
                     {
-                        var health = neighbour.FindComponent<HealthCellComponentFeature.IHealth>();
+                        var health = neighbour.FindComponent<IHealthCellComponent>();
                         health.ApplyDamage(new Damage(DamageType.Explosion, 1));
                     }
                 }

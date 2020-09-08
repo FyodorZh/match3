@@ -169,7 +169,7 @@ namespace Match3.Features
                                     if (colorComponent != null) // только что взорвался
                                     {
                                         var colorObject = colorComponent.Owner;
-                                        var health = colorObject.Owner.FindComponent<HealthCellComponentFeature.IHealth>();
+                                        var health = colorObject.Owner.FindComponent<IHealthCellComponent>();
                                         health.ApplyDamage(new Damage(DamageType.Match, 1));
                                     }
                                 }

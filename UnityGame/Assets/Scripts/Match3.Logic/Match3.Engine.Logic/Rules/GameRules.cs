@@ -104,16 +104,6 @@ namespace Match3.Logic
             if (!_cellComponentFeatures.ContainsKey(feature.FeatureId))
             {
                 _cellComponentFeatures.Add(feature.FeatureId, feature);
-
-                foreach (var objectFeature in feature.DependsOnObjectFeatures)
-                {
-                    RegisterObjectFeature(objectFeature);
-                }
-
-                foreach (var componentFeature in feature.DependsOnObjectComponentFeatures)
-                {
-                    RegisterObjectComponentFeature(componentFeature);
-                }
             }
         }
 

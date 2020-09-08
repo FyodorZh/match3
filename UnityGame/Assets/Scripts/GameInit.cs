@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Match3;
-using Match3.Core;
 using Match3.Features;
 using Match3.Features.Bomb;
 using Match3.Features.Bomb.Default;
@@ -9,11 +8,10 @@ using Match3.Features.Chain;
 using Match3.Features.Chain.Default;
 using Match3.Features.Chip;
 using Match3.Features.Chip.Default;
-using Match3.Features.Color;
 using Match3.Features.Color.Default;
+using Match3.Features.Default;
 using Match3.Features.Emitter;
 using Match3.Features.Emitter.Default;
-using Match3.Features.Health;
 using Match3.Features.Health.Default;
 using Match3.Features.Mass.Default;
 using Match3.Features.Move.Default;
@@ -142,7 +140,7 @@ public class GameInit : MonoBehaviour
             },
             new ICellComponentFeature[]
             {
-                HealthCellComponentFeature.Instance
+                new HealthCellComponentFeatureImpl(),
             },
             new IObjectFeature[]
             {

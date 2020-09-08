@@ -14,7 +14,6 @@ namespace Match3.Features
 
         public override IEnumerable<ICellComponentFeature> DependsOnCellComponentFeatures { get; } = new ICellComponentFeature[]
         {
-            HealthCellComponentFeature.Instance,
         };
 
         public override IEnumerable<IObjectFeature> DependsOnObjectFeatures { get; } = new IObjectFeature[]
@@ -34,7 +33,7 @@ namespace Match3.Features
 
             var cell = game.Board.GetCell(id);
 
-            var healthComponent = cell.FindComponent<HealthCellComponentFeature.IHealth>();
+            var healthComponent = cell.FindComponent<IHealthCellComponent>();
             healthComponent?.ApplyDamage(new Damage(DamageType.Match, 1));
         }
     }
