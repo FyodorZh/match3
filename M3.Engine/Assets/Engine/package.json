@@ -1,0 +1,11 @@
+{
+    "name": "com.unity.match3",
+    "displayName": "Match 3 Engine",
+    "version": "0.0.1",
+    "unity": "2019.3",
+    "description": "This package provides Match3 Runtime, Match3 Editor and other common functionality",
+    "keywords": ["match3"],
+    "category": "",
+    "dependencies": {
+    }
+}
